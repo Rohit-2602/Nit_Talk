@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
+    android:id="@+id/group_Layout">
+
+    <View
+        android:id="@+id/selected_view"
+        android:layout_width="5dp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:layout_height="match_parent"
+        android:background="@drawable/shape_rectangle_side_corner"/>
+
+    <ImageView
+        android:id="@+id/chat_DP"
+        android:layout_marginStart="5dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="5dp"
+        android:src="@drawable/ic_user"
+        tools:ignore="ContentDescription" />
+
+</LinearLayout>

@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">WhatsApp Clone</string>
+    <string name="enter_your_email_id">Enter Your Email ID</string>
+    <string name="enter_a_password">Enter a Password</string>
+    <string name="signup">SignUp</string>
+    <string name="sign_in">Sign In</string>
+    <string name="login">Login</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="re_enter_password">Re-Enter Password</string>
+    <string name="name">Name</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="invite_members">Invite Members</string>
+    <string name="text_channels">TEXT CHANNELS</string>
+    <string name="voice_channels">VOICE CHANNELS</string>
+</resources>

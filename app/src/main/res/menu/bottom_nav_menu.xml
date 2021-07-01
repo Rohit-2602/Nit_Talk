@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/groupChatFragment"
+        android:icon="@drawable/ic_group"
+        android:title="Groups" />
+
+    <item
+        android:id="@+id/friendChatFragment"
+        android:icon="@drawable/ic_friend_chat"
+        android:title="Friend Chat" />
+
+    <item
+        android:id="@+id/friendFragment"
+        android:icon="@drawable/ic_friend"
+        android:title="Friends" />
+
+    <item
+        android:id="@+id/profileFragment"
+        android:icon="@drawable/ic_user"
+        android:title="Profile" />
+
+</menu>

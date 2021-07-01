@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_main"
+    app:startDestination="@id/groupChatFragment">
+
+    <fragment
+        android:id="@+id/groupChatFragment"
+        android:name="com.example.nittalk.ui.groupchat.GroupChatFragment"
+        android:label="fragment_group_chat"
+        tools:layout="@layout/fragment_group_chat" >
+        <action
+            android:id="@+id/action_groupChatFragment_to_friendChatFragment"
+            app:destination="@id/friendChatFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/friendChatFragment"
+        android:name="com.example.nittalk.ui.friendchat.FriendChatFragment"
+        android:label="fragment_friend_chat"
+        tools:layout="@layout/fragment_friend_chat" >
+        <action
+            android:id="@+id/action_friendChatFragment_to_friendFragment"
+            app:destination="@id/friendFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.nittalk.ui.profile.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/friendFragment"
+        android:name="com.example.nittalk.ui.friends.FriendFragment"
+        android:label="fragment_friend"
+        tools:layout="@layout/fragment_friend" >
+        <action
+            android:id="@+id/action_friendFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+</navigation>
