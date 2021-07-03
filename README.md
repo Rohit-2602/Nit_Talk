@@ -8,11 +8,12 @@ NitTalk is a fully functional social media app with multiple features built with
 
 
 ## Current Status
-Currently working on TextMessaging Feature.
+Currently working on Message Notification.
 
 ## Done
 - Email Auth
 - Saving group and channel selected state.
+- Group Text Messaging
 
 ## Screenshots
 <img src="https://user-images.githubusercontent.com/65807152/124163947-cabd2680-dabd-11eb-8eaf-0210bb6456e3.jpg" width=250 align=left>
