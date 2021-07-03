@@ -7,16 +7,20 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.nittalk.data.PreferencesManager
 import com.example.nittalk.data.User
 import kotlinx.coroutines.launch
 
-class AuthViewModel @ViewModelInject constructor(private val authRepository: AuthRepository, private val preferencesManager: PreferencesManager) :
-    ViewModel() {
+class AuthViewModel @ViewModelInject constructor(private val authRepository: AuthRepository)
+    : ViewModel() {
 
     val currentUser = authRepository.currentUser
     val progress = authRepository.progress
     val enable = authRepository.enable
+
+    fun saveUserToDB(user: User) =
+        viewModelScope.launch {
+            authRepository.saveUserToDB(user)
+        }
 
     fun createUser(email: String, password: String, activity: Activity) =
         viewModelScope.launch {
@@ -43,7 +47,7 @@ class AuthViewModel @ViewModelInject constructor(private val authRepository: Aut
             authRepository.uploadImage(imageUri, userId, activity)
         }
 
-    fun imageDownloadUrl(imageUri: Uri?, userId: String) : MutableLiveData<String> {
+    fun imageDownloadUrl(imageUri: Uri?, userId: String): MutableLiveData<String> {
         val imageUrl = MutableLiveData<String>()
         viewModelScope.launch {
             val url = authRepository.imageDownloadUrl(imageUri, userId)

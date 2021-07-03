@@ -8,11 +8,14 @@ import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import com.example.nittalk.data.*
+import com.example.nittalk.db.UserDao
 import com.example.nittalk.ui.MainActivity
 import com.example.nittalk.ui.auth.AuthActivity
 import com.example.nittalk.ui.auth.InfoFragment
 import com.example.nittalk.ui.auth.LoginFragment
 import com.example.nittalk.ui.auth.LoginFragmentDirections
+import com.example.nittalk.util.Constant.CHANNEL_SELECTED
+import com.example.nittalk.util.Constant.GROUP_SELECTED
 import com.example.nittalk.util.Constant.LOGIN_STATE_KEY
 import com.example.nittalk.util.Constant.branchIdHashMap
 import com.example.nittalk.util.Constant.semesterIdHashMap
@@ -31,7 +34,7 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-class FirebaseSource @Inject constructor(private val preferencesManager: PreferencesManager) {
+class FirebaseSource @Inject constructor(private val preferencesManager: PreferencesManager, private val userDao: UserDao) {
 
     private val firebaseAuth: FirebaseAuth by lazy {
         FirebaseAuth.getInstance()
@@ -53,7 +56,11 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
     val enable = MutableLiveData(true)
     val loginState = preferencesManager.loginStateFlow
 
+    suspend fun saveUserToDB(user: User) =
+        userDao.insertUser(user)
 
+    fun getCurrentUserFromDB(currentUserId: String) =
+        userDao.getCurrentUser(currentUserId)
 
     fun createUserWithEmailAndPassword(email: String, password: String, activity: Activity) {
         progress.value = View.VISIBLE
@@ -131,8 +138,14 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
             }
     }
 
-    fun createUser(user: User, infoFragment: InfoFragment) {
+    suspend fun createUser(user: User, infoFragment: InfoFragment) {
         enable.value = false
+        val initialGroupSelectedId = branchIdHashMap[user.branch] + semesterIdHashMap[user.semester]
+        preferencesManager.updateGroupSelected(GROUP_SELECTED, initialGroupSelectedId)
+
+        val initialChannelSelectedId = initialGroupSelectedId + "General"
+        preferencesManager.updateChannelSelected(CHANNEL_SELECTED, initialChannelSelectedId)
+
         userCollection.document(user.id).set(user).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 enable.value = true
@@ -193,7 +206,7 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
                 user.groups.add(id)
                 userCollection.document(user.id).set(user)
 
-                createTextChannel(channelName = "General", group = group, activity = activity)
+                createGeneralTextChannel(group = group, activity = activity)
                 createTextChannel(channelName = user.section, group = group, activity = activity)
                 userCollection.document(user.id).collection("groups").document(id).set(group)
 
@@ -208,6 +221,27 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
                 }
             }
         }
+    }
+
+    private fun createGeneralTextChannel(group: Group, activity: Activity) {
+        val textChannelCollection = groupCollection.document(group.groupId).collection("textChannels")
+        val id = group.groupId + "General"
+        val sectionTextChannel = Channel(
+            channelId = id,
+            channelName = "General",
+            createdAt = System.currentTimeMillis()
+        )
+        textChannelCollection.document(id).set(sectionTextChannel).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                showToast(activity, "Text Channel Created")
+            }
+            else {
+                showToast(activity, task.exception?.message)
+            }
+        }
+        group.channelsId.add(id)
+        group.textChannels.add(id)
+        groupCollection.document(group.groupId).set(group)
     }
 
     private fun createTextChannel(channelName: String, group: Group, activity: Activity) {
@@ -285,11 +319,48 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
         }
     }
 
+//    fun sendMessage(groupId: String, channelId: String, message: Message) {
+//        groupCollection.document(groupId).collection("textChannels").document(channelId).collection("messages").add(message)
+//    }
+
+    fun sendMessage(groupPreferences: GroupPreferences, messageText: String, imageUrl: String, currentUser: User) {
+        val messageCollection = groupCollection.document(groupPreferences.groupSelectedId).collection("textChannels").document(groupPreferences.channelSelectedId).collection("messages")
+        val id = messageCollection.document().id
+        val message = Message(
+            senderId = firebaseAuth.currentUser!!.uid,
+            message = messageText,
+            messageId = id,
+            imageUrl = imageUrl,
+            senderDp = currentUser.profileImageUrl,
+            senderName = currentUser.name,
+            sendAt = System.currentTimeMillis()
+        )
+        messageCollection.document(id).set(message)
+    }
+
+//    @ExperimentalCoroutinesApi
+//    fun getChannelMessages(groupId: String, channelId: String) : Flow<List<Message>> {
+//        return callbackFlow {
+//            val messages = groupCollection.document(groupId).collection("textChannels").document(channelId).collection("messages")
+//                .addSnapshotListener { querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
+//                    if (firebaseFirestoreException != null) {
+//                        cancel(cause = firebaseFirestoreException, message = "Error Fetching Messages")
+//                        return@addSnapshotListener
+//                    }
+//                    val map = querySnapshot!!.documents.mapNotNull { it.toObject(Message::class.java) }
+//                    offer(map)
+//                }
+//            awaitClose {
+//                messages.remove()
+//            }
+//        }
+//    }
+
     @ExperimentalCoroutinesApi
-    fun getChannelMessages(groupId: String, channelId: String) : Flow<List<Message>> {
+    fun getChannelMessages(groupPreferences: GroupPreferences) : Flow<List<Message>> {
         return callbackFlow {
-            val messages = groupCollection.document(groupId).collection("textChannels").document(channelId).collection("messages")
-                .addSnapshotListener { querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
+            val messages = groupCollection.document(groupPreferences.groupSelectedId).collection("textChannels").document(groupPreferences.channelSelectedId).collection("messages")
+                .orderBy("sendAt").addSnapshotListener { querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
                     if (firebaseFirestoreException != null) {
                         cancel(cause = firebaseFirestoreException, message = "Error Fetching Messages")
                         return@addSnapshotListener

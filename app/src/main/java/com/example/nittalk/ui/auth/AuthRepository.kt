@@ -13,13 +13,16 @@ class AuthRepository @Inject constructor(private val firebaseSource: FirebaseSou
     val enable = firebaseSource.enable
     val loginState = firebaseSource.loginState
 
+    suspend fun saveUserToDB(user: User) =
+        firebaseSource.saveUserToDB(user)
+
     fun createUser(email: String, password: String, activity: Activity) =
         firebaseSource.createUserWithEmailAndPassword(email, password, activity)
 
     fun signIn(email: String, password: String, loginFragment: LoginFragment) =
         firebaseSource.signInWithEmailAndPassword(email, password, loginFragment)
 
-    fun createUser(user: User, infoFragment: InfoFragment) =
+    suspend fun createUser(user: User, infoFragment: InfoFragment) =
         firebaseSource.createUser(user, infoFragment)
 
     fun uploadImage(imageUri: Uri, userId: String, activity: Activity) =

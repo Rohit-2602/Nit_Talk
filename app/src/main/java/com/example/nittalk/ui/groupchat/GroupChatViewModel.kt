@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.nittalk.data.PreferencesManager
 import com.example.nittalk.util.Constant.CHANNEL_SELECTED
 import com.example.nittalk.util.Constant.GROUP_SELECTED
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
@@ -20,7 +19,8 @@ class GroupChatViewModel @ViewModelInject constructor(
 
     private val currentUserUid = groupChatRepository.currentUser!!.uid
 
-    @ExperimentalCoroutinesApi
+    private suspend fun currentUserFromDB() = groupChatRepository.getCurrentUserFromDB().first()
+
     val currentUserGroups = groupChatRepository.getUserGroup(currentUserUid).asLiveData()
 
     fun updateGroupSelected(groupId: String) =
@@ -53,8 +53,19 @@ class GroupChatViewModel @ViewModelInject constructor(
         id
     }
 
-    val textChannels = groupSelected.flatMapLatest {
-        groupChatRepository.getGroupTextChannels(it)
+    private val groupPreferences = preferencesManager.groupPreferencesFlow
+
+    val textChannels = groupPreferences.flatMapLatest {
+        groupChatRepository.getGroupTextChannels(it.groupSelectedId)
     }
+
+    fun sendMessage(messageText: String, imageUrl: String) =
+        viewModelScope.launch {
+            groupChatRepository.sendMessage(groupPreferences.first(), messageText, imageUrl, currentUserFromDB())
+        }
+
+    val channelMessages = groupPreferences.flatMapLatest {
+        groupChatRepository.getMessages(it)
+    }.asLiveData()
 
 }

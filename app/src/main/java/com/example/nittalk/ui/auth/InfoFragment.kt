@@ -73,6 +73,7 @@ class InfoFragment : Fragment(R.layout.fragment_info) {
                         section = binding.subsectionSpinner.selectedItem.toString()
                     )
                     authViewModel.createUser(user, this)
+                    authViewModel.saveUserToDB(user)
                     authViewModel.addUserToGroup(user, requireActivity())
                     binding.createUserProgressbar.visibility = View.GONE
                     Log.i("Rohit", user.toString())

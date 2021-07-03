@@ -1,10 +1,12 @@
 package com.example.nittalk.ui
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupWithNavController
 import com.example.nittalk.R
 import com.example.nittalk.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,8 +28,23 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.main_fragment_container_view) as NavHostFragment
         navController = navHostFragment.navController
 
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when(destination.id) {
+                R.id.groupChatFragment -> hideBottomNav()
+                else -> showBottomNav()
+            }
+        }
+
         binding.bottomNavigationView.setupWithNavController(navController)
 
+    }
+
+    private fun showBottomNav() {
+        binding.bottomNavigationView.visibility = View.VISIBLE
+    }
+
+    private fun hideBottomNav() {
+        binding.bottomNavigationView.visibility = View.GONE
     }
 
 }
