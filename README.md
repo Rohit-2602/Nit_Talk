@@ -5,6 +5,8 @@ NitTalk is a fully functional social media app with multiple features built with
 - Firebase (Authentication, Cloud Firestore, Cloud Messaging)
 - Dagger-Hilt (For Depending Injection)
 - MVVM Architecture
+- Room Database
+- Datastore
 
 
 ## Current Status
