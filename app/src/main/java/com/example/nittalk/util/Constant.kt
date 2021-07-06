@@ -6,6 +6,7 @@ object Constant {
     const val LOGIN_STATE_KEY = "login_state"
     const val GROUP_SELECTED = "group_selected"
     const val CHANNEL_SELECTED = "channel_selected"
+    const val CHAT_SELECTED = "chat_selected"
 
     val branchIdHashMap : HashMap<String, String> = hashMapOf(
         "Civil" to "Civil",

@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -76,7 +75,6 @@ class InfoFragment : Fragment(R.layout.fragment_info) {
                     authViewModel.saveUserToDB(user)
                     authViewModel.addUserToGroup(user, requireActivity())
                     binding.createUserProgressbar.visibility = View.GONE
-                    Log.i("Rohit", user.toString())
                 }
             }
         }

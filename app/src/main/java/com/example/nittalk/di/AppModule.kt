@@ -3,6 +3,7 @@ package com.example.nittalk.di
 import android.content.Context
 import androidx.room.Room
 import com.example.nittalk.data.PreferencesManager
+import com.example.nittalk.db.GroupPreferencesDao
 import com.example.nittalk.db.UserDao
 import com.example.nittalk.db.UserDatabase
 import com.example.nittalk.firebase.FirebaseSource
@@ -19,11 +20,14 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideFirebaseSource(preferencesManager: PreferencesManager, userDao: UserDao) : FirebaseSource = FirebaseSource(preferencesManager, userDao)
+    fun provideFirebaseSource(
+        preferencesManager: PreferencesManager, userDao: UserDao, groupPreferencesDao: GroupPreferencesDao
+    ): FirebaseSource =
+        FirebaseSource(preferencesManager, userDao, groupPreferencesDao)
 
     @Provides
     @Singleton
-    fun provideUserDb(@ApplicationContext context: Context) : UserDatabase =
+    fun provideUserDb(@ApplicationContext context: Context): UserDatabase =
         Room.databaseBuilder(context, UserDatabase::class.java, "user_database")
             .fallbackToDestructiveMigration()
             .build()
@@ -31,5 +35,9 @@ object AppModule {
     @Provides
     fun provideUserDao(db: UserDatabase): UserDao =
         db.getUserDao()
+
+    @Provides
+    fun provideServerInfoDao(db: UserDatabase): GroupPreferencesDao =
+        db.getServerDao()
 
 }

@@ -21,14 +21,30 @@ class GroupChatRepository @Inject constructor(private val firebaseSource: Fireba
     fun getUserGroup(userId: String) =
         firebaseSource.getUserGroup(userId)
 
+    fun getGroupPref() = firebaseSource.getGroupPref()
+
     @ExperimentalCoroutinesApi
     fun getGroupTextChannels(groupId: String) =
         firebaseSource.getGroupTextChannels(groupId)
 
-    fun sendMessage(groupPreferences: GroupPreferences, messageText: String, imageUrl: String, currentUser: User) =
-        firebaseSource.sendMessage(groupPreferences, messageText, imageUrl, currentUser)
+    @ExperimentalCoroutinesApi
+    fun getChannelName(groupId: String, channelId: String) =
+        firebaseSource.getChannelName(groupId, channelId)
 
-    fun getMessages(groupPreferences: GroupPreferences) =
-        firebaseSource.getChannelMessages(groupPreferences)
+    @ExperimentalCoroutinesApi
+    fun getGroupName(groupId: String) =
+        firebaseSource.getGroupName(groupId)
+
+    fun updateChannelSelected(groupId: String, channelId: String) =
+        firebaseSource.updateChannelSelected(groupId, channelId)
+
+    fun sendMessage(groupPreferences: GroupPreferences, messageText: String, imageUrl: String, currentUser: User) =
+        firebaseSource.sendMessage(groupPreferences.groupSelectedId, groupPreferences.channelSelectedId, messageText, imageUrl, currentUser)
+
+    @ExperimentalCoroutinesApi
+    fun getMessages(groupId: String, channelId: String) =
+        firebaseSource.getChannelMessages(groupId, channelId)
+
+    fun update(groupSelectedId: String) = firebaseSource.update(groupSelectedId)
 
 }

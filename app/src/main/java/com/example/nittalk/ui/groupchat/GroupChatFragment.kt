@@ -13,15 +13,15 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.asLiveData
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.nittalk.R
 import com.example.nittalk.data.Channel
-import com.example.nittalk.data.Group
 import com.example.nittalk.databinding.FragmentGroupChatBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSelected,
@@ -39,6 +39,10 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentGroupChatBinding.bind(view)
         setUpNavDrawer()
+
+        viewModel.groupName.observe(viewLifecycleOwner) {
+            binding.groupNameTextView.text = it
+        }
 
         binding.apply {
             textChannelsTextView.setOnClickListener {
@@ -93,11 +97,9 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
             }
-
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
             }
-
             override fun afterTextChanged(p0: Editable?) {
                 val isEmpty = p0.toString().trim().isEmpty()
                 if(isEmpty) {
@@ -125,7 +127,6 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
     private fun setUpGroupRecyclerView() {
         groupAdapter = GroupRecyclerViewAdapter(this, viewModel.selectedGroupId)
         viewModel.currentUserGroups.observe(viewLifecycleOwner) {
-            binding.groupNameTextView.text = it[0].groupName
             groupAdapter.submitList(it)
         }
         binding.groupRecyclerview.apply {
@@ -135,13 +136,14 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
         }
     }
 
-    override fun checkOutGroup(group: Group, groupId: String) {
-        binding.groupNameTextView.text = group.groupName
+    override fun checkOutGroup(groupId: String) {
         viewModel.updateGroupSelected(groupId)
+        viewModel.update(groupId)
+        messageAdapter.notifyDataSetChanged()
     }
 
     private fun setUpTextChannelRecyclerView() {
-        textChannelAdapter = TextChannelRecyclerViewAdapter(this, viewModel.selectedChannelId)
+        textChannelAdapter = TextChannelRecyclerViewAdapter(this, viewModel.channelSelected, this)
         viewModel.textChannels.asLiveData().observe(viewLifecycleOwner) {
             textChannelAdapter.submitList(it)
         }
@@ -153,7 +155,7 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
     }
 
     override fun showTextChannelMessages(channel: Channel, channelId: String) {
-        viewModel.updateChannelSelected(channelId)
+        viewModel.updateChannelSelected(channel.groupId, channelId)
         binding.apply {
             groupChatToolbar.title = channel.channelName
             drawerLayout.closeDrawer(GravityCompat.START)
@@ -166,7 +168,7 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
     private fun setUpMessageRecyclerView() {
         messageAdapter = MessageAdapter()
         val mLayoutManager = LinearLayoutManager(requireContext())
-        viewModel.channelMessages.observe(viewLifecycleOwner) {
+        viewModel.messages.asLiveData().observe(viewLifecycleOwner) {
             messageAdapter.submitList(it)
             mLayoutManager.smoothScrollToPosition(binding.messageRV, null, it.size)
         }
@@ -181,7 +183,12 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
     private fun setUpNavDrawer() {
         val mainActivity = activity as AppCompatActivity
         mainActivity.setSupportActionBar(binding.groupChatToolbar)
-        mainActivity.setupActionBarWithNavController(findNavController())
+
+        CoroutineScope(Dispatchers.Main).launch {
+            viewModel.channelName.observe(viewLifecycleOwner) { channelId ->
+                binding.groupChatToolbar.title = channelId
+            }
+        }
 
         val bottomNav = requireActivity().findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 

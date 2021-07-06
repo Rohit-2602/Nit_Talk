@@ -13,8 +13,6 @@ import com.example.nittalk.databinding.ItemGroupBinding
 class GroupRecyclerViewAdapter(private val listener: OnGroupItemSelected, private var selectedGroupId: String) :
     ListAdapter<Group, GroupRecyclerViewAdapter.GroupViewHolder>(GROUP_COMPARATOR) {
 
-//    private var selectedGroupPosition = 0
-
     companion object {
         private val GROUP_COMPARATOR = object : DiffUtil.ItemCallback<Group>() {
             override fun areItemsTheSame(oldItem: Group, newItem: Group): Boolean {
@@ -38,7 +36,7 @@ class GroupRecyclerViewAdapter(private val listener: OnGroupItemSelected, privat
         viewHolder.binding.groupLayout.setOnClickListener {
             val position = viewHolder.absoluteAdapterPosition
             selectedGroupId = getItem(position).groupId
-            listener.checkOutGroup(group = getItem(position), getItem(position).groupId)
+            listener.checkOutGroup(getItem(position).groupId)
             notifyDataSetChanged()
         }
         return viewHolder
@@ -57,5 +55,5 @@ class GroupRecyclerViewAdapter(private val listener: OnGroupItemSelected, privat
 }
 
 interface OnGroupItemSelected {
-    fun checkOutGroup(group: Group, groupId: String)
+    fun checkOutGroup(groupId: String)
 }

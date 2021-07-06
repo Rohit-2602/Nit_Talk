@@ -1,9 +1,9 @@
 package com.example.nittalk.ui.groupchat
 
 import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -11,10 +11,17 @@ import com.example.nittalk.R
 import com.example.nittalk.data.Channel
 import com.example.nittalk.databinding.ItemChannelBinding
 
-class TextChannelRecyclerViewAdapter(private val listener: OnTextChannelSelected, private var selectedChannelId: String):
+class TextChannelRecyclerViewAdapter(private val listener: OnTextChannelSelected, private var selectedChannelId: LiveData<String>, private val groupChatFragment: GroupChatFragment):
     ListAdapter<Channel, TextChannelRecyclerViewAdapter.TextChannelViewHolder>(TEXT_CHANNEL_COMPARATOR) {
 
-//    private var selectedItem = 0
+    private val selectedChannel: String
+        get() = run {
+        var id = ""
+        selectedChannelId.observe(groupChatFragment) {
+            id = it
+        }
+        id
+    }
 
     companion object {
         private val TEXT_CHANNEL_COMPARATOR = object : DiffUtil.ItemCallback<Channel>() {
@@ -34,12 +41,10 @@ class TextChannelRecyclerViewAdapter(private val listener: OnTextChannelSelected
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TextChannelViewHolder {
-        Log.i("Rohit Selected", selectedChannelId)
         val binding = ItemChannelBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         val viewHolder = TextChannelViewHolder(binding)
         viewHolder.binding.channelLayout.setOnClickListener {
             val position = viewHolder.absoluteAdapterPosition
-            selectedChannelId = getItem(position).channelId
             listener.showTextChannelMessages(getItem(position), getItem(position).channelId)
             notifyDataSetChanged()
         }
@@ -48,7 +53,7 @@ class TextChannelRecyclerViewAdapter(private val listener: OnTextChannelSelected
 
     override fun onBindViewHolder(holder: TextChannelViewHolder, position: Int) {
         val currentChannel = getItem(position)
-        if (selectedChannelId == currentChannel.channelId) {
+        if (selectedChannel == currentChannel.channelId) {
             holder.binding.channelTitleTextView.setTextColor(Color.parseColor("#FFFFFF"))
             holder.binding.hashTextView.setTextColor(Color.parseColor("#FFFFFF"))
             holder.binding.channelLayout.setBackgroundResource(R.drawable.shape_channel_selected)
