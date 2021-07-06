@@ -5,14 +5,17 @@ NitTalk is a fully functional social media app with multiple features built with
 - Firebase (Authentication, Cloud Firestore, Cloud Messaging)
 - Dagger-Hilt (For Depending Injection)
 - MVVM Architecture
+- Room Database
+- Datastore
 
 
 ## Current Status
-Currently working on TextMessaging Feature.
+Currently working on Saving Group and Channel Selected State.
 
 ## Done
 - Email Auth
 - Saving group and channel selected state.
+- Group Text Messaging
 
 ## Screenshots
 <img src="https://user-images.githubusercontent.com/65807152/124163947-cabd2680-dabd-11eb-8eaf-0210bb6456e3.jpg" width=250 align=left>
