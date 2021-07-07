@@ -409,6 +409,7 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
     fun getChannelMessages(groupId: String, channelId: String) : Flow<List<Message>> {
         return callbackFlow {
             val messages = groupCollection.document(groupId).collection("textChannels").document(channelId).collection("messages")
+                .orderBy("sendAt")
                 .addSnapshotListener { querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
                     if (firebaseFirestoreException != null) {
                         cancel(cause = firebaseFirestoreException, message = "Error Fetching Messages")

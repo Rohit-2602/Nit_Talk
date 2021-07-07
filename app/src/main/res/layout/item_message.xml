@@ -9,27 +9,79 @@
     android:layout_marginEnd="10dp"
     android:id="@+id/message_constraint">
 
+    <LinearLayout
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/message_date_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:layout_marginBottom="5dp"
+        android:weightSum="3">
+
+        <View
+            android:id="@+id/view1"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1.5"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_gravity="center_vertical"
+            android:background="@color/black" />
+
+        <TextView
+            android:id="@+id/message_date_header_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:gravity="center"
+            android:textColor="@color/black"
+            tools:text="July 7, 2021" />
+
+        <View
+            android:id="@+id/view2"
+            android:layout_width="0dp"
+            android:layout_weight="1.5"
+            android:layout_gravity="center_vertical"
+            android:layout_height="1dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@color/black" />
+
+    </LinearLayout>
+
     <ImageView
         android:id="@+id/sender_Dp_IV"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:src="@drawable/bulbasaur"
         android:scaleType="centerCrop"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/message_date_header"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/sender_name_TV"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:text="Rohit Sharma"
         android:textColor="@color/black"
         android:textSize="20sp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/sender_Dp_IV"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/message_date_header" />
+
+    <TextView
+        android:id="@+id/message_sent_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@id/message_TV"
+        app:layout_constraintStart_toEndOf="@id/sender_name_TV"
+        app:layout_constraintTop_toBottomOf="@id/message_date_header"
+        tools:text="Today at 11:34" />
 
     <TextView
         android:id="@+id/message_TV"
