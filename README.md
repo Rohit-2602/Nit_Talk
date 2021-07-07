@@ -8,6 +8,8 @@ NitTalk is a fully functional social media app with multiple features built with
 - Room Database
 - Datastore
 
+## Firebase FlowChart 👀
+ [**Firebase Flow Chart**](https://whimsical.com/nit-talk-firebase-flowchart-AqJqtDqdypWyPiYBVTG5cS)
 
 ## Current Status
 Currently working on Message Push Notification.
