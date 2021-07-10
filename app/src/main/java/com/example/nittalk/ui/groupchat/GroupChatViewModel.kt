@@ -1,11 +1,13 @@
 package com.example.nittalk.ui.groupchat
 
+import android.content.Context
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.nittalk.data.PreferencesManager
+import com.example.nittalk.firebase.FirebaseUtil
 import com.example.nittalk.util.Constant.GROUP_SELECTED
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -16,13 +18,14 @@ import kotlinx.coroutines.launch
 
 class GroupChatViewModel @ViewModelInject constructor(
     private val groupChatRepository: GroupChatRepository,
-    private val preferencesManager: PreferencesManager
+    private val preferencesManager: PreferencesManager,
+    private val firebaseUtil: FirebaseUtil
 ) :
     ViewModel() {
 
-    private val currentUserUid = groupChatRepository.currentUser!!.uid
+    val currentUserUid = groupChatRepository.currentUser!!.uid
 
-    private suspend fun currentUserFromDB() = groupChatRepository.getCurrentUserFromDB().first()
+    val currentUserFromDB = groupChatRepository.getCurrentUserFromDB()
 
     @ExperimentalCoroutinesApi
     val currentUserGroups = groupChatRepository.getUserGroup(currentUserUid).asLiveData()
@@ -30,6 +33,11 @@ class GroupChatViewModel @ViewModelInject constructor(
     private val groupPref = groupChatRepository.getGroupPref()
 
     private val groupSelected = preferencesManager.groupSelected
+
+    @ExperimentalCoroutinesApi
+    val currentGroup = groupSelected.flatMapLatest {
+        groupChatRepository.getGroupById(it)
+    }
 
     @ExperimentalCoroutinesApi
     val groupName = groupSelected.flatMapLatest { groupSelected ->
@@ -94,9 +102,11 @@ class GroupChatViewModel @ViewModelInject constructor(
         viewModelScope.launch {
             groupChatRepository.sendMessage(
                 groupPref.first().find { it.channelSelectedId == channelSelected.asFlow().first() }!!,
-                messageText, imageUrl, currentUserFromDB()
+                messageText, imageUrl, currentUserFromDB.first()
             )
         }
 
-}
+    fun sendNotification(context: Context, title: String, message: String, userId: String) =
+        firebaseUtil.sendNotification(context, title, message, userId)
 
+}

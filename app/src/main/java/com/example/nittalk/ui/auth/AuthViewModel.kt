@@ -8,10 +8,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.nittalk.data.User
+import com.example.nittalk.firebase.FirebaseUtil
 import kotlinx.coroutines.launch
 
-class AuthViewModel @ViewModelInject constructor(private val authRepository: AuthRepository)
-    : ViewModel() {
+class AuthViewModel @ViewModelInject constructor(
+    private val authRepository: AuthRepository,
+    private val firebaseUtil: FirebaseUtil
+) : ViewModel() {
 
     val currentUser = authRepository.currentUser
     val progress = authRepository.progress
@@ -56,16 +59,9 @@ class AuthViewModel @ViewModelInject constructor(private val authRepository: Aut
         return imageUrl
     }
 
+    fun updateDeviceToken(token: String) =
+        firebaseUtil.updateToken(token)
+
     val loginState = authRepository.loginState.asLiveData()
-
-//    val loginState get() = run {
-//        val state = MutableLiveData(false)
-//        viewModelScope.launch {
-//            state.postValue(authRepository.loginState())
-//        }
-//        state
-//    }
-
-//    fun logOut() = authRepository.logout()
 
 }

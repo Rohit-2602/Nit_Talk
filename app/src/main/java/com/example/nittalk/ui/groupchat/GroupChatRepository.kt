@@ -21,6 +21,10 @@ class GroupChatRepository @Inject constructor(private val firebaseSource: Fireba
     fun getUserGroup(userId: String) =
         firebaseSource.getUserGroup(userId)
 
+    @ExperimentalCoroutinesApi
+    fun getGroupById(groupId: String) =
+        firebaseSource.getGroupById(groupId)
+
     fun getGroupPref() = firebaseSource.getGroupPref()
 
     @ExperimentalCoroutinesApi

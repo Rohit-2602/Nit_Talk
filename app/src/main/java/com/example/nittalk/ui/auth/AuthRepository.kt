@@ -34,8 +34,4 @@ class AuthRepository @Inject constructor(private val firebaseSource: FirebaseSou
     fun addUserToGroup(user: User, activity: Activity) =
         firebaseSource.addUserToGroup(user, activity)
 
-//    suspend fun loginState() = firebaseSource.loginState()
-
-//    fun logout() = firebaseSource.logout()
-
 }

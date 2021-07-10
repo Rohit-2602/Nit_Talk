@@ -7,7 +7,7 @@ class MessageTimeUtil {
 
     companion object {
 
-        fun getTimeAgo(time: Long) : String? {
+        fun getTimeAgo(time: Long) : String {
             val messageTime = Calendar.getInstance()
             messageTime.timeInMillis = time
             val now = Calendar.getInstance()
@@ -17,7 +17,7 @@ class MessageTimeUtil {
             } else if (now.get(Calendar.DATE) - messageTime.get(Calendar.DATE) == 1) {
                 "Yesterday at " + DateFormat.getTimeInstance(DateFormat.SHORT).format(time)
             }  else {
-                DateFormat.getDateTimeInstance().format(time)
+                DateFormat.getDateInstance().format(time) + " " + DateFormat.getTimeInstance(DateFormat.SHORT).format(time)
             }
         }
 

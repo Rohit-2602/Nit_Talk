@@ -248,6 +248,24 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
         }
     }
 
+    @ExperimentalCoroutinesApi
+    fun getGroupById(groupId: String) : Flow<Group> {
+        return callbackFlow {
+            val groups = groupCollection.document(groupId)
+                .addSnapshotListener { documentSnapshot: DocumentSnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
+                    if (firebaseFirestoreException != null) {
+                        cancel(cause = firebaseFirestoreException, message = "Error Getting Group Detail")
+                        return@addSnapshotListener
+                    }
+                    val map = documentSnapshot!!.toObject(Group::class.java)!!
+                    offer(map)
+                }
+            awaitClose {
+                groups.remove()
+            }
+        }
+    }
+
     fun getGroupPref() =
         groupPreferencesDao.getSelectedGroupChannel()
 

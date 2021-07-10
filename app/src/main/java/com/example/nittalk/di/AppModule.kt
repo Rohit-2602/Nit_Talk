@@ -7,6 +7,7 @@ import com.example.nittalk.db.GroupPreferencesDao
 import com.example.nittalk.db.UserDao
 import com.example.nittalk.db.UserDatabase
 import com.example.nittalk.firebase.FirebaseSource
+import com.example.nittalk.firebase.FirebaseUtil
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,7 +22,9 @@ object AppModule {
     @Provides
     @Singleton
     fun provideFirebaseSource(
-        preferencesManager: PreferencesManager, userDao: UserDao, groupPreferencesDao: GroupPreferencesDao
+        preferencesManager: PreferencesManager,
+        userDao: UserDao,
+        groupPreferencesDao: GroupPreferencesDao
     ): FirebaseSource =
         FirebaseSource(preferencesManager, userDao, groupPreferencesDao)
 
@@ -39,5 +42,9 @@ object AppModule {
     @Provides
     fun provideServerInfoDao(db: UserDatabase): GroupPreferencesDao =
         db.getServerDao()
+
+    @Provides
+    @Singleton
+    fun provideFirebaseUtil(): FirebaseUtil = FirebaseUtil()
 
 }

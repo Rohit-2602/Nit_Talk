@@ -1,12 +1,14 @@
 package com.example.nittalk.util
 
+import com.example.nittalk.BuildConfig
+
 object Constant {
 
     const val USER_PREFERENCES = "user_preferences"
     const val LOGIN_STATE_KEY = "login_state"
     const val GROUP_SELECTED = "group_selected"
-    const val CHANNEL_SELECTED = "channel_selected"
-    const val CHAT_SELECTED = "chat_selected"
+    const val FIREBASE_SERVER_KEY = BuildConfig.FIREBASE_SERVER_KEY
+    const val SENDER_ID = BuildConfig.FIREBASE_SENDER_ID
 
     val branchIdHashMap : HashMap<String, String> = hashMapOf(
         "Civil" to "Civil",

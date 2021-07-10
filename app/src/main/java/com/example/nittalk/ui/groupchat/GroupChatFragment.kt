@@ -16,6 +16,8 @@ import androidx.lifecycle.asLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.nittalk.R
 import com.example.nittalk.data.Channel
+import com.example.nittalk.data.Group
+import com.example.nittalk.data.User
 import com.example.nittalk.databinding.FragmentGroupChatBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,14 +36,24 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
     private lateinit var groupAdapter : GroupRecyclerViewAdapter
     private lateinit var textChannelAdapter: TextChannelRecyclerViewAdapter
     private lateinit var messageAdapter: MessageAdapter
+    private lateinit var currentGroup : Group
+    private lateinit var currentUser: User
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentGroupChatBinding.bind(view)
         setUpNavDrawer()
 
+        viewModel.currentGroup.asLiveData().observe(viewLifecycleOwner) {
+            currentGroup = it
+        }
+
         viewModel.groupName.observe(viewLifecycleOwner) {
             binding.groupNameTextView.text = it
+        }
+
+        viewModel.currentUserFromDB.asLiveData().observe(viewLifecycleOwner) {
+            currentUser = it
         }
 
         binding.apply {
@@ -116,6 +128,12 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
             if (message != "") {
                 binding.messageEditText.setText("")
                 viewModel.sendMessage(messageText = message, imageUrl = "")
+                val membersUidList = currentGroup.members
+
+                for (member in membersUidList) {
+                    viewModel.sendNotification(requireContext(), currentGroup.groupName, message = currentUser.name + ": " + message, userId = viewModel.currentUserUid)
+                }
+
             }
             else {
                 Toast.makeText(requireContext(), "Write Something", Toast.LENGTH_SHORT).show()
@@ -202,7 +220,6 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
                 super.onDrawerSlide(drawerView, slideOffset)
                 groupAdapter.notifyDataSetChanged()
                 textChannelAdapter.notifyDataSetChanged()
-                bottomNav.visibility = View.VISIBLE
             }
 
             override fun onDrawerOpened(drawerView: View) {
