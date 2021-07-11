@@ -15,4 +15,5 @@
     <string name="invite_members">Invite Members</string>
     <string name="text_channels">TEXT CHANNELS</string>
     <string name="voice_channels">VOICE CHANNELS</string>
+    <string name="message">Message</string>
 </resources>

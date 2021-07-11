@@ -14,22 +14,14 @@
     <color name="darkBlue">#002b27</color>
     <color name="lightBlue">#056e83</color>
 
-<!--    <color name="dark">#212226</color>-->
-    <color name="darkBlack">#303136</color>
-    <color name="lightBlack">#42474d</color>
     <color name="gray">#4f535c</color>
+    <color name="darker_gray">#aaa</color>
 
     <color name="selectedChannelColor">#6a6c71</color>
 
-    <color name="whiteGray">#99aab5</color>
-    <color name="light">#2c2f33</color>
-    <color name="dark">	#23272a</color>
-
-<!--    <color name="skyblue">#17A2D8</color>-->
-<!--    <color name="black">#02030E</color>-->
-<!--    <color name="background">#403F44</color>-->
-<!--    <color name="darkBlue">#2F7093</color>-->
-<!--    <color name="lightBlack">#344A54</color>-->
-<!--    <color name="grey">#C1CBDC</color>-->
+    <color name="black_gray">#424549</color>
+    <color name="light_gray">#36393e</color>
+    <color name="light_black">#282b30</color>
+    <color name="black_light">#1e2124</color>
 
 </resources>

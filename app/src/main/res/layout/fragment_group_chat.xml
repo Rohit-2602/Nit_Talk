@@ -10,13 +10,13 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/gray">
+        android:background="@color/black_gray">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/group_chat_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/blueColor"
+            android:background="@color/black_light"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -27,43 +27,63 @@
             android:id="@+id/message_RV"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            tools:listitem="@layout/item_message"
-            android:layout_marginBottom="20dp"
-            app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
-            app:layout_constraintTop_toBottomOf="@+id/group_chat_toolbar" />
+            android:layout_marginBottom="10dp"
+            android:overScrollMode="never"
+            app:layout_constraintBottom_toTopOf="@id/constraintLayout"
+            app:layout_constraintTop_toBottomOf="@id/group_chat_toolbar"
+            tools:listitem="@layout/item_message" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/black"
+            android:background="@color/black_gray"
             app:layout_constraintBottom_toBottomOf="parent">
+
+            <ImageView
+                android:id="@+id/message_image_Btn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="20dp"
+                android:padding="10dp"
+                android:layout_margin="10dp"
+                android:src="@drawable/ic_image"
+                android:background="@drawable/shape_circle"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription" />
 
             <EditText
                 android:id="@+id/message_editText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_margin="10dp"
                 android:background="@drawable/shape_message_background"
-                android:hint="Message"
+                android:hint="@string/message"
                 android:padding="10dp"
                 android:textColor="@color/selectedChannelColor"
                 android:textColorHint="@color/selectedChannelColor"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/message_send_Btn"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toEndOf="@+id/message_image_Btn"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="Autofill,TextFields" />
 
             <ImageView
                 android:id="@+id/message_send_Btn"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_marginStart="20dp"
+                android:padding="10dp"
+                android:layout_margin="10dp"
                 android:src="@drawable/ic_send_24"
                 android:visibility="gone"
+                android:background="@drawable/shape_circle"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -83,8 +103,8 @@
             <LinearLayout
                 android:id="@+id/linearLayout2"
                 android:layout_width="wrap_content"
-                android:background="@color/dark"
                 android:layout_height="match_parent"
+                android:background="@color/light_black"
                 android:orientation="vertical">
 
                 <ImageView
@@ -101,7 +121,7 @@
                     android:layout_height="1dp"
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="5dp"
-                    android:background="@color/darkBlue" />
+                    android:background="@color/white" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/group_recyclerview"
@@ -114,7 +134,7 @@
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/light">
+                android:background="@color/black_gray">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/linearLayout"
@@ -128,7 +148,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:ellipsize="end"
-                        android:text="Electrical Sem 2"
+                        tools:text="Electrical Sem 2"
                         android:textColor="@color/white"
                         android:textSize="20sp"
                         android:textStyle="bold"
@@ -153,9 +173,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
+                        android:drawableStart="@drawable/ic_arrow_up"
                         android:gravity="center"
                         android:text="@string/text_channels"
-                        android:drawableStart="@drawable/ic_arrow_up"
                         android:textColor="@color/selectedChannelColor"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
@@ -176,12 +196,12 @@
                         android:id="@+id/voice_channels_textView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/voice_channels"
                         android:layout_marginTop="10dp"
+                        android:drawableStart="@drawable/ic_arrow_up"
+                        android:gravity="center"
+                        android:text="@string/voice_channels"
                         android:textColor="@color/selectedChannelColor"
                         android:textStyle="bold"
-                        android:gravity="center"
-                        android:drawableStart="@drawable/ic_arrow_up"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/text_channels_recyclerview"
                         tools:text="VOICE CHANNELS" />
@@ -204,7 +224,8 @@
         android:id="@+id/user_status_nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="end">
+        android:layout_gravity="end"
+        android:background="@color/black_gray">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -217,7 +238,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:ellipsize="end"
-                android:text="# CHANNEL EE 8"
+                tools:text="# CHANNEL EE 8"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -244,7 +265,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        android:text="Online - 29"
+                        tools:text="Online - 29"
                         android:textColor="@color/black"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -263,7 +284,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        android:text="Offline - 129"
+                        tools:text="Offline - 129"
                         android:textColor="@color/black"
                         android:textSize="16sp"
                         android:textStyle="bold" />
