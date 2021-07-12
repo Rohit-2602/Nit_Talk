@@ -32,7 +32,7 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
     private var _binding: FragmentGroupChatBinding? = null
     private val binding get() = _binding!!
     private lateinit var toggle: ActionBarDrawerToggle
-    private val viewModel by viewModels<GroupChatViewModel>()
+    private val groupChatViewModel by viewModels<GroupChatViewModel>()
     private lateinit var groupAdapter : GroupRecyclerViewAdapter
     private lateinit var textChannelAdapter: TextChannelRecyclerViewAdapter
     private lateinit var messageAdapter: MessageAdapter
@@ -44,15 +44,15 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
         _binding = FragmentGroupChatBinding.bind(view)
         setUpNavDrawer()
 
-        viewModel.currentGroup.asLiveData().observe(viewLifecycleOwner) {
+        groupChatViewModel.currentGroup.asLiveData().observe(viewLifecycleOwner) {
             currentGroup = it
         }
 
-        viewModel.groupName.observe(viewLifecycleOwner) {
+        groupChatViewModel.groupName.observe(viewLifecycleOwner) {
             binding.groupNameTextView.text = it
         }
 
-        viewModel.currentUserFromDB.asLiveData().observe(viewLifecycleOwner) {
+        groupChatViewModel.currentUserFromDB.asLiveData().observe(viewLifecycleOwner) {
             currentUser = it
         }
 
@@ -105,52 +105,52 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
         setUpChannelsRecyclerView()
         setUpMessageRecyclerView()
 
-        binding.messageEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+        binding.apply {
+            messageEditText.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-                val isEmpty = p0.toString().trim().isEmpty()
-                if (isEmpty) {
-                    binding.messageSendBtn.visibility = View.GONE
-                } else {
-                    binding.messageSendBtn.visibility = View.VISIBLE
                 }
-            }
-        })
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
-        binding.messageSendBtn.setOnClickListener {
-            val message = binding.messageEditText.text.toString().trim()
-            if (message != "") {
-                binding.messageEditText.setText("")
-                viewModel.sendMessage(messageText = message, imageUrl = "")
-                val membersUidList = currentGroup.members
-
-                for (member in membersUidList) {
-                    viewModel.sendNotification(
-                        requireContext(),
-                        currentGroup.groupName,
-                        message = currentUser.name + ": " + message,
-                        userId = viewModel.currentUserUid
-                    )
                 }
+                override fun afterTextChanged(p0: Editable?) {
+                    val isEmpty = p0.toString().trim().isEmpty()
+                    if (isEmpty) {
+                        messageSendBtn.visibility = View.GONE
+                    } else {
+                        messageSendBtn.visibility = View.VISIBLE
+                    }
+                }
+            })
 
-            }
-            else {
-                Toast.makeText(requireContext(), "Write Something", Toast.LENGTH_SHORT).show()
+            messageSendBtn.setOnClickListener {
+                val message = messageEditText.text.toString().trim()
+                if (message != "") {
+                    messageEditText.setText("")
+                    groupChatViewModel.sendMessage(messageText = message, imageUrl = "")
+                    val membersUidList = currentGroup.members
+
+                    for (member in membersUidList) {
+                        groupChatViewModel.sendNotification(
+                            requireContext(),
+                            currentGroup.groupName,
+                            message = currentUser.name + ": " + message,
+                            userId = groupChatViewModel.currentUserUid
+                        )
+                    }
+
+                }
+                else {
+                    Toast.makeText(requireContext(), "Write Something", Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
     }
 
     private fun setUpGroupRecyclerView() {
-        groupAdapter = GroupRecyclerViewAdapter(this, viewModel.selectedGroupId)
-        viewModel.currentUserGroups.observe(viewLifecycleOwner) {
+        groupAdapter = GroupRecyclerViewAdapter(this, groupChatViewModel.selectedGroupId)
+        groupChatViewModel.currentUserGroups.observe(viewLifecycleOwner) {
             groupAdapter.submitList(it)
         }
         binding.groupRecyclerview.apply {
@@ -161,14 +161,14 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
     }
 
     override fun checkOutGroup(groupId: String) {
-        viewModel.updateGroupSelected(groupId)
-        viewModel.update(groupId)
+        groupChatViewModel.updateGroupSelected(groupId)
+        groupChatViewModel.update(groupId)
         messageAdapter.notifyDataSetChanged()
     }
 
     private fun setUpTextChannelRecyclerView() {
-        textChannelAdapter = TextChannelRecyclerViewAdapter(this, viewModel.channelSelected, this)
-        viewModel.textChannels.asLiveData().observe(viewLifecycleOwner) {
+        textChannelAdapter = TextChannelRecyclerViewAdapter(this, groupChatViewModel.channelSelected, this)
+        groupChatViewModel.textChannels.asLiveData().observe(viewLifecycleOwner) {
             textChannelAdapter.submitList(it)
         }
         binding.textChannelsRecyclerview.apply {
@@ -179,7 +179,7 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
     }
 
     override fun showTextChannelMessages(channel: Channel, channelId: String) {
-        viewModel.updateChannelSelected(channel.groupId, channelId)
+        groupChatViewModel.updateChannelSelected(channel.groupId, channelId)
         binding.apply {
             groupChatToolbar.title = channel.channelName
             drawerLayout.closeDrawer(GravityCompat.START)
@@ -192,7 +192,7 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
     private fun setUpMessageRecyclerView() {
         messageAdapter = MessageAdapter()
         val mLayoutManager = LinearLayoutManager(requireContext())
-        viewModel.messages.asLiveData().observe(viewLifecycleOwner) {
+        groupChatViewModel.messages.asLiveData().observe(viewLifecycleOwner) {
             messageAdapter.submitList(it)
             mLayoutManager.smoothScrollToPosition(binding.messageRV, null, it.size)
         }
@@ -209,7 +209,7 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
         mainActivity.setSupportActionBar(binding.groupChatToolbar)
 
         CoroutineScope(Dispatchers.Main).launch {
-            viewModel.channelName.observe(viewLifecycleOwner) { channelId ->
+            groupChatViewModel.channelName.observe(viewLifecycleOwner) { channelId ->
                 binding.groupChatToolbar.title = channelId
             }
         }
@@ -226,17 +226,14 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
                 super.onDrawerSlide(drawerView, slideOffset)
                 textChannelAdapter.notifyDataSetChanged()
             }
-
             override fun onDrawerOpened(drawerView: View) {
                 textChannelAdapter.notifyDataSetChanged()
                 bottomNav.visibility = View.VISIBLE
             }
-
             override fun onDrawerClosed(drawerView: View) {
                 super.onDrawerClosed(drawerView)
                 bottomNav.visibility = View.GONE
             }
-
         }
         binding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()

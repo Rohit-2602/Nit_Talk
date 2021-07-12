@@ -45,36 +45,40 @@ class InfoFragment : Fragment(R.layout.fragment_info) {
         }
 
         authViewModel.enable.observe(viewLifecycleOwner) {
-            binding.subsectionSpinner.isEnabled = it
-            binding.branchSpinner.isEnabled = it
-            binding.semesterSpinner.isEnabled = it
-            binding.backBtn.isEnabled = it
-            binding.nameEditText.isEnabled = it
-            binding.profileImageView.isEnabled = it
+            binding.apply {
+                subsectionSpinner.isEnabled = it
+                branchSpinner.isEnabled = it
+                semesterSpinner.isEnabled = it
+                backBtn.isEnabled = it
+                nameEditText.isEnabled = it
+                profileImageView.isEnabled = it
+            }
         }
 
-        binding.createBtn.setOnClickListener {
-            if (binding.nameEditText.text.toString().isEmpty()) {
-                binding.nameInputEditText.error = "Name Cannot be Empty !!"
-            }
-            else {
-                binding.createUserProgressbar.visibility = View.VISIBLE
-                authViewModel.imageDownloadUrl(
-                    imageUri,
-                    currentUserUid
-                ).observe(viewLifecycleOwner) { imageUrl ->
-                    val user = User(
-                        id = currentUserUid,
-                        name = binding.nameEditText.text.toString(),
-                        profileImageUrl = imageUrl,
-                        semester = binding.semesterSpinner.selectedItem.toString(),
-                        branch = binding.branchSpinner.selectedItem.toString(),
-                        section = binding.subsectionSpinner.selectedItem.toString()
-                    )
-                    authViewModel.createUser(user, this)
-                    authViewModel.saveUserToDB(user)
-                    authViewModel.addUserToGroup(user, requireActivity())
-                    binding.createUserProgressbar.visibility = View.GONE
+        binding.apply {
+            createBtn.setOnClickListener {
+                if (nameEditText.text.toString().isEmpty()) {
+                    nameInputEditText.error = "Name Cannot be Empty !!"
+                }
+                else {
+                    createUserProgressbar.visibility = View.VISIBLE
+                    authViewModel.imageDownloadUrl(
+                        imageUri,
+                        currentUserUid
+                    ).observe(viewLifecycleOwner) { imageUrl ->
+                        val user = User(
+                            id = currentUserUid,
+                            name = nameEditText.text.toString(),
+                            profileImageUrl = imageUrl,
+                            semester = semesterSpinner.selectedItem.toString(),
+                            branch = branchSpinner.selectedItem.toString(),
+                            section = subsectionSpinner.selectedItem.toString()
+                        )
+                        authViewModel.createUser(user, this@InfoFragment)
+                        authViewModel.saveUserToDB(user)
+                        authViewModel.addUserToGroup(user, requireActivity())
+                        createUserProgressbar.visibility = View.GONE
+                    }
                 }
             }
         }

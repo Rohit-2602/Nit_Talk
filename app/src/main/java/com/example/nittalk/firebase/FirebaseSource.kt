@@ -10,7 +10,6 @@ import androidx.navigation.fragment.findNavController
 import com.example.nittalk.data.*
 import com.example.nittalk.db.GroupPreferencesDao
 import com.example.nittalk.db.UserDao
-import com.example.nittalk.ui.MainActivity
 import com.example.nittalk.ui.auth.AuthActivity
 import com.example.nittalk.ui.auth.InfoFragment
 import com.example.nittalk.ui.auth.LoginFragment
@@ -127,7 +126,6 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
                                             val user = getUserById(firebaseAuth.currentUser!!.uid).first()
                                             userDao.insertUser(user)
                                         }
-//                                        startMainActivity(loginFragment)
                                     } else {
                                         if (firebaseAuth.currentUser?.isEmailVerified == true) {
                                             enable.value = true
@@ -255,7 +253,6 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
                 groupCollection.document(id).set(group).addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         showToast(activity, "New Group Created")
-                        startMainActivity(activity)
                     } else {
                         showToast(activity, task.exception?.message)
                     }
@@ -442,11 +439,11 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
         }
     }
 
-    private fun startMainActivity(activity: Activity) {
-        val intent = Intent(activity, MainActivity::class.java)
-        activity.startActivity(intent)
-        activity.finish()
-    }
+//    private fun startMainActivity(activity: Activity) {
+//        val intent = Intent(activity, MainActivity::class.java)
+//        activity.startActivity(intent)
+//        activity.finish()
+//    }
 
     private fun startInfoFragment(loginFragment: LoginFragment) {
         val action = LoginFragmentDirections.actionLoginFragmentToInfoFragment()

@@ -26,37 +26,40 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         }
 
         authViewModel.enable.observe(viewLifecycleOwner) {
-            binding.emailEditText.isEnabled = it
-            binding.passwordEditText.isEnabled = it
-            binding.signupButton.isEnabled = it
-            binding.signinButton.isEnabled = it
-            binding.forgotPasswordBtn.isEnabled = it
+            binding.apply {
+                emailEditText.isEnabled = it
+                passwordEditText.isEnabled = it
+                signupButton.isEnabled = it
+                signinButton.isEnabled = it
+                forgotPasswordBtn.isEnabled = it
+            }
         }
 
-        binding.signupButton.setOnClickListener {
-            val action = LoginFragmentDirections.actionLoginFragmentToSignUpFragment()
-            findNavController().navigate(action)
-        }
+        binding.apply {
+            signupButton.setOnClickListener {
+                val action = LoginFragmentDirections.actionLoginFragmentToSignUpFragment()
+                findNavController().navigate(action)
+            }
+            signinButton.setOnClickListener {
+                val email = emailEditText.text.toString()
+                val password = passwordEditText.text.toString()
 
-        binding.signinButton.setOnClickListener {
-            val email = binding.emailEditText.text.toString()
-            val password = binding.passwordEditText.text.toString()
-
-            if (email.isEmpty()) {
-                binding.emailInputLayout.error = "Email Cannot Be Empty"
-            } else if (!isEmailValid(email)) {
-                binding.emailInputLayout.error = "Email Is Not Valid"
-            } else {
-                binding.emailInputLayout.error = null
-                if (password.isEmpty()) {
-                    binding.passwordInputLayout.error = "Password Cannot Be Empty"
-                } else if (password.length < 6) {
-                    binding.passwordInputLayout.error =
-                        "Password Should Be at-least 6 characters long"
+                if (email.isEmpty()) {
+                    emailInputLayout.error = "Email Cannot Be Empty"
+                } else if (!isEmailValid(email)) {
+                    emailInputLayout.error = "Email Is Not Valid"
                 } else {
-                    binding.passwordInputLayout.error = null
-                    Log.i("Rohit Login", "Starting Main Activity")
-                    authViewModel.signIn(email, password, this)
+                    emailInputLayout.error = null
+                    if (password.isEmpty()) {
+                        passwordInputLayout.error = "Password Cannot Be Empty"
+                    } else if (password.length < 6) {
+                        passwordInputLayout.error =
+                            "Password Should Be at-least 6 characters long"
+                    } else {
+                        passwordInputLayout.error = null
+                        Log.i("Rohit Login", "Starting Main Activity")
+                        authViewModel.signIn(email, password, this@LoginFragment)
+                    }
                 }
             }
         }
