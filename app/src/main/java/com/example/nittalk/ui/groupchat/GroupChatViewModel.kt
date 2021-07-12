@@ -32,6 +32,10 @@ class GroupChatViewModel @ViewModelInject constructor(
 
     private val groupPref = groupChatRepository.getGroupPref()
 
+    val groupOnlineUsers = groupChatRepository.getGroupOnlineUsers().asLiveData()
+
+    val groupOfflineUsers = groupChatRepository.getGroupOfflineUsers().asLiveData()
+
     private val groupSelected = preferencesManager.groupSelected
 
     @ExperimentalCoroutinesApi

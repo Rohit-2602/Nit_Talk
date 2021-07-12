@@ -11,8 +11,8 @@ import com.example.nittalk.R
 import com.example.nittalk.data.Channel
 import com.example.nittalk.databinding.ItemChannelBinding
 
-class TextChannelRecyclerViewAdapter(private val listener: OnTextChannelSelected, private var selectedChannelId: LiveData<String>, private val groupChatFragment: GroupChatFragment):
-    ListAdapter<Channel, TextChannelRecyclerViewAdapter.TextChannelViewHolder>(TEXT_CHANNEL_COMPARATOR) {
+class TextChannelAdapter(private val listener: OnTextChannelSelected, private var selectedChannelId: LiveData<String>, private val groupChatFragment: GroupChatFragment):
+    ListAdapter<Channel, TextChannelAdapter.TextChannelViewHolder>(TEXT_CHANNEL_COMPARATOR) {
 
     private val selectedChannel: String
         get() = run {

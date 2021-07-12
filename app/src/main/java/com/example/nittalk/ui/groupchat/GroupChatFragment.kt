@@ -33,9 +33,11 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
     private val binding get() = _binding!!
     private lateinit var toggle: ActionBarDrawerToggle
     private val groupChatViewModel by viewModels<GroupChatViewModel>()
-    private lateinit var groupAdapter : GroupRecyclerViewAdapter
-    private lateinit var textChannelAdapter: TextChannelRecyclerViewAdapter
+    private lateinit var groupAdapter : GroupAdapter
+    private lateinit var textChannelAdapter: TextChannelAdapter
     private lateinit var messageAdapter: MessageAdapter
+    private lateinit var onlineAdapter: OnlineStatusAdapter
+    private lateinit var offlineAdapter: OfflineStatusAdapter
     private lateinit var currentGroup : Group
     private lateinit var currentUser: User
 
@@ -54,6 +56,10 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
 
         groupChatViewModel.currentUserFromDB.asLiveData().observe(viewLifecycleOwner) {
             currentUser = it
+        }
+
+        binding.apply {
+
         }
 
         binding.apply {
@@ -104,6 +110,8 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
         setUpTextChannelRecyclerView()
         setUpChannelsRecyclerView()
         setUpMessageRecyclerView()
+        setUpOnlineUserRecyclerView()
+        setUpOfflineUserRecyclerView()
 
         binding.apply {
             messageEditText.addTextChangedListener(object : TextWatcher {
@@ -149,7 +157,7 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
     }
 
     private fun setUpGroupRecyclerView() {
-        groupAdapter = GroupRecyclerViewAdapter(this, groupChatViewModel.selectedGroupId)
+        groupAdapter = GroupAdapter(this, groupChatViewModel.selectedGroupId)
         groupChatViewModel.currentUserGroups.observe(viewLifecycleOwner) {
             groupAdapter.submitList(it)
         }
@@ -167,7 +175,7 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
     }
 
     private fun setUpTextChannelRecyclerView() {
-        textChannelAdapter = TextChannelRecyclerViewAdapter(this, groupChatViewModel.channelSelected, this)
+        textChannelAdapter = TextChannelAdapter(this, groupChatViewModel.channelSelected, this)
         groupChatViewModel.textChannels.asLiveData().observe(viewLifecycleOwner) {
             textChannelAdapter.submitList(it)
         }
@@ -204,13 +212,40 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
         }
     }
 
+    private fun setUpOnlineUserRecyclerView() {
+        onlineAdapter = OnlineStatusAdapter()
+        groupChatViewModel.groupOnlineUsers.observe(viewLifecycleOwner) {
+            onlineAdapter.submitList(it)
+            binding.onlineTextView.text = "Online - ${it.size}"
+        }
+        binding.onlineRecyclerView.apply {
+            adapter = onlineAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+            setHasFixedSize(true)
+        }
+    }
+
+    private fun setUpOfflineUserRecyclerView() {
+        offlineAdapter = OfflineStatusAdapter()
+        groupChatViewModel.groupOfflineUsers.observe(viewLifecycleOwner) {
+            offlineAdapter.submitList(it)
+            binding.offlineTextView.text = "Offline - ${it.size}"
+        }
+        binding.offlineRecyclerView.apply {
+            adapter = offlineAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+            setHasFixedSize(true)
+        }
+    }
+
     private fun setUpNavDrawer() {
         val mainActivity = activity as AppCompatActivity
         mainActivity.setSupportActionBar(binding.groupChatToolbar)
 
         CoroutineScope(Dispatchers.Main).launch {
-            groupChatViewModel.channelName.observe(viewLifecycleOwner) { channelId ->
-                binding.groupChatToolbar.title = channelId
+            groupChatViewModel.channelName.observe(viewLifecycleOwner) { channelName ->
+                binding.groupChatToolbar.title = channelName
+                binding.onlineChannelTitle.text = channelName
             }
         }
 
@@ -225,9 +260,13 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
                 super.onDrawerSlide(drawerView, slideOffset)
                 textChannelAdapter.notifyDataSetChanged()
+                onlineAdapter.notifyDataSetChanged()
+                offlineAdapter.notifyDataSetChanged()
             }
             override fun onDrawerOpened(drawerView: View) {
                 textChannelAdapter.notifyDataSetChanged()
+                onlineAdapter.notifyDataSetChanged()
+                offlineAdapter.notifyDataSetChanged()
                 bottomNav.visibility = View.VISIBLE
             }
             override fun onDrawerClosed(drawerView: View) {

@@ -10,8 +10,8 @@ import com.bumptech.glide.Glide
 import com.example.nittalk.data.Group
 import com.example.nittalk.databinding.ItemGroupBinding
 
-class GroupRecyclerViewAdapter(private val listener: OnGroupItemSelected, private var selectedGroupId: String) :
-    ListAdapter<Group, GroupRecyclerViewAdapter.GroupViewHolder>(GROUP_COMPARATOR) {
+class GroupAdapter(private val listener: OnGroupItemSelected, private var selectedGroupId: String) :
+    ListAdapter<Group, GroupAdapter.GroupViewHolder>(GROUP_COMPARATOR) {
 
     companion object {
         private val GROUP_COMPARATOR = object : DiffUtil.ItemCallback<Group>() {

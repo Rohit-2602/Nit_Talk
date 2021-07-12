@@ -50,10 +50,65 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
 
     private val userCollection = fireStore.collection("users")
     private val groupCollection = fireStore.collection("groups")
+    private val statusCollection = fireStore.collection("status")
 
     val progress = MutableLiveData(View.GONE)
     val enable = MutableLiveData(true)
     val loginState = preferencesManager.loginStateFlow
+
+    suspend fun makeCurrentUserOnline(userId: String) {
+        userCollection.document(userId).update("isOnline", true)
+        val currentUser = getUserById(userId).first()
+        val groupId = preferencesManager.groupSelected.first()
+        statusCollection.document(groupId).collection("online").document(userId).set(currentUser)
+        statusCollection.document(groupId).collection("offline").document(userId).delete()
+    }
+
+    suspend fun makeCurrentUserOffline(userId: String) {
+        userCollection.document(userId).update("isOnline", false)
+        val currentUser = getUserById(userId).first()
+        val groupId = preferencesManager.groupSelected.first()
+        statusCollection.document(groupId).collection("offline").document(userId).set(currentUser)
+        statusCollection.document(groupId).collection("online").document(userId).delete()
+    }
+
+    @ExperimentalCoroutinesApi
+    fun getCurrentGroupOnlineUsers(): Flow<List<User>> {
+        return callbackFlow {
+            val groupId = preferencesManager.groupSelected.first()
+            val users = statusCollection.document(groupId).collection("online")
+                .addSnapshotListener { querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
+                    if (firebaseFirestoreException != null) {
+                        cancel(cause = firebaseFirestoreException, message = "Error Getting Online Users")
+                        return@addSnapshotListener
+                    }
+                    val map = querySnapshot!!.documents.mapNotNull { it.toObject(User::class.java) }
+                    offer(map)
+                }
+            awaitClose {
+                users.remove()
+            }
+        }
+    }
+
+    @ExperimentalCoroutinesApi
+    fun getCurrentGroupOfflineUsers(): Flow<List<User>> {
+        return callbackFlow {
+            val groupId = preferencesManager.groupSelected.first()
+            val users = statusCollection.document(groupId).collection("offline")
+                .addSnapshotListener { querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
+                    if (firebaseFirestoreException != null) {
+                        cancel(cause = firebaseFirestoreException, message = "Error Getting Offline Users")
+                        return@addSnapshotListener
+                    }
+                    val map = querySnapshot!!.documents.mapNotNull { it.toObject(User::class.java) }
+                    offer(map)
+                }
+            awaitClose {
+                users.remove()
+            }
+        }
+    }
 
     suspend fun saveUserToDB(user: User) =
         userDao.insertUser(user)

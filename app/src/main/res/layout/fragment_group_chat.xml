@@ -225,6 +225,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="end"
+        tools:layout_gravity=""
         android:background="@color/black_gray">
 
         <LinearLayout
@@ -265,7 +266,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        tools:text="Online - 29"
+                        android:text="Online - 29"
                         android:textColor="@color/black"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -284,7 +285,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        tools:text="Offline - 129"
+                        android:text="Offline - 129"
                         android:textColor="@color/black"
                         android:textSize="16sp"
                         android:textStyle="bold" />

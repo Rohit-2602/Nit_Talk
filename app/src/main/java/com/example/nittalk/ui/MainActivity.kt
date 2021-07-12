@@ -2,6 +2,7 @@ package com.example.nittalk.ui
 
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -17,6 +18,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController : NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
+    private val mainActivityViewModel by viewModels<MainActivityViewModel>()
+
+    override fun onStart() {
+        super.onStart()
+        mainActivityViewModel.makeCurrentUserOnline()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +52,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun hideBottomNav() {
         binding.bottomNavigationView.visibility = View.GONE
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mainActivityViewModel.makeCurrentUserOffline()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mainActivityViewModel.makeCurrentUserOffline()
     }
 
 }
