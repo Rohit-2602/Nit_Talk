@@ -31,6 +31,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -60,6 +61,24 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
 
     fun getCurrentUserFromDB(currentUserId: String) =
         userDao.getCurrentUser(currentUserId)
+
+    @ExperimentalCoroutinesApi
+    fun getUserById(userId: String): Flow<User> {
+        return callbackFlow {
+            val user = userCollection.document(userId)
+                .addSnapshotListener { documentSnapshot: DocumentSnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
+                    if (firebaseFirestoreException != null) {
+                        cancel(cause = firebaseFirestoreException, message = "Error Getting User")
+                        return@addSnapshotListener
+                    }
+                    val map = documentSnapshot!!.toObject(User::class.java)!!
+                    offer(map)
+                }
+            awaitClose {
+                user.remove()
+            }
+        }
+    }
 
     fun createUserWithEmailAndPassword(email: String, password: String, activity: Activity) {
         progress.value = View.VISIBLE
@@ -105,6 +124,8 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
                                                 LOGIN_STATE_KEY,
                                                 true
                                             )
+                                            val user = getUserById(firebaseAuth.currentUser!!.uid).first()
+                                            userDao.insertUser(user)
                                         }
 //                                        startMainActivity(loginFragment)
                                     } else {
@@ -138,6 +159,7 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
     }
 
     suspend fun createUser(user: User, infoFragment: InfoFragment) {
+        progress.value = View.VISIBLE
         enable.value = false
         val initialGroupSelectedId = branchIdHashMap[user.branch] + semesterIdHashMap[user.semester]
         preferencesManager.updateGroupSelected(GROUP_SELECTED, initialGroupSelectedId)
@@ -145,12 +167,14 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
         userCollection.document(user.id).set(user).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 enable.value = true
+                progress.value = View.GONE
                 CoroutineScope(Dispatchers.IO).launch {
                     preferencesManager.updateLoginState(LOGIN_STATE_KEY, true)
                 }
 
             } else {
                 enable.value = true
+                progress.value = View.GONE
                 showToast(infoFragment.requireActivity(), task.exception?.message)
             }
         }
@@ -158,13 +182,16 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
 
     fun uploadImage(imageUri: Uri, userId: String, activity: Activity) {
         progress.value = View.VISIBLE
+        enable.value = false
         storageReference.reference.child("${userId}/uploads/DP").putFile(imageUri)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     progress.value = View.GONE
+                    enable.value = true
                     showToast(activity, "Upload Successful")
                 } else {
                     progress.value = View.GONE
+                    enable.value = true
                     showToast(activity, task.exception?.message)
                 }
             }
@@ -180,8 +207,9 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
     }
 
     fun addUserToGroup(user: User, activity: Activity) {
+        progress.value = View.VISIBLE
+        enable.value = false
         val id = branchIdHashMap[user.branch] + semesterIdHashMap[user.semester]
-        val  demoGroupId = "DemoGroup"
         groupCollection.document(id).get().addOnSuccessListener { dataSnapshot ->
             if (dataSnapshot.exists()) {
                 val group = dataSnapshot.toObject(Group::class.java)!!
@@ -191,15 +219,15 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
                 userCollection.document(user.id).set(user)
 
                 val serverSelected1 = GroupPreferences(id, id + "General")
-                val serverSelected2 = GroupPreferences(demoGroupId, demoGroupId + "General")
 
                 CoroutineScope(Dispatchers.IO).launch {
                     groupPreferencesDao.insertServer(serverSelected1)
-                    groupPreferencesDao.insertServer(serverSelected2)
                 }
 
                 groupCollection.document(id).update("members", members)
                 userCollection.document(user.id).collection("groups").document(id).set(group)
+                progress.value = View.GONE
+                enable.value = true
             } else {
                 val link =
                     "https://firebasestorage.googleapis.com/v0/b/whatsapp-clone-bcfa9.appspot.com/o/6iLPcltZkKdE0lkMGkmkgvfEu3r2%2Fuploads%2FDP?alt=media&token=a24e2722-5e22-4e92-9485-6301463db3b2"
@@ -208,34 +236,22 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
                     groupName = "${user.branch} ${user.semester}",
                     groupDp = link
                 )
-                val demoGroup = Group(
-                    groupId = demoGroupId,
-                    groupName = "DemoGroup",
-                    groupDp = "https://firebasestorage.googleapis.com/v0/b/whatsapp-clone-bcfa9.appspot.com/o/spiderman.jpg?alt=media&token=22bbb815-26b7-4da1-87c7-29961f510d90"
-                )
+
                 group.members.add(user.id)
                 user.groups.add(id)
-                user.groups.add(demoGroupId)
                 userCollection.document(user.id).set(user)
 
                 createGeneralTextChannel(group = group, activity = activity)
                 createTextChannel(channelName = user.section, group = group, activity = activity)
 
-                createGeneralTextChannel(group = demoGroup, activity = activity)
-                createTextChannel(channelName = "Demo Text Channel", group = demoGroup, activity = activity)
-
                 val serverSelected1 = GroupPreferences(id, id + "General")
-                val serverSelected2 = GroupPreferences(demoGroupId, demoGroupId + "General")
 
                 CoroutineScope(Dispatchers.IO).launch {
                     groupPreferencesDao.insertServer(serverSelected1)
-                    groupPreferencesDao.insertServer(serverSelected2)
                 }
 
                 userCollection.document(user.id).collection("groups").document(id).set(group)
-                userCollection.document(user.id).collection("groups").document(demoGroupId).set(demoGroup)
 
-                groupCollection.document("DemoGroup").set(demoGroup)
                 groupCollection.document(id).set(group).addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         showToast(activity, "New Group Created")
@@ -244,6 +260,8 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
                         showToast(activity, task.exception?.message)
                     }
                 }
+                progress.value = View.GONE
+                enable.value = true
             }
         }
     }
@@ -352,24 +370,6 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
         group.channelsId.add(id)
         group.textChannels.add(id)
         groupCollection.document(group.groupId).set(group)
-    }
-
-    @ExperimentalCoroutinesApi
-    fun getUserById(userId: String): Flow<User> {
-        return callbackFlow {
-            val user = userCollection.document(userId)
-                .addSnapshotListener { documentSnapshot: DocumentSnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
-                    if (firebaseFirestoreException != null) {
-                        cancel(cause = firebaseFirestoreException, message = "Error Getting User")
-                        return@addSnapshotListener
-                    }
-                    val map = documentSnapshot!!.toObject(User::class.java)!!
-                    offer(map)
-                }
-            awaitClose {
-                user.remove()
-            }
-        }
     }
 
     @ExperimentalCoroutinesApi
