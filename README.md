@@ -1,6 +1,6 @@
 ## A Simple Social Media App very similar to Discord, MVVM, Firebase 🚀 -
 NitTalk is a fully functional social media app with multiple features built with Kotlin.  
-I personally made this app for my college Student to Interact with Each-Other, so it has semester, section stuff etc.
+I am making this app for my college Students to Interact with Each-Other, so it has semester, section stuff etc.
 
 ## Techs Used 💻
 - Firebase (Authentication, Cloud Firestore, Cloud Messaging)
