@@ -24,8 +24,9 @@ Currently working on Message Push Notification.
 | ----- | ------ | ---- | ---------- |
 | <img src="https://user-images.githubusercontent.com/65807152/124163947-cabd2680-dabd-11eb-8eaf-0210bb6456e3.jpg" width=250> | <img src="https://user-images.githubusercontent.com/65807152/124163951-cc86ea00-dabd-11eb-86bb-b6ae2b4f32a1.jpg" width=250> | <img src="https://user-images.githubusercontent.com/65807152/124163953-cd1f8080-dabd-11eb-9f73-3a4570f2429f.jpg" width=250> | <img src="https://user-images.githubusercontent.com/65807152/124163954-ce50ad80-dabd-11eb-9ee3-4da91729fb81.jpg" width=250> |
 
-| Message Screen | Message Notification |
-| -------------- | -------------------- |
-| <img src="https://user-images.githubusercontent.com/65807152/124779825-b666a700-df5f-11eb-9442-0da893d1786c.jpg" width=250> | <img src="https://user-images.githubusercontent.com/65807152/125169992-5cb5e500-e1ca-11eb-836b-ac2d82a4c23d.jpg" width=250> |
+| Message Screen | Message Notification | User Status |
+| -------------- | -------------------- | ----------- |
+| <img src="https://user-images.githubusercontent.com/65807152/124779825-b666a700-df5f-11eb-9442-0da893d1786c.jpg" width=250> | <img src="https://user-images.githubusercontent.com/65807152/125169992-5cb5e500-e1ca-11eb-836b-ac2d82a4c23d.jpg" width=250> | <img src="https://user-images.githubusercontent.com/65807152/125334372-f0251c80-e368-11eb-86bf-21a0dac83252.jpg" width=250> |
+
 
 
