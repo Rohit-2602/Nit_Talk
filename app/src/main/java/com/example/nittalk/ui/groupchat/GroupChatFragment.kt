@@ -109,15 +109,16 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
             }
+
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
             }
+
             override fun afterTextChanged(p0: Editable?) {
                 val isEmpty = p0.toString().trim().isEmpty()
-                if(isEmpty) {
+                if (isEmpty) {
                     binding.messageSendBtn.visibility = View.GONE
-                }
-                else {
+                } else {
                     binding.messageSendBtn.visibility = View.VISIBLE
                 }
             }
@@ -131,7 +132,12 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
                 val membersUidList = currentGroup.members
 
                 for (member in membersUidList) {
-                    viewModel.sendNotification(requireContext(), currentGroup.groupName, message = currentUser.name + ": " + message, userId = viewModel.currentUserUid)
+                    viewModel.sendNotification(
+                        requireContext(),
+                        currentGroup.groupName,
+                        message = currentUser.name + ": " + message,
+                        userId = viewModel.currentUserUid
+                    )
                 }
 
             }
@@ -218,12 +224,10 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
         ) {
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
                 super.onDrawerSlide(drawerView, slideOffset)
-                groupAdapter.notifyDataSetChanged()
                 textChannelAdapter.notifyDataSetChanged()
             }
 
             override fun onDrawerOpened(drawerView: View) {
-                groupAdapter.notifyDataSetChanged()
                 textChannelAdapter.notifyDataSetChanged()
                 bottomNav.visibility = View.VISIBLE
             }

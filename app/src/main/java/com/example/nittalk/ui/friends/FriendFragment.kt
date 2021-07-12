@@ -8,9 +8,9 @@ import com.example.nittalk.databinding.FragmentFriendBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class FriendFragment: Fragment(R.layout.fragment_friend) {
+class FriendFragment : Fragment(R.layout.fragment_friend) {
 
-    private var _binding : FragmentFriendBinding?= null
+    private var _binding: FragmentFriendBinding? = null
     private val binding get() = _binding!!
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
