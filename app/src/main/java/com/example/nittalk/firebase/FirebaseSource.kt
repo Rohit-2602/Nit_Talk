@@ -57,7 +57,6 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
     val loginState = preferencesManager.loginStateFlow
 
     suspend fun makeCurrentUserOnline(userId: String) {
-        userCollection.document(userId).update("isOnline", true)
         val currentUser = getUserById(userId).first()
         val groupId = preferencesManager.groupSelected.first()
         statusCollection.document(groupId).collection("online").document(userId).set(currentUser)
@@ -65,7 +64,6 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
     }
 
     suspend fun makeCurrentUserOffline(userId: String) {
-        userCollection.document(userId).update("isOnline", false)
         val currentUser = getUserById(userId).first()
         val groupId = preferencesManager.groupSelected.first()
         statusCollection.document(groupId).collection("offline").document(userId).set(currentUser)
