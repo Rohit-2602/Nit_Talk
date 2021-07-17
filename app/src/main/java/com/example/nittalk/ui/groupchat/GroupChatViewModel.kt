@@ -27,14 +27,13 @@ class GroupChatViewModel @ViewModelInject constructor(
 
     val currentUserFromDB = groupChatRepository.getCurrentUserFromDB()
 
+    fun getUserById(userId: String) =
+        groupChatRepository.getUserById(userId)
+
     @ExperimentalCoroutinesApi
     val currentUserGroups = groupChatRepository.getUserGroup(currentUserUid).asLiveData()
 
     private val groupPref = groupChatRepository.getGroupPref()
-
-    val groupOnlineUsers = groupChatRepository.getGroupOnlineUsers().asLiveData()
-
-    val groupOfflineUsers = groupChatRepository.getGroupOfflineUsers().asLiveData()
 
     private val groupSelected = preferencesManager.groupSelected
 
@@ -42,6 +41,10 @@ class GroupChatViewModel @ViewModelInject constructor(
     val currentGroup = groupSelected.flatMapLatest {
         groupChatRepository.getGroupById(it)
     }
+
+    val onlineGroupMembers = groupChatRepository.getGroupOnlineMembers().asLiveData()
+
+    val offlineGroupMembers = groupChatRepository.getGroupOfflineMembers().asLiveData()
 
     @ExperimentalCoroutinesApi
     val groupName = groupSelected.flatMapLatest { groupSelected ->

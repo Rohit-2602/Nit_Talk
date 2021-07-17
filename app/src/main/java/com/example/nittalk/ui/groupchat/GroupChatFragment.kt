@@ -59,10 +59,6 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
         }
 
         binding.apply {
-
-        }
-
-        binding.apply {
             textChannelsTextView.setOnClickListener {
                 if (binding.textChannelsRecyclerview.isVisible) {
                     binding.textChannelsTextView.setCompoundDrawablesWithIntrinsicBounds(
@@ -214,7 +210,7 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
 
     private fun setUpOnlineUserRecyclerView() {
         onlineAdapter = OnlineStatusAdapter()
-        groupChatViewModel.groupOnlineUsers.observe(viewLifecycleOwner) {
+        groupChatViewModel.onlineGroupMembers.observe(viewLifecycleOwner) {
             onlineAdapter.submitList(it)
             binding.onlineTextView.text = "Online - ${it.size}"
         }
@@ -227,7 +223,7 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
 
     private fun setUpOfflineUserRecyclerView() {
         offlineAdapter = OfflineStatusAdapter()
-        groupChatViewModel.groupOfflineUsers.observe(viewLifecycleOwner) {
+        groupChatViewModel.offlineGroupMembers.observe(viewLifecycleOwner) {
             offlineAdapter.submitList(it)
             binding.offlineTextView.text = "Offline - ${it.size}"
         }

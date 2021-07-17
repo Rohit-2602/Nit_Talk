@@ -3,6 +3,7 @@ package com.example.nittalk.firebase
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
@@ -31,6 +32,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -56,18 +58,62 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
     val enable = MutableLiveData(true)
     val loginState = preferencesManager.loginStateFlow
 
+    @ExperimentalCoroutinesApi
     suspend fun makeCurrentUserOnline(userId: String) {
         val currentUser = getUserById(userId).first()
-        val groupId = preferencesManager.groupSelected.first()
-        statusCollection.document(groupId).collection("online").document(userId).set(currentUser)
-        statusCollection.document(groupId).collection("offline").document(userId).delete()
+        statusCollection.document("online").collection("onlineMembers").document(userId).set(currentUser)
+        statusCollection.document("offline").collection("offlineMembers").document(userId).delete()
     }
 
+    @ExperimentalCoroutinesApi
     suspend fun makeCurrentUserOffline(userId: String) {
         val currentUser = getUserById(userId).first()
-        val groupId = preferencesManager.groupSelected.first()
-        statusCollection.document(groupId).collection("offline").document(userId).set(currentUser)
-        statusCollection.document(groupId).collection("online").document(userId).delete()
+        statusCollection.document("online").collection("onlineMembers").document(userId).delete()
+        statusCollection.document("offline").collection("offlineMembers").document(userId).set(currentUser)
+    }
+
+    @ExperimentalCoroutinesApi
+    fun onlineGroupMembers(): Flow<List<User>> = preferencesManager.groupSelected.flatMapLatest { groupId ->
+        callbackFlow {
+            val group = getGroupById(groupId)
+            val members = group.first().members
+            Log.i("Rohit members", members.toString())
+            val users = statusCollection.document("online").collection("onlineMembers")
+                .whereIn("id", members)
+                .addSnapshotListener { querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
+                    if (firebaseFirestoreException != null) {
+                        cancel(cause = firebaseFirestoreException, message = "Error Getting Online Group Members")
+                        return@addSnapshotListener
+                    }
+                    val map = querySnapshot!!.documents.mapNotNull { it.toObject(User::class.java) }
+                    offer(map)
+                }
+            awaitClose {
+                users.remove()
+            }
+        }
+    }
+
+    @ExperimentalCoroutinesApi
+    fun offlineGroupMembers(): Flow<List<User>> = preferencesManager.groupSelected.flatMapLatest { groupId ->
+        callbackFlow {
+            val group = getGroupById(groupId)
+            val members = group.first().members
+            Log.i("Rohit members", members.toString())
+            val users = statusCollection.document("offline").collection("offlineMembers")
+                .whereIn("id", members)
+                .addSnapshotListener { querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
+                    if (firebaseFirestoreException != null) {
+                        cancel(cause = firebaseFirestoreException, message = "Error Getting Online Group Members")
+                        return@addSnapshotListener
+                    }
+                    val map = querySnapshot!!.documents.mapNotNull { it.toObject(User::class.java) }
+                    offer(map)
+                }
+            awaitClose {
+                users.remove()
+            }
+        }
     }
 
     @ExperimentalCoroutinesApi
@@ -281,7 +327,7 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
                 enable.value = true
             } else {
                 val link =
-                    "https://firebasestorage.googleapis.com/v0/b/whatsapp-clone-bcfa9.appspot.com/o/6iLPcltZkKdE0lkMGkmkgvfEu3r2%2Fuploads%2FDP?alt=media&token=a24e2722-5e22-4e92-9485-6301463db3b2"
+                    "https://firebasestorage.googleapis.com/v0/b/whatsapp-clone-bcfa9.appspot.com/o/spiderman.jpg?alt=media&token=22bbb815-26b7-4da1-87c7-29961f510d90"
                 val group = Group(
                     groupId = id,
                     groupName = "${user.branch} ${user.semester}",
