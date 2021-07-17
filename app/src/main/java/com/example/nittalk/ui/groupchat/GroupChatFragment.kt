@@ -255,11 +255,13 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
         ) {
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
                 super.onDrawerSlide(drawerView, slideOffset)
+                groupAdapter.notifyDataSetChanged()
                 textChannelAdapter.notifyDataSetChanged()
                 onlineAdapter.notifyDataSetChanged()
                 offlineAdapter.notifyDataSetChanged()
             }
             override fun onDrawerOpened(drawerView: View) {
+                groupAdapter.notifyDataSetChanged()
                 textChannelAdapter.notifyDataSetChanged()
                 onlineAdapter.notifyDataSetChanged()
                 offlineAdapter.notifyDataSetChanged()
