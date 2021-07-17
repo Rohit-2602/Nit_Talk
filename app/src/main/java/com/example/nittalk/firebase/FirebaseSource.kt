@@ -3,7 +3,6 @@ package com.example.nittalk.firebase
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
@@ -77,7 +76,6 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
         callbackFlow {
             val group = getGroupById(groupId)
             val members = group.first().members
-            Log.i("Rohit members", members.toString())
             val users = statusCollection.document("online").collection("onlineMembers")
                 .whereIn("id", members)
                 .addSnapshotListener { querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
@@ -99,7 +97,6 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
         callbackFlow {
             val group = getGroupById(groupId)
             val members = group.first().members
-            Log.i("Rohit members", members.toString())
             val users = statusCollection.document("offline").collection("offlineMembers")
                 .whereIn("id", members)
                 .addSnapshotListener { querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
