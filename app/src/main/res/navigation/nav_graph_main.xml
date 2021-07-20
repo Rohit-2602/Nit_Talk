@@ -21,7 +21,7 @@
         tools:layout="@layout/fragment_friend_chat" >
         <action
             android:id="@+id/action_friendChatFragment_to_friendFragment"
-            app:destination="@id/friendFragment" />
+            app:destination="@id/searchFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
@@ -29,10 +29,10 @@
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
     <fragment
-        android:id="@+id/friendFragment"
-        android:name="com.example.nittalk.ui.friends.FriendFragment"
+        android:id="@+id/searchFragment"
+        android:name="com.example.nittalk.ui.search.SearchFragment"
         android:label="fragment_friend"
-        tools:layout="@layout/fragment_friend" >
+        tools:layout="@layout/fragment_search" >
         <action
             android:id="@+id/action_friendFragment_to_profileFragment"
             app:destination="@id/profileFragment" />

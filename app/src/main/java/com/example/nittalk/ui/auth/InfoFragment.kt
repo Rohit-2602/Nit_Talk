@@ -13,6 +13,7 @@ import com.example.nittalk.data.User
 import com.example.nittalk.databinding.FragmentInfoBinding
 import com.theartofdev.edmodo.cropper.CropImage
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
 
 @AndroidEntryPoint
 class InfoFragment : Fragment(R.layout.fragment_info) {
@@ -69,6 +70,7 @@ class InfoFragment : Fragment(R.layout.fragment_info) {
                         val user = User(
                             id = currentUserUid,
                             name = nameEditText.text.toString(),
+                            lowercaseName = nameEditText.text.toString().toLowerCase(Locale.ROOT),
                             profileImageUrl = imageUrl,
                             semester = semesterSpinner.selectedItem.toString(),
                             branch = branchSpinner.selectedItem.toString(),

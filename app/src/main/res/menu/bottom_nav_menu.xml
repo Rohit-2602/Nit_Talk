@@ -12,9 +12,9 @@
         android:title="Friend Chat" />
 
     <item
-        android:id="@+id/friendFragment"
-        android:icon="@drawable/ic_friend"
-        android:title="Friends" />
+        android:id="@+id/searchFragment"
+        android:icon="@drawable/ic_search"
+        android:title="Search" />
 
     <item
         android:id="@+id/profileFragment"

@@ -18,7 +18,7 @@ class GroupChatRepository @Inject constructor(private val firebaseSource: Fireba
         firebaseSource.getCurrentUserFromDB(currentUser!!.uid)
 
     @ExperimentalCoroutinesApi
-    fun getUserGroup(userId: String) =
+    suspend fun getUserGroup(userId: String) =
         firebaseSource.getUserGroup(userId)
 
     @ExperimentalCoroutinesApi

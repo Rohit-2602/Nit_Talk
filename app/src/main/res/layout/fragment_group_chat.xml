@@ -225,7 +225,6 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="end"
-        tools:layout_gravity=""
         android:background="@color/black_gray">
 
         <LinearLayout

@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import com.example.nittalk.data.GroupPreferences
 import com.example.nittalk.data.User
 
-@Database(entities = [User::class, GroupPreferences::class], exportSchema = false, version = 1)
+@Database(entities = [User::class, GroupPreferences::class], exportSchema = false, version = 2)
 abstract class UserDatabase: RoomDatabase() {
 
     abstract fun getUserDao() : UserDao

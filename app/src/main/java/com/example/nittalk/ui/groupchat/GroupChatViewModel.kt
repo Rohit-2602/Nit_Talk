@@ -2,10 +2,8 @@ package com.example.nittalk.ui.groupchat
 
 import android.content.Context
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asFlow
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import com.example.nittalk.data.Group
 import com.example.nittalk.data.PreferencesManager
 import com.example.nittalk.firebase.FirebaseUtil
 import com.example.nittalk.util.Constant.GROUP_SELECTED
@@ -27,11 +25,18 @@ class GroupChatViewModel @ViewModelInject constructor(
 
     val currentUserFromDB = groupChatRepository.getCurrentUserFromDB()
 
-    fun getUserById(userId: String) =
-        groupChatRepository.getUserById(userId)
+//    @ExperimentalCoroutinesApi
+//    fun getUserById(userId: String) =
+//        groupChatRepository.getUserById(userId)
 
     @ExperimentalCoroutinesApi
-    val currentUserGroups = groupChatRepository.getUserGroup(currentUserUid).asLiveData()
+    val currentUserGroups get() = run {
+        val groups = MutableLiveData<List<Group>>()
+        viewModelScope.launch {
+            groups.postValue(groupChatRepository.getUserGroup(currentUserUid).first())
+        }
+        groups
+    }
 
     private val groupPref = groupChatRepository.getGroupPref()
 
@@ -42,8 +47,10 @@ class GroupChatViewModel @ViewModelInject constructor(
         groupChatRepository.getGroupById(it)
     }
 
+    @ExperimentalCoroutinesApi
     val onlineGroupMembers = groupChatRepository.getGroupOnlineMembers().asLiveData()
 
+    @ExperimentalCoroutinesApi
     val offlineGroupMembers = groupChatRepository.getGroupOfflineMembers().asLiveData()
 
     @ExperimentalCoroutinesApi

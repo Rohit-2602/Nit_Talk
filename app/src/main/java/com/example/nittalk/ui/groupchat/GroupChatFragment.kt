@@ -261,10 +261,10 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
                 offlineAdapter.notifyDataSetChanged()
             }
             override fun onDrawerOpened(drawerView: View) {
-                groupAdapter.notifyDataSetChanged()
-                textChannelAdapter.notifyDataSetChanged()
-                onlineAdapter.notifyDataSetChanged()
-                offlineAdapter.notifyDataSetChanged()
+//                groupAdapter.notifyDataSetChanged()
+//                textChannelAdapter.notifyDataSetChanged()
+//                onlineAdapter.notifyDataSetChanged()
+//                offlineAdapter.notifyDataSetChanged()
                 bottomNav.visibility = View.VISIBLE
             }
             override fun onDrawerClosed(drawerView: View) {
