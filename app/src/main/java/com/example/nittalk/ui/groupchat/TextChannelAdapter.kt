@@ -4,12 +4,12 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.LiveData
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nittalk.R
 import com.example.nittalk.data.Channel
 import com.example.nittalk.databinding.ItemChannelBinding
+import com.example.nittalk.util.Comparators.TEXT_CHANNEL_COMPARATOR
 
 class TextChannelAdapter(private val listener: OnTextChannelSelected, private var selectedChannelId: LiveData<String>, private val groupChatFragment: GroupChatFragment):
     ListAdapter<Channel, TextChannelAdapter.TextChannelViewHolder>(TEXT_CHANNEL_COMPARATOR) {
@@ -21,17 +21,6 @@ class TextChannelAdapter(private val listener: OnTextChannelSelected, private va
             id = it
         }
         id
-    }
-
-    companion object {
-        private val TEXT_CHANNEL_COMPARATOR = object : DiffUtil.ItemCallback<Channel>() {
-            override fun areItemsTheSame(oldItem: Channel, newItem: Channel): Boolean {
-                return oldItem.channelId == newItem.channelId
-            }
-            override fun areContentsTheSame(oldItem: Channel, newItem: Channel): Boolean {
-                return oldItem == newItem
-            }
-        }
     }
 
     inner class TextChannelViewHolder(val binding: ItemChannelBinding) : RecyclerView.ViewHolder(binding.root) {

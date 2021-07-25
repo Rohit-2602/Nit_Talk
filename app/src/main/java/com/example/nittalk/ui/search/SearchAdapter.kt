@@ -39,7 +39,7 @@ class SearchAdapter(
                 Glide.with(binding.root).load(user.profileImageUrl).circleCrop().into(userDp)
                 userName.text = user.name
                 CoroutineScope(Dispatchers.IO).launch {
-                    val currentUser = searchViewModel.getCurrentUser().first()
+                    val currentUser = searchViewModel.currentUser.first()
                     withContext(Dispatchers.Main) {
                         Log.i("Rohit CurrentUser", currentUser.toString())
                         if (currentUser.outGoingRequests.contains(user.id)) {

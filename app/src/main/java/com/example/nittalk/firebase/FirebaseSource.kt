@@ -546,8 +546,8 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
         val currentUser = getUserById(currentUserId).first()
         val friend = getUserById(friendId).first()
 
-        currentUser.outGoingRequests.remove(friendId)
-        friend.incomingRequests.remove(currentUserId)
+        currentUser.incomingRequests.remove(friendId)
+        friend.outGoingRequests.remove(currentUserId)
 
         currentUser.friends.add(friendId)
         friend.friends.add(currentUserId)
@@ -561,12 +561,85 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
         val currentUser = getUserById(currentUserId).first()
         val friend = getUserById(friendId).first()
 
-        currentUser.outGoingRequests.remove(friendId)
-        friend.incomingRequests.remove(currentUserId)
+        currentUser.incomingRequests.remove(friendId)
+        friend.outGoingRequests.remove(currentUserId)
 
         userCollection.document(currentUserId).set(currentUser)
         userCollection.document(friendId).set(friend)
     }
+
+    @ExperimentalCoroutinesApi
+    fun getIncomingRequests(currentUserId: String): Flow<List<String>> {
+        return callbackFlow {
+            val incomingRequest = userCollection.document(currentUserId)
+                .addSnapshotListener { documentSnapshot: DocumentSnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
+                    if (firebaseFirestoreException != null) {
+                        cancel(cause = firebaseFirestoreException, message = "Error Getting Incoming Requests")
+                        return@addSnapshotListener
+                    }
+                    val requests = documentSnapshot?.get("incomingRequests") as ArrayList<String>
+                    offer(requests)
+                }
+            awaitClose {
+                incomingRequest.remove()
+            }
+        }
+    }
+
+    @ExperimentalCoroutinesApi
+    fun getOutGoingRequests(currentUserId: String): Flow<List<String>> {
+        return callbackFlow {
+            val outgoingRequest = userCollection.document(currentUserId)
+                .addSnapshotListener { documentSnapshot: DocumentSnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
+                    if (firebaseFirestoreException != null) {
+                        cancel(cause = firebaseFirestoreException, message = "Error Getting Incoming Requests")
+                        return@addSnapshotListener
+                    }
+                    val requests = documentSnapshot?.get("outGoingRequests") as ArrayList<String>
+                    offer(requests)
+                }
+            awaitClose {
+                outgoingRequest.remove()
+            }
+        }
+    }
+
+    @ExperimentalCoroutinesApi
+    fun getUserFriends(currentUserId: String): Flow<List<String>> {
+        return callbackFlow {
+            val onlineFriends = userCollection.document(currentUserId)
+                .addSnapshotListener { documentSnapshot: DocumentSnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
+                    if (firebaseFirestoreException != null) {
+                        cancel(cause = firebaseFirestoreException, message = "Error Getting Incoming Requests")
+                        return@addSnapshotListener
+                    }
+                    val friends = documentSnapshot?.get("friends") as ArrayList<String>
+                    offer(friends)
+                }
+            awaitClose {
+                onlineFriends.remove()
+            }
+        }
+    }
+
+//    @ExperimentalCoroutinesApi
+//    fun getOfflineFriends(currentUserId: String): Flow<List<User>> = getUserById(currentUserId).flatMapLatest { currentUser ->
+//        callbackFlow {
+//            val friends = currentUser.friends
+//            val friendsList = statusCollection.document("offline").collection("offlineMembers").whereIn("id", friends)
+//                .addSnapshotListener { querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
+//                    if (firebaseFirestoreException != null) {
+//                        cancel(cause = firebaseFirestoreException, message = "Error Getting Offline Friends")
+//                        return@addSnapshotListener
+//                    }
+//                    val friendsMap = querySnapshot!!.documents.mapNotNull { it.toObject(User::class.java) }
+//                    offer(friendsMap)
+//                }
+//            awaitClose {
+//                friendsList.remove()
+//            }
+//        }
+//    }
 
     private fun startInfoFragment(loginFragment: LoginFragment) {
         val action = LoginFragmentDirections.actionLoginFragmentToInfoFragment()
