@@ -5,34 +5,21 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.nittalk.data.User
 import com.example.nittalk.databinding.ItemIncomingRequestBinding
-import com.example.nittalk.util.Comparators.STRING_COMPARATOR
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.example.nittalk.util.Comparators.USER_COMPARATOR
 
-class IncomingRequestAdapter(
-    private val listener: IncomingRequestClickListener,
-    private val searchViewModel: SearchViewModel
-) : ListAdapter<String, IncomingRequestAdapter.IncomingViewHolder>(
-    STRING_COMPARATOR
-) {
+class IncomingRequestAdapter(private val listener: IncomingRequestClickListener) :
+    ListAdapter<User, IncomingRequestAdapter.IncomingViewHolder>(USER_COMPARATOR) {
 
     inner class IncomingViewHolder(private val binding: ItemIncomingRequestBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(userId: String) {
-            CoroutineScope(Dispatchers.IO).launch {
-                val user = searchViewModel.getUserById(userId).first()
-                withContext(Dispatchers.Main) {
-                    binding.apply {
-                        Glide.with(binding.root).load(user.profileImageUrl).circleCrop()
-                            .into(requestUserDp)
-                        requestUserName.text = user.name
-                        requestType.text = "Incoming Request"
-                    }
-                }
+        fun bind(user: User) {
+            binding.apply {
+                Glide.with(binding.root).load(user.profileImageUrl).circleCrop()
+                    .into(requestUserDp)
+                requestUserName.text = user.name
+                requestType.text = "Incoming Request"
             }
         }
     }
@@ -43,10 +30,10 @@ class IncomingRequestAdapter(
         val incomingViewHolder = IncomingViewHolder(binding)
         binding.apply {
             requestAcceptButton.setOnClickListener {
-                listener.acceptRequest(getItem(incomingViewHolder.absoluteAdapterPosition))
+                listener.acceptRequest(getItem(incomingViewHolder.absoluteAdapterPosition).id)
             }
             requestRejectButton.setOnClickListener {
-                listener.declineRequest(getItem(incomingViewHolder.absoluteAdapterPosition))
+                listener.declineRequest(getItem(incomingViewHolder.absoluteAdapterPosition).id)
             }
         }
         return incomingViewHolder

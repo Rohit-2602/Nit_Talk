@@ -15,7 +15,7 @@ data class User(
     var branch: String = "",
     var section: String = "",
     @Ignore
-    val isOnline: Boolean = false,
+    var isOnline: Boolean = false,
     @Ignore
     var groups: MutableList<String> = ArrayList(),
     @Ignore

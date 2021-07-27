@@ -1,6 +1,5 @@
 package com.example.nittalk.ui.search
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,16 +11,15 @@ import com.example.nittalk.data.User
 import com.example.nittalk.databinding.ItemSearchUserBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class SearchAdapter(
     private val listener: OnClickListener,
-    private val searchViewModel: SearchViewModel,
-): ListAdapter<User, SearchAdapter.SearchViewHolder>(USER_COMPARATOR) {
+    private val searchViewModel: SearchViewModel
+) : ListAdapter<User, SearchAdapter.SearchViewHolder>(USER_COMPARATOR) {
 
-    companion object{
+    companion object {
         private val USER_COMPARATOR = object : DiffUtil.ItemCallback<User>() {
             override fun areItemsTheSame(oldItem: User, newItem: User): Boolean {
                 return oldItem.id == newItem.id
@@ -33,20 +31,23 @@ class SearchAdapter(
         }
     }
 
-    inner class SearchViewHolder(private val binding: ItemSearchUserBinding): RecyclerView.ViewHolder(binding.root) {
+    inner class SearchViewHolder(private val binding: ItemSearchUserBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(user: User) {
-            binding.apply {
-                Glide.with(binding.root).load(user.profileImageUrl).circleCrop().into(userDp)
-                userName.text = user.name
-                CoroutineScope(Dispatchers.IO).launch {
-                    val currentUser = searchViewModel.currentUser.first()
-                    withContext(Dispatchers.Main) {
-                        Log.i("Rohit CurrentUser", currentUser.toString())
-                        if (currentUser.outGoingRequests.contains(user.id)) {
+            CoroutineScope(Dispatchers.IO).launch {
+                val currentUser = searchViewModel.currentUser()
+                withContext(Dispatchers.Main) {
+                    binding.apply {
+                        Glide.with(binding.root).load(user.profileImageUrl).circleCrop().into(userDp)
+                        userName.text = user.name
+                        if (user.id == currentUser.id) {
+                            sendFriendRequestBtn.visibility = View.GONE
+                            cancelFriendRequestBtn.visibility = View.GONE
+                        }
+                        else if (currentUser.outGoingRequests.contains(user.id)) {
                             sendFriendRequestBtn.visibility = View.GONE
                             cancelFriendRequestBtn.visibility = View.VISIBLE
-                        }
-                        else {
+                        } else {
                             sendFriendRequestBtn.visibility = View.VISIBLE
                             cancelFriendRequestBtn.visibility = View.GONE
                         }
@@ -57,14 +58,15 @@ class SearchAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
-        val binding = ItemSearchUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemSearchUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         val searchViewHolder = SearchViewHolder(binding)
         binding.apply {
             sendFriendRequestBtn.setOnClickListener {
-                listener.sendFriendRequest(getItem(searchViewHolder.adapterPosition).id)
+                listener.sendFriendRequest(getItem(searchViewHolder.absoluteAdapterPosition).id)
             }
             cancelFriendRequestBtn.setOnClickListener {
-                listener.cancelFriendRequest(getItem(searchViewHolder.adapterPosition).id)
+                listener.cancelFriendRequest(getItem(searchViewHolder.absoluteAdapterPosition).id)
             }
         }
         return searchViewHolder

@@ -16,4 +16,8 @@
     <string name="text_channels">TEXT CHANNELS</string>
     <string name="voice_channels">VOICE CHANNELS</string>
     <string name="message">Message</string>
+    <string name="incoming_request">Incoming Request</string>
+    <string name="outgoing_requests">OutGoing Requests</string>
+    <string name="online">Online</string>
+    <string name="offline">Offline</string>
 </resources>

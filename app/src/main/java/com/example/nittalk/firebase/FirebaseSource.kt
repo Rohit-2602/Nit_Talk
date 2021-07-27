@@ -60,14 +60,16 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
 
     @ExperimentalCoroutinesApi
     suspend fun makeCurrentUserOnline(userId: String) {
-        val currentUser = getUserById(userId).first()
+        val currentUser = getUserById(userId)
+        userCollection.document(userId).update("isOnline", true)
         statusCollection.document("online").collection("onlineMembers").document(userId).set(currentUser)
         statusCollection.document("offline").collection("offlineMembers").document(userId).delete()
     }
 
     @ExperimentalCoroutinesApi
     suspend fun makeCurrentUserOffline(userId: String) {
-        val currentUser = getUserById(userId).first()
+        val currentUser = getUserById(userId)
+        userCollection.document(userId).update("isOnline", false)
         statusCollection.document("online").collection("onlineMembers").document(userId).delete()
         statusCollection.document("offline").collection("offlineMembers").document(userId).set(currentUser)
     }
@@ -120,22 +122,8 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
     fun getCurrentUserFromDB(currentUserId: String) =
         userDao.getCurrentUser(currentUserId)
 
-    @ExperimentalCoroutinesApi
-    fun getUserById(userId: String): Flow<User> {
-        return callbackFlow {
-            val user = userCollection.document(userId)
-                .addSnapshotListener { documentSnapshot: DocumentSnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
-                    if (firebaseFirestoreException != null) {
-                        cancel(cause = firebaseFirestoreException, message = "Error Getting User")
-                        return@addSnapshotListener
-                    }
-                    val map = documentSnapshot!!.toObject(User::class.java)!!
-                    offer(map)
-                }
-            awaitClose {
-                user.remove()
-            }
-        }
+    suspend fun getUserById(userId: String): User {
+        return userCollection.document(userId).get().await().toObject(User::class.java)!!
     }
 
     fun createUserWithEmailAndPassword(email: String, password: String, activity: Activity) {
@@ -182,7 +170,7 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
                                                 LOGIN_STATE_KEY,
                                                 true
                                             )
-                                            val user = getUserById(firebaseAuth.currentUser!!.uid).first()
+                                            val user = getUserById(firebaseAuth.currentUser!!.uid)
                                             userDao.insertUser(user)
                                         }
                                     } else {
@@ -427,7 +415,7 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
 
     @ExperimentalCoroutinesApi
     suspend fun getUserGroup(userId: String) : Flow<List<Group>> {
-        val currentUser = getUserById(userId).first()
+        val currentUser = getUserById(userId)
         return callbackFlow {
             val groups = groupCollection.whereIn("groupId", currentUser.groups)
                 .addSnapshotListener { querySnapshot : QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
@@ -497,7 +485,7 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
     }
 
     @ExperimentalCoroutinesApi
-    fun searchUserByName(query: String, currentUserId: String): Flow<List<User>> {
+    fun searchUserByName(query: String): Flow<List<User>> {
         return callbackFlow {
             val users = userCollection
                 .orderBy("lowercaseName")
@@ -508,7 +496,7 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
                         cancel(message = "Error Fetching Posts", cause = firebaseFirestoreException)
                         return@addSnapshotListener
                     }
-                    val map = querySnapshot!!.documents.mapNotNull { it.toObject(User::class.java) }.filter { it.id != currentUserId }
+                    val map = querySnapshot!!.documents.mapNotNull { it.toObject(User::class.java) }
                     offer(map)
                 }
             awaitClose {
@@ -519,8 +507,8 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
 
     @ExperimentalCoroutinesApi
     suspend fun sendFriendRequest(friendId: String, currentUserId: String) {
-        val currentUser = getUserById(currentUserId).first()
-        val friend = getUserById(friendId).first()
+        val currentUser = getUserById(currentUserId)
+        val friend = getUserById(friendId)
 
         currentUser.outGoingRequests.add(friendId)
         friend.incomingRequests.add(currentUserId)
@@ -531,8 +519,8 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
 
     @ExperimentalCoroutinesApi
     suspend fun cancelFriendRequest(friendId: String, currentUserId: String) {
-        val currentUser = getUserById(currentUserId).first()
-        val friend = getUserById(friendId).first()
+        val currentUser = getUserById(currentUserId)
+        val friend = getUserById(friendId)
 
         currentUser.outGoingRequests.remove(friendId)
         friend.incomingRequests.remove(currentUserId)
@@ -543,8 +531,8 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
 
     @ExperimentalCoroutinesApi
     suspend fun acceptFriendRequest(friendId: String, currentUserId: String) {
-        val currentUser = getUserById(currentUserId).first()
-        val friend = getUserById(friendId).first()
+        val currentUser = getUserById(currentUserId)
+        val friend = getUserById(friendId)
 
         currentUser.incomingRequests.remove(friendId)
         friend.outGoingRequests.remove(currentUserId)
@@ -558,8 +546,8 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
 
     @ExperimentalCoroutinesApi
     suspend fun declineFriendRequest(friendId: String, currentUserId: String) {
-        val currentUser = getUserById(currentUserId).first()
-        val friend = getUserById(friendId).first()
+        val currentUser = getUserById(currentUserId)
+        val friend = getUserById(friendId)
 
         currentUser.incomingRequests.remove(friendId)
         friend.outGoingRequests.remove(currentUserId)
@@ -569,16 +557,35 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
     }
 
     @ExperimentalCoroutinesApi
-    fun getIncomingRequests(currentUserId: String): Flow<List<String>> {
+    fun getUserFlowById(userId: String): Flow<User> {
         return callbackFlow {
-            val incomingRequest = userCollection.document(currentUserId)
+            val user = userCollection.document(userId)
                 .addSnapshotListener { documentSnapshot: DocumentSnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
                     if (firebaseFirestoreException != null) {
-                        cancel(cause = firebaseFirestoreException, message = "Error Getting Incoming Requests")
+                        cancel(cause = firebaseFirestoreException, message = "Error Getting User")
                         return@addSnapshotListener
                     }
-                    val requests = documentSnapshot?.get("incomingRequests") as ArrayList<String>
-                    offer(requests)
+                    val map = documentSnapshot!!.toObject(User::class.java)!!
+                    offer(map)
+                }
+            awaitClose {
+                user.remove()
+            }
+        }
+    }
+
+    @ExperimentalCoroutinesApi
+    fun getIncomingRequests(currentUserId: String): Flow<List<User>> = getUserFlowById(currentUserId).flatMapLatest { currentUser ->
+        callbackFlow {
+            val userRequests = currentUser.incomingRequests
+            val incomingRequest = userCollection.whereIn("id", userRequests)
+                .addSnapshotListener { querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
+                    if (firebaseFirestoreException != null) {
+                        cancel(cause = firebaseFirestoreException, message = "Error Getting Incoming Request")
+                        return@addSnapshotListener
+                    }
+                    val incomingMap = querySnapshot!!.documents.mapNotNull { it.toObject(User::class.java) }
+                    offer(incomingMap)
                 }
             awaitClose {
                 incomingRequest.remove()
@@ -587,16 +594,17 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
     }
 
     @ExperimentalCoroutinesApi
-    fun getOutGoingRequests(currentUserId: String): Flow<List<String>> {
-        return callbackFlow {
-            val outgoingRequest = userCollection.document(currentUserId)
-                .addSnapshotListener { documentSnapshot: DocumentSnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
+    fun getOutGoingRequests(currentUserId: String): Flow<List<User>> = getUserFlowById(currentUserId).flatMapLatest { currentUser ->
+        callbackFlow {
+            val userOutgoingRequest = currentUser.outGoingRequests
+            val outgoingRequest = userCollection.whereIn("id", userOutgoingRequest)
+                .addSnapshotListener { querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
                     if (firebaseFirestoreException != null) {
                         cancel(cause = firebaseFirestoreException, message = "Error Getting Incoming Requests")
                         return@addSnapshotListener
                     }
-                    val requests = documentSnapshot?.get("outGoingRequests") as ArrayList<String>
-                    offer(requests)
+                    val outgoingMap = querySnapshot!!.documents.mapNotNull { it.toObject(User::class.java) }
+                    offer(outgoingMap)
                 }
             awaitClose {
                 outgoingRequest.remove()
@@ -605,41 +613,44 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
     }
 
     @ExperimentalCoroutinesApi
-    fun getUserFriends(currentUserId: String): Flow<List<String>> {
-        return callbackFlow {
-            val onlineFriends = userCollection.document(currentUserId)
-                .addSnapshotListener { documentSnapshot: DocumentSnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
+    fun getUserOnlineFriends(currentUserId: String): Flow<List<User>> = getUserFlowById(currentUserId).flatMapLatest { currentUser ->
+        callbackFlow {
+            val userFriends = currentUser.friends
+            val friends = statusCollection.document("online")
+                .collection("onlineMembers").whereIn("id", userFriends)
+                .addSnapshotListener { querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
                     if (firebaseFirestoreException != null) {
                         cancel(cause = firebaseFirestoreException, message = "Error Getting Incoming Requests")
                         return@addSnapshotListener
                     }
-                    val friends = documentSnapshot?.get("friends") as ArrayList<String>
-                    offer(friends)
+                    val friendsMap = querySnapshot!!.documents.mapNotNull { it.toObject(User::class.java) }
+                    offer(friendsMap)
                 }
             awaitClose {
-                onlineFriends.remove()
+                friends.remove()
             }
         }
     }
 
-//    @ExperimentalCoroutinesApi
-//    fun getOfflineFriends(currentUserId: String): Flow<List<User>> = getUserById(currentUserId).flatMapLatest { currentUser ->
-//        callbackFlow {
-//            val friends = currentUser.friends
-//            val friendsList = statusCollection.document("offline").collection("offlineMembers").whereIn("id", friends)
-//                .addSnapshotListener { querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
-//                    if (firebaseFirestoreException != null) {
-//                        cancel(cause = firebaseFirestoreException, message = "Error Getting Offline Friends")
-//                        return@addSnapshotListener
-//                    }
-//                    val friendsMap = querySnapshot!!.documents.mapNotNull { it.toObject(User::class.java) }
-//                    offer(friendsMap)
-//                }
-//            awaitClose {
-//                friendsList.remove()
-//            }
-//        }
-//    }
+    @ExperimentalCoroutinesApi
+    fun getUserOfflineFriends(currentUserId: String): Flow<List<User>> = getUserFlowById(currentUserId).flatMapLatest { currentUser ->
+        callbackFlow {
+            val userFriends = currentUser.friends
+            val friends = statusCollection.document("offline")
+                .collection("offlineMembers").whereIn("id", userFriends)
+                .addSnapshotListener { querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
+                    if (firebaseFirestoreException != null) {
+                        cancel(cause = firebaseFirestoreException, message = "Error Getting Incoming Requests")
+                        return@addSnapshotListener
+                    }
+                    val friendsMap = querySnapshot!!.documents.mapNotNull { it.toObject(User::class.java) }
+                    offer(friendsMap)
+                }
+            awaitClose {
+                friends.remove()
+            }
+        }
+    }
 
     private fun startInfoFragment(loginFragment: LoginFragment) {
         val action = LoginFragmentDirections.actionLoginFragmentToInfoFragment()

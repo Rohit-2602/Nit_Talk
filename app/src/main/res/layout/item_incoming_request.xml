@@ -32,7 +32,7 @@
         app:layout_constraintEnd_toStartOf="@+id/request_accept_button"
         app:layout_constraintStart_toEndOf="@+id/request_user_dp"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="Rohit Sharma" />
+        tools:text="Rohit Sharma" />
 
     <TextView
         android:id="@+id/request_type"
@@ -48,7 +48,7 @@
         app:layout_constraintEnd_toStartOf="@+id/request_accept_button"
         app:layout_constraintStart_toEndOf="@+id/request_user_dp"
         app:layout_constraintTop_toBottomOf="@+id/request_user_name"
-        android:text="Incoming Request" />
+        android:text="@string/incoming_request" />
 
     <ImageView
         android:id="@+id/request_reject_button"

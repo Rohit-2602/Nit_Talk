@@ -15,7 +15,8 @@
         android:scaleType="centerCrop"
         android:src="@drawable/bulbasaur"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/friend_name"
@@ -47,7 +48,7 @@
         app:layout_constraintEnd_toStartOf="@+id/friend_chat_button"
         app:layout_constraintStart_toEndOf="@+id/friend_dp"
         app:layout_constraintTop_toBottomOf="@+id/friend_name"
-        tools:text="OutGoing Request" />
+        tools:text="Online/Offline" />
 
     <ImageView
         android:id="@+id/friend_chat_button"

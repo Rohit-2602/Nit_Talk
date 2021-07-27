@@ -16,16 +16,6 @@ object Comparators {
         }
     }
 
-    val STRING_COMPARATOR = object : DiffUtil.ItemCallback<String>() {
-        override fun areItemsTheSame(oldItem: String, newItem: String): Boolean {
-            return oldItem == newItem
-        }
-
-        override fun areContentsTheSame(oldItem: String, newItem: String): Boolean {
-            return oldItem == newItem
-        }
-    }
-
     val GROUP_COMPARATOR = object : DiffUtil.ItemCallback<Group>() {
         override fun areItemsTheSame(oldItem: Group, newItem: Group): Boolean {
             return oldItem.groupId == newItem.groupId
