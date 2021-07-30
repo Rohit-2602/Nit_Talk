@@ -136,13 +136,12 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
 
                     for (member in membersUidList) {
                         groupChatViewModel.sendNotification(
-                            requireContext(),
-                            currentGroup.groupName,
+                            context = requireContext(),
+                            title = currentGroup.groupName,
                             message = currentUser.name + ": " + message,
                             userId = groupChatViewModel.currentUserUid
                         )
                     }
-
                 }
                 else {
                     Toast.makeText(requireContext(), "Write Something", Toast.LENGTH_SHORT).show()

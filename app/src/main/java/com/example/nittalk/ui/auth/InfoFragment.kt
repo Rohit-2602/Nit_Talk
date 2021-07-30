@@ -76,6 +76,15 @@ class InfoFragment : Fragment(R.layout.fragment_info) {
                             branch = branchSpinner.selectedItem.toString(),
                             section = subsectionSpinner.selectedItem.toString()
                         )
+                        /*
+                        * To Remove bug from SearchFragment (SearchUserByName) method
+                        * which uses firebase .whereIn("", "") method
+                        * that requires a not null list
+                        * Adding Default value to lists, that are parameter in whereIn method
+                        * */
+                        user.friends.add("1")
+                        user.outGoingRequests.add("1")
+                        user.incomingRequests.add("1")
                         authViewModel.createUser(user, this@InfoFragment)
                         authViewModel.saveUserToDB(user)
                         authViewModel.addUserToGroup(user, requireActivity())
