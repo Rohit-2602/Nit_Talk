@@ -12,16 +12,17 @@ NitTalk is a fully functional social media app with multiple features built with
  [**Firebase Flow Chart**](https://whimsical.com/nit-talk-firebase-flowchart-AqJqtDqdypWyPiYBVTG5cS)
 
 ## Current Status
-Currently working on Search User By its Name.
+Currently working on User Profile Screen.
 
 ## Done ✔️
 - Email Auth
 - Saving group and channel selected state
 - Group Text Messaging with Notifications
 - Added User Online Status
-- Send and Get Friends Requests Done
-- Search User By Name Done
-- Get Online and Offline Status of Friend Done
+- Send and Get Friends Requests
+- Search User By Name
+- Get Online and Offline Status of Friend
+- Personal Message to Friend
 
 ## Screenshots 📷
 | Login | SignUp | Info | HomeScreen |
