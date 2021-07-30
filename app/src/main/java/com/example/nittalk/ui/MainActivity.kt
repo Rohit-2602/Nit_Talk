@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        appBarConfiguration = AppBarConfiguration(setOf(R.id.groupChatFragment, R.id.friendChatFragment, R.id.searchFragment, R.id.profileFragment))
+        appBarConfiguration = AppBarConfiguration(setOf(R.id.groupChatFragment, R.id.inboxFragment, R.id.searchFragment, R.id.profileFragment))
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.main_fragment_container_view) as NavHostFragment
         navController = navHostFragment.navController
@@ -38,6 +38,7 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when(destination.id) {
                 R.id.groupChatFragment -> hideBottomNav()
+                R.id.friendChatFragment -> hideBottomNav()
                 else -> showBottomNav()
             }
         }

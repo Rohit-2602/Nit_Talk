@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:text="Create Account"
+        android:text="@string/create_account"
         android:textColor="@color/white"
         android:textSize="35sp"
         android:textStyle="bold"
@@ -40,7 +40,7 @@
         android:src="@drawable/ic_user"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@id/textView"
         app:shapeAppearanceOverlay="@style/CircularImageView"
         app:strokeColor="@color/white"
         app:strokeWidth="1dp" />
@@ -51,11 +51,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginTop="5dp"
-        android:text="Please Fill The Input Below Here"
+        android:text="@string/please_fill_the_input_below_here"
         android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/loginText" />
+        app:layout_constraintTop_toBottomOf="@id/loginText" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/name_input_editText"
@@ -74,7 +74,7 @@
         app:boxCornerRadiusTopStart="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_imageView">
+        app:layout_constraintTop_toBottomOf="@id/profile_imageView">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/name_editText"
@@ -98,7 +98,7 @@
         android:backgroundTint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/name_input_editText"
+        app:layout_constraintTop_toBottomOf="@id/name_input_editText"
         tools:listitem="@layout/item_info_spinner" />
 
     <Spinner
@@ -111,7 +111,7 @@
         android:backgroundTint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/semester_spinner"
+        app:layout_constraintTop_toBottomOf="@id/semester_spinner"
         tools:listitem="@layout/item_info_spinner" />
 
     <Spinner
@@ -124,7 +124,7 @@
         android:backgroundTint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/branch_spinner"
+        app:layout_constraintTop_toBottomOf="@id/branch_spinner"
         tools:listitem="@layout/item_info_spinner" />
 
     <com.google.android.material.button.MaterialButton
@@ -133,11 +133,11 @@
         android:layout_height="wrap_content"
         android:layout_margin="30dp"
         android:backgroundTint="@color/blueColor"
-        android:text="Create"
+        android:text="@string/create"
         android:textColor="@color/darkBlue"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/subsection_spinner" />
+        app:layout_constraintTop_toBottomOf="@id/subsection_spinner" />
 
     <ProgressBar
         android:id="@+id/create_user_progressbar"
@@ -155,10 +155,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/profile_imageView"
-        app:layout_constraintEnd_toEndOf="@+id/profile_imageView"
-        app:layout_constraintStart_toStartOf="@+id/profile_imageView"
-        app:layout_constraintTop_toTopOf="@+id/profile_imageView"
+        app:layout_constraintBottom_toBottomOf="@id/profile_imageView"
+        app:layout_constraintEnd_toEndOf="@id/profile_imageView"
+        app:layout_constraintStart_toStartOf="@id/profile_imageView"
+        app:layout_constraintTop_toTopOf="@id/profile_imageView"
         tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

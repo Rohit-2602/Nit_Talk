@@ -40,7 +40,7 @@ class SearchAdapter(
                     binding.apply {
                         Glide.with(binding.root).load(user.profileImageUrl).circleCrop().into(userDp)
                         userName.text = user.name
-                        if (user.id == currentUser.id) {
+                        if (user.id == currentUser.id || currentUser.friends.contains(user.id)) {
                             sendFriendRequestBtn.visibility = View.GONE
                             cancelFriendRequestBtn.visibility = View.GONE
                         }

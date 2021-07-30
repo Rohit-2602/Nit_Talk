@@ -12,16 +12,19 @@
         tools:layout="@layout/fragment_group_chat" >
         <action
             android:id="@+id/action_groupChatFragment_to_friendChatFragment"
-            app:destination="@id/friendChatFragment" />
+            app:destination="@id/inboxFragment" />
     </fragment>
     <fragment
-        android:id="@+id/friendChatFragment"
-        android:name="com.example.nittalk.ui.friendchat.FriendChatFragment"
+        android:id="@+id/inboxFragment"
+        android:name="com.example.nittalk.ui.inbox.InboxFragment"
         android:label="fragment_friend_chat"
-        tools:layout="@layout/fragment_friend_chat" >
+        tools:layout="@layout/fragment_inbox" >
         <action
-            android:id="@+id/action_friendChatFragment_to_friendFragment"
+            android:id="@+id/action_inboxFragment_to_friendFragment"
             app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_inboxFragment_to_friendChatFragment"
+            app:destination="@id/friendChatFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
@@ -36,5 +39,20 @@
         <action
             android:id="@+id/action_friendFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_friendChatFragment"
+            app:destination="@id/friendChatFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/friendChatFragment"
+        android:name="com.example.nittalk.ui.inbox.FriendChatFragment"
+        android:label="fragment_friend_chat"
+        tools:layout="@layout/fragment_friend_chat" >
+        <argument
+            android:name="friendId"
+            app:argType="string" />
+        <argument
+            android:name="friendName"
+            app:argType="string" />
     </fragment>
 </navigation>

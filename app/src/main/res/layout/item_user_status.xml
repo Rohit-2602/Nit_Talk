@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginBottom="5dp">
@@ -12,18 +13,19 @@
         android:layout_height="40dp"
         android:src="@drawable/ic_user"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/user_status_name_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Rohit Sharma"
+        tools:text="Rohit Sharma"
         android:layout_marginStart="10dp"
         android:textSize="18sp"
         android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="@+id/user_status_Dp"
-        app:layout_constraintStart_toEndOf="@+id/user_status_Dp"
-        app:layout_constraintTop_toTopOf="@+id/user_status_Dp" />
+        app:layout_constraintBottom_toBottomOf="@id/user_status_Dp"
+        app:layout_constraintStart_toEndOf="@id/user_status_Dp"
+        app:layout_constraintTop_toTopOf="@id/user_status_Dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

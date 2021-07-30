@@ -25,8 +25,8 @@
         android:layout_marginStart="10dp"
         android:textColor="@color/black"
         android:textSize="20sp"
-        app:layout_constraintEnd_toStartOf="@+id/cancel_friend_request_btn"
-        app:layout_constraintStart_toEndOf="@+id/user_dp"
+        app:layout_constraintEnd_toStartOf="@id/cancel_friend_request_btn"
+        app:layout_constraintStart_toEndOf="@id/user_dp"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Rohit Sharma" />
 
@@ -41,7 +41,7 @@
         android:padding="5dp"
         android:src="@drawable/ic_cancel_request"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/send_friend_request_btn"
+        app:layout_constraintEnd_toStartOf="@id/send_friend_request_btn"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription" />
 

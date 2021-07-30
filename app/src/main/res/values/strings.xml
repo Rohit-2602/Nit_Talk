@@ -20,4 +20,16 @@
     <string name="outgoing_requests">OutGoing Requests</string>
     <string name="online">Online</string>
     <string name="offline">Offline</string>
+    <string name="groups">Groups</string>
+    <string name="friend_chat">Friend Chat</string>
+    <string name="search">Search</string>
+    <string name="profile">Profile</string>
+    <string name="create_account">Create Account</string>
+    <string name="please_fill_the_input_below_here">Please Fill The Input Below Here</string>
+    <string name="create">Create</string>
+    <string name="already_have_a_account">Already have a account?</string>
+    <string name="search_your_friends_to_chat_with">Search Your Friends To Chat With</string>
+    <string name="please_sign_in_to_continue">Please Sign In To Continue</string>
+    <string name="forgot_password">Forgot Password</string>
+    <string name="don_t_have_an_account">Don\'t have an account ?</string>
 </resources>

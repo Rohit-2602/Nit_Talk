@@ -1,9 +1,7 @@
 package com.example.nittalk.util
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.nittalk.data.Channel
-import com.example.nittalk.data.Group
-import com.example.nittalk.data.User
+import com.example.nittalk.data.*
 
 object Comparators {
 
@@ -12,6 +10,26 @@ object Comparators {
             return oldItem.id == newItem.id
         }
         override fun areContentsTheSame(oldItem: User, newItem: User): Boolean {
+            return oldItem == newItem
+        }
+    }
+
+    val INBOX_COMPARATOR = object : DiffUtil.ItemCallback<Inbox>() {
+        override fun areItemsTheSame(oldItem: Inbox, newItem: Inbox): Boolean {
+            return oldItem.friendId == newItem.friendId
+        }
+
+        override fun areContentsTheSame(oldItem: Inbox, newItem: Inbox): Boolean {
+            return oldItem == newItem
+        }
+    }
+
+    val MESSAGE_COMPARATOR = object : DiffUtil.ItemCallback<Message>() {
+        override fun areItemsTheSame(oldItem: Message, newItem: Message): Boolean {
+            return oldItem.messageId == newItem.messageId
+        }
+
+        override fun areContentsTheSame(oldItem: Message, newItem: Message): Boolean {
             return oldItem == newItem
         }
     }

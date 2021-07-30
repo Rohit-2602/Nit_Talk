@@ -4,21 +4,21 @@
     <item
         android:id="@+id/groupChatFragment"
         android:icon="@drawable/ic_group"
-        android:title="Groups" />
+        android:title="@string/groups" />
 
     <item
-        android:id="@+id/friendChatFragment"
+        android:id="@+id/inboxFragment"
         android:icon="@drawable/ic_friend_chat"
-        android:title="Friend Chat" />
+        android:title="@string/friend_chat" />
 
     <item
         android:id="@+id/searchFragment"
         android:icon="@drawable/ic_search"
-        android:title="Search" />
+        android:title="@string/search" />
 
     <item
         android:id="@+id/profileFragment"
         android:icon="@drawable/ic_user"
-        android:title="Profile" />
+        android:title="@string/profile" />
 
 </menu>

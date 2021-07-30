@@ -7,7 +7,7 @@ class MessageTimeUtil {
 
     companion object {
 
-        fun getTimeAgo(time: Long) : String {
+        fun getTimeAgoGroupChat(time: Long) : String {
             val messageTime = Calendar.getInstance()
             messageTime.timeInMillis = time
             val now = Calendar.getInstance()
@@ -18,6 +18,20 @@ class MessageTimeUtil {
                 "Yesterday at " + DateFormat.getTimeInstance(DateFormat.SHORT).format(time)
             }  else {
                 DateFormat.getDateInstance().format(time) + " " + DateFormat.getTimeInstance(DateFormat.SHORT).format(time)
+            }
+        }
+
+        fun getTimeAgoFriendChat(time: Long) : String {
+            val messageTime = Calendar.getInstance()
+            messageTime.timeInMillis = time
+            val now = Calendar.getInstance()
+
+            return if (now.get(Calendar.DATE) == messageTime.get(Calendar.DATE)) {
+                DateFormat.getTimeInstance(DateFormat.SHORT).format(time)
+            } else if (now.get(Calendar.DATE) - messageTime.get(Calendar.DATE) == 1) {
+                "Yesterday"
+            }  else {
+                DateFormat.getDateInstance().format(time)
             }
         }
 

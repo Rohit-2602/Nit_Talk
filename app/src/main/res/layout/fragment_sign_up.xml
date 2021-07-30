@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:text="Create Account"
+        android:text="@string/create_account"
         android:textColor="@color/white"
         android:textSize="35sp"
         android:textStyle="bold"
@@ -35,11 +35,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginTop="5dp"
-        android:text="Please Fill The Input Below Here"
+        android:text="@string/please_fill_the_input_below_here"
         android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/loginText" />
+        app:layout_constraintTop_toBottomOf="@id/loginText" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/email_inputLayout"
@@ -58,7 +58,7 @@
         app:boxCornerRadiusTopStart="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
+        app:layout_constraintTop_toBottomOf="@id/textView">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/email_editText"
@@ -90,7 +90,7 @@
         app:hintTextColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/email_inputLayout"
+        app:layout_constraintTop_toBottomOf="@id/email_inputLayout"
         app:passwordToggleEnabled="true"
         app:passwordToggleTint="@color/white">
 
@@ -124,7 +124,7 @@
         app:hintTextColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password_inputLayout"
+        app:layout_constraintTop_toBottomOf="@id/password_inputLayout"
         app:passwordToggleEnabled="true"
         app:passwordToggleTint="@color/white">
 
@@ -151,18 +151,18 @@
         app:backgroundTint="@color/blueColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/re_password_inputLayout" />
+        app:layout_constraintTop_toBottomOf="@id/re_password_inputLayout" />
 
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
-        android:text="Already have a account?"
+        android:text="@string/already_have_a_account"
         android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/signin_button"
+        app:layout_constraintEnd_toStartOf="@id/signin_button"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent" />
@@ -173,14 +173,14 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginBottom="20dp"
-        android:text="Sign In"
+        android:text="@string/sign_in"
         android:textColor="@color/blueColor"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/textView1" />
+        app:layout_constraintStart_toEndOf="@id/textView1" />
 
     <ProgressBar
         android:id="@+id/progressBar"
