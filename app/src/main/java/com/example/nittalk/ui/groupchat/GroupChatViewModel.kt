@@ -1,20 +1,22 @@
 package com.example.nittalk.ui.groupchat
 
 import android.content.Context
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.example.nittalk.data.Group
 import com.example.nittalk.data.PreferencesManager
 import com.example.nittalk.firebase.FirebaseUtil
 import com.example.nittalk.util.Constant.GROUP_SELECTED
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class GroupChatViewModel @ViewModelInject constructor(
+@HiltViewModel
+class GroupChatViewModel @Inject constructor(
     private val groupChatRepository: GroupChatRepository,
     private val preferencesManager: PreferencesManager,
     private val firebaseUtil: FirebaseUtil

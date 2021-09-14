@@ -1,13 +1,15 @@
 package com.example.nittalk.ui
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainActivityViewModel @ViewModelInject constructor(private val mainActivityRepository: MainActivityRepository): ViewModel() {
+@HiltViewModel
+class MainActivityViewModel @Inject constructor(private val mainActivityRepository: MainActivityRepository): ViewModel() {
 
     @ExperimentalCoroutinesApi
     fun makeCurrentUserOnline() =

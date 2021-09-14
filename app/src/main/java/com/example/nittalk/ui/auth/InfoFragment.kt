@@ -70,7 +70,7 @@ class InfoFragment : Fragment(R.layout.fragment_info) {
                         val user = User(
                             id = currentUserUid,
                             name = nameEditText.text.toString(),
-                            lowercaseName = nameEditText.text.toString().toLowerCase(Locale.ROOT),
+                            lowercaseName = nameEditText.text.toString().lowercase(Locale.ROOT),
                             profileImageUrl = imageUrl,
                             semester = semesterSpinner.selectedItem.toString(),
                             branch = branchSpinner.selectedItem.toString(),

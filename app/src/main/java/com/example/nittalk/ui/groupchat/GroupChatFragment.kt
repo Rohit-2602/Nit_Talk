@@ -139,7 +139,7 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
                             context = requireContext(),
                             title = currentGroup.groupName,
                             message = currentUser.name + ": " + message,
-                            userId = groupChatViewModel.currentUserUid
+                            userId = member
                         )
                     }
                 }

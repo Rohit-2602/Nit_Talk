@@ -1,15 +1,17 @@
 package com.example.nittalk.ui.inbox
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FriendChatViewModel @ViewModelInject constructor(private val friendChatRepository: FriendChatRepository) :
+@HiltViewModel
+class FriendChatViewModel @Inject constructor(private val friendChatRepository: FriendChatRepository) :
     ViewModel() {
 
     private val currentUserId = Firebase.auth.currentUser!!.uid

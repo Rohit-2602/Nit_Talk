@@ -1,16 +1,18 @@
 package com.example.nittalk.ui.search
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SearchViewModel @ViewModelInject constructor(private val searchRepository: SearchRepository) :
+@HiltViewModel
+class SearchViewModel @Inject constructor(private val searchRepository: SearchRepository) :
     ViewModel() {
 
     val currentUserId = Firebase.auth.currentUser!!.uid

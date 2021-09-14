@@ -249,7 +249,7 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
             storageReference.reference.child("${userId}/uploads/DP").downloadUrl.await()
                 .toString()
         } else {
-            ""
+            "https://firebasestorage.googleapis.com/v0/b/whatsapp-clone-bcfa9.appspot.com/o/default_user.png?alt=media&token=341a84e8-b3a7-441f-b8f4-c3826dd50790"
         }
     }
 
@@ -491,8 +491,8 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
         return callbackFlow {
             val users = userCollection
                 .orderBy("lowercaseName")
-                .startAt(query.toLowerCase(Locale.ROOT))
-                .endAt(query.toLowerCase(Locale.ROOT) + "\uf8ff")
+                .startAt(query.lowercase(Locale.ROOT))
+                .endAt(query.lowercase(Locale.ROOT) + "\uf8ff")
                 .addSnapshotListener { querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
                     if (firebaseFirestoreException != null) {
                         cancel(message = "Error Fetching Posts", cause = firebaseFirestoreException)
