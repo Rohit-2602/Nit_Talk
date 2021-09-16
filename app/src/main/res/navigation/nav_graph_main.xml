@@ -30,7 +30,12 @@
         android:id="@+id/profileFragment"
         android:name="com.example.nittalk.ui.profile.ProfileFragment"
         android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.example.nittalk.ui.search.SearchFragment"
@@ -54,5 +59,19 @@
         <argument
             android:name="friendName"
             app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.example.nittalk.ui.editprofile.EditProfileFragment"
+        android:label="fragment_edit_profile"
+        tools:layout="@layout/fragment_edit_profile" >
+        <action
+            android:id="@+id/action_editProfileFragment_to_profileFragment"
+            app:destination="@id/profileFragment"
+            app:popUpTo="@id/editProfileFragment"
+            app:popUpToInclusive="true" />
+        <argument
+            android:name="user"
+            app:argType="com.example.nittalk.data.User" />
     </fragment>
 </navigation>

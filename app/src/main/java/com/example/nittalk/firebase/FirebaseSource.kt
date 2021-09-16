@@ -14,6 +14,7 @@ import com.example.nittalk.ui.auth.AuthActivity
 import com.example.nittalk.ui.auth.InfoFragment
 import com.example.nittalk.ui.auth.LoginFragment
 import com.example.nittalk.ui.auth.LoginFragmentDirections
+import com.example.nittalk.util.Constant.DEFAULT_USER_DP
 import com.example.nittalk.util.Constant.GROUP_SELECTED
 import com.example.nittalk.util.Constant.LOGIN_STATE_KEY
 import com.example.nittalk.util.Constant.branchIdHashMap
@@ -227,6 +228,22 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
         }
     }
 
+    suspend fun updateFirebaseUser(user: User) {
+        progress.value = View.VISIBLE
+        enable.value = false
+        val map : Map<String, String> = hashMapOf(
+            "name" to user.name,
+            "lowercaseName" to user.name.lowercase(),
+            "profileImageUrl" to user.profileImageUrl,
+            "branch" to user.branch,
+            "section" to user.section,
+            "semester" to user.semester
+        )
+        userCollection.document(user.id).update(map).await()
+        progress.value = View.GONE
+        enable.value = true
+    }
+
     fun uploadImage(imageUri: Uri, userId: String, activity: Activity) {
         progress.value = View.VISIBLE
         enable.value = false
@@ -249,7 +266,7 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
             storageReference.reference.child("${userId}/uploads/DP").downloadUrl.await()
                 .toString()
         } else {
-            "https://firebasestorage.googleapis.com/v0/b/whatsapp-clone-bcfa9.appspot.com/o/default_user.png?alt=media&token=341a84e8-b3a7-441f-b8f4-c3826dd50790"
+            DEFAULT_USER_DP
         }
     }
 

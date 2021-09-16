@@ -1,10 +1,13 @@
 package com.example.nittalk.data
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
+import kotlinx.android.parcel.Parcelize
 
 @Entity(tableName = "user_table")
+@Parcelize
 data class User(
     @PrimaryKey
     var id: String = "",
@@ -24,4 +27,4 @@ data class User(
     val incomingRequests: MutableList<String> = ArrayList(),
     @Ignore
     val friends: MutableList<String> = ArrayList()
-)
+): Parcelable

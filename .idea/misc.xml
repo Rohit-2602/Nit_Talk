@@ -4,6 +4,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/AndroidProjects/Nit_Talk/app/src/main/res/drawable/ic_user.xml" value="0.2703125" />
+        <entry key="..\:/AndroidProjects/Nit_Talk/app/src/main/res/layout/fragment_edit_profile.xml" value="0.25416666666666665" />
+        <entry key="..\:/AndroidProjects/Nit_Talk/app/src/main/res/layout/fragment_info.xml" value="0.25416666666666665" />
+        <entry key="..\:/AndroidProjects/Nit_Talk/app/src/main/res/layout/fragment_profile.xml" value="0.25416666666666665" />
+        <entry key="..\:/AndroidProjects/Nit_Talk/app/src/main/res/layout/toolbar_profile.xml" value="0.19583333333333333" />
       </map>
     </option>
   </component>

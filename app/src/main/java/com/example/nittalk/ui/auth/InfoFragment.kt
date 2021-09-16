@@ -132,7 +132,7 @@ class InfoFragment : Fragment(R.layout.fragment_info) {
     }
 
     private fun setUpBranchSpinners() {
-        val semesterList = arrayListOf(
+        val branchList = arrayListOf(
             "Civil",
             "Computer Science",
             "Electrical",
@@ -141,12 +141,12 @@ class InfoFragment : Fragment(R.layout.fragment_info) {
             "Mechanical",
             "Production"
         )
-        val branchAdapter = InfoSpinnerAdapter(requireContext(), semesterList)
+        val branchAdapter = InfoSpinnerAdapter(requireContext(), branchList)
         binding.branchSpinner.adapter = branchAdapter
     }
 
     private fun setUpSubSectionSpinners() {
-        val semesterList = arrayListOf(
+        val subSectionList = arrayListOf(
             "Section 1",
             "Section 2",
             "Section 3",
@@ -156,7 +156,7 @@ class InfoFragment : Fragment(R.layout.fragment_info) {
             "Section 7",
             "Section 8"
         )
-        val subSectionAdapter = InfoSpinnerAdapter(requireContext(), semesterList)
+        val subSectionAdapter = InfoSpinnerAdapter(requireContext(), subSectionList)
         binding.subsectionSpinner.adapter = subSectionAdapter
     }
 

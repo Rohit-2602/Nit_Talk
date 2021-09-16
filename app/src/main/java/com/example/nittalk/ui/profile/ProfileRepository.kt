@@ -6,6 +6,10 @@ import javax.inject.Inject
 
 class ProfileRepository @Inject constructor(private val firebaseSource: FirebaseSource) {
 
+    val currentUserUid = firebaseSource.currentUser()!!.uid
+
     suspend fun signOut(activity: Activity) = firebaseSource.logout(activity)
+
+    fun getCurrentUser() = firebaseSource.getCurrentUserFromDB(currentUserUid)
 
 }
