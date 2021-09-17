@@ -49,12 +49,13 @@ class EditProfileViewModel @Inject constructor(private val repository: EditProfi
         updateFirebaseUser(user)
     }
 
-    fun showAlertDialog(context: Context, updateUser: () -> Unit) {
+    fun showAlertDialog(oldUser: User, activity: Activity, context: Context, updateUser: () -> User) {
         val alertDialog = AlertDialog.Builder(context)
             .setTitle("Do you want to change Your College Info ?")
             .setMessage("Changing This info can cause some problem, Are you sure you want to change this information?")
             .setPositiveButton("Yes") { _, _ ->
-                updateUser()
+                val newUser = updateUser()
+                changeUserGroup(oldUser = oldUser, updatedUser = newUser, activity = activity)
             }
             .setNegativeButton("No") { _, _ ->
 
@@ -66,5 +67,10 @@ class EditProfileViewModel @Inject constructor(private val repository: EditProfi
     fun isBranchSemesterOrSectionChanged(user: User, branch: String, semester: String, section: String): Boolean {
         return (branch != user.branch || section != user.section || semester != user.semester)
     }
+
+    private fun changeUserGroup(oldUser: User, updatedUser: User, activity: Activity) =
+        CoroutineScope(Dispatchers.Main).launch {
+            repository.changeUserGroup(oldUser, updatedUser, activity)
+        }
 
 }

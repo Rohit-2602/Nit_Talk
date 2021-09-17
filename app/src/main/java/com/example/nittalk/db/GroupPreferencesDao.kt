@@ -1,9 +1,6 @@
 package com.example.nittalk.db
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.example.nittalk.data.GroupPreferences
 import kotlinx.coroutines.flow.Flow
 
@@ -12,6 +9,9 @@ interface GroupPreferencesDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertServer(groupPreferences: GroupPreferences)
+
+    @Delete
+    suspend fun removeServer(groupPreferences: GroupPreferences)
 
     @Query("SELECT * FROM group_pref")
     fun getSelectedGroupChannel(): Flow<List<GroupPreferences>>

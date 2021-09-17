@@ -18,9 +18,12 @@ class EditProfileRepository @Inject constructor(private val firebaseSource: Fire
     suspend fun saveUserToDB(user: User) =
         firebaseSource.saveUserToDB(user)
 
-    suspend fun imageDownloadUrl(imageUri: Uri?, userId: String) : String =
+    suspend fun imageDownloadUrl(imageUri: Uri?, userId: String): String =
         firebaseSource.getImageDownloadUrl(imageUri, userId)
 
     suspend fun updateFirebaseUser(user: User) = firebaseSource.updateFirebaseUser(user)
+
+    suspend fun changeUserGroup(oldUser: User, updatedUser: User, activity: Activity) =
+        firebaseSource.changeUserGroup(oldUser, updatedUser, activity)
 
 }

@@ -27,6 +27,7 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
     private val navArgs by navArgs<EditProfileFragmentArgs>()
     private var imageUri: Uri? = null
     private lateinit var currentUserUid: String
+    private var updatedUser = User()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -76,8 +77,7 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
                             section = sectionSpinner.selectedItem.toString()
                         )
                     ) {
-                        editProfileViewModel.showAlertDialog(requireContext()) { updateUser() }
-
+                        editProfileViewModel.showAlertDialog(navArgs.user, requireActivity(), requireContext()) { updateUser() }
                     } else {
                         updateUser()
                     }
@@ -87,12 +87,12 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
 
     }
 
-    private fun updateUser() {
+    private fun updateUser(): User {
         binding.apply {
             createUserProgressbar.visibility = View.VISIBLE
-            var user: User
+//            var user = User()
             if (imageUri == null) {
-                user = User(
+                updatedUser = User(
                     id = currentUserUid,
                     name = nameEditText.text.toString(),
                     lowercaseName = nameEditText.text.toString()
@@ -102,15 +102,13 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
                     branch = branchSpinner.selectedItem.toString(),
                     section = sectionSpinner.selectedItem.toString()
                 )
-                editProfileViewModel.updateUser(user)
-                createUserProgressbar.visibility = View.GONE
-                val action = EditProfileFragmentDirections.actionEditProfileFragmentToProfileFragment()
-                findNavController().navigate(action)
+//                editProfileViewModel.updateUser(user)
+//                createUserProgressbar.visibility = View.GONE
             }
             else {
                 editProfileViewModel.imageDownloadUrl(imageUri)
                     .observe(viewLifecycleOwner) { imageUrl ->
-                        user = User(
+                        updatedUser = User(
                             id = currentUserUid,
                             name = nameEditText.text.toString(),
                             lowercaseName = nameEditText.text.toString()
@@ -120,13 +118,20 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
                             branch = branchSpinner.selectedItem.toString(),
                             section = sectionSpinner.selectedItem.toString()
                         )
-                        editProfileViewModel.updateUser(user)
-                        createUserProgressbar.visibility = View.GONE
-                        val action = EditProfileFragmentDirections.actionEditProfileFragmentToProfileFragment()
-                        findNavController().navigate(action)
+//                        editProfileViewModel.updateUser(user)
+//                        createUserProgressbar.visibility = View.GONE
                     }
             }
+            editProfileViewModel.updateUser(updatedUser)
+            createUserProgressbar.visibility = View.GONE
+            navigateToProfileFragment()
         }
+        return updatedUser
+    }
+
+    private fun navigateToProfileFragment() {
+        val action = EditProfileFragmentDirections.actionEditProfileFragmentToProfileFragment()
+        findNavController().navigate(action)
     }
 
     private fun startCropActivity() {

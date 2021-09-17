@@ -326,6 +326,28 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
         }
     }
 
+    suspend fun changeUserGroup(user: User, updatedUser: User, activity: Activity) {
+        val newGroupId = branchIdHashMap[updatedUser.branch] + semesterIdHashMap[updatedUser.semester]
+        val oldGroupId = branchIdHashMap[user.branch] + semesterIdHashMap[user.semester]
+        preferencesManager.updateGroupSelected(GROUP_SELECTED, newGroupId)
+
+        val oldServer = GroupPreferences(oldGroupId, oldGroupId + "General")
+
+        groupPreferencesDao.removeServer(oldServer)
+
+        addUserToGroup(updatedUser, activity)
+
+        groupCollection.document(oldGroupId).get().addOnSuccessListener { dataSnapshot ->
+            if (dataSnapshot.exists()) {
+                val group = dataSnapshot.toObject(Group::class.java)!!
+                val members = group.members
+                members.remove(user.id)
+                user.groups.remove(oldGroupId)
+                groupCollection.document(oldGroupId).update("members", members)
+            }
+        }
+    }
+
     @ExperimentalCoroutinesApi
     fun getGroupById(groupId: String) : Flow<Group> {
         return callbackFlow {
