@@ -23,7 +23,7 @@ class EditProfileRepository @Inject constructor(private val firebaseSource: Fire
 
     suspend fun updateFirebaseUser(user: User) = firebaseSource.updateFirebaseUser(user)
 
-    suspend fun changeUserGroup(oldUser: User, updatedUser: User, activity: Activity) =
-        firebaseSource.changeUserGroup(oldUser, updatedUser, activity)
+    suspend fun changeUserGroup(oldUserBranch: String, oldUserSemester: String, updatedUser: User, activity: Activity) =
+        firebaseSource.changeUserGroup(oldUserBranch = oldUserBranch, oldUserSemester = oldUserSemester, updatedUser = updatedUser, activity = activity)
 
 }

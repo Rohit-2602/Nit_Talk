@@ -16,7 +16,6 @@ import com.example.nittalk.data.User
 import com.example.nittalk.databinding.FragmentEditProfileBinding
 import com.theartofdev.edmodo.cropper.CropImage
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
 
 @AndroidEntryPoint
 class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
@@ -27,22 +26,25 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
     private val navArgs by navArgs<EditProfileFragmentArgs>()
     private var imageUri: Uri? = null
     private lateinit var currentUserUid: String
-    private var updatedUser = User()
+    private lateinit var updatedUser : User
+    private lateinit var oldUser: User
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentEditProfileBinding.bind(view)
 
         currentUserUid = editProfileViewModel.currentUser!!.uid
+        oldUser = navArgs.user
+        updatedUser = oldUser
 
         setUpSemesterSpinners()
         setUpBranchSpinners()
         setUpSubSectionSpinners()
 
         binding.apply {
-            Glide.with(requireContext()).load(navArgs.user.profileImageUrl).circleCrop()
+            Glide.with(requireContext()).load(oldUser.profileImageUrl).circleCrop()
                 .into(profileImageView)
-            nameEditText.setText(navArgs.user.name)
+            nameEditText.setText(oldUser.name)
 
             profileImageView.setOnClickListener {
                 startCropActivity()
@@ -71,13 +73,13 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
                     nameInputEditText.error = "Name Cannot be Empty !!"
                 } else {
                     if (editProfileViewModel.isBranchSemesterOrSectionChanged(
-                            navArgs.user,
+                            oldUser,
                             branch = branchSpinner.selectedItem.toString(),
                             semester = semesterSpinner.selectedItem.toString(),
                             section = sectionSpinner.selectedItem.toString()
                         )
                     ) {
-                        editProfileViewModel.showAlertDialog(navArgs.user, requireActivity(), requireContext()) { updateUser() }
+                        editProfileViewModel.showAlertDialog(oldUser.branch, oldUser.semester, requireActivity(), requireContext()) { updateUser() }
                     } else {
                         updateUser()
                     }
@@ -90,36 +92,20 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
     private fun updateUser(): User {
         binding.apply {
             createUserProgressbar.visibility = View.VISIBLE
-//            var user = User()
+
+            updatedUser.name = nameEditText.text.toString()
+            updatedUser.lowercaseName = nameEditText.text.toString().lowercase()
+            updatedUser.semester = semesterSpinner.selectedItem.toString()
+            updatedUser.branch = branchSpinner.selectedItem.toString()
+            updatedUser.section = sectionSpinner.selectedItem.toString()
+
             if (imageUri == null) {
-                updatedUser = User(
-                    id = currentUserUid,
-                    name = nameEditText.text.toString(),
-                    lowercaseName = nameEditText.text.toString()
-                        .lowercase(Locale.ROOT),
-                    profileImageUrl = navArgs.user.profileImageUrl,
-                    semester = semesterSpinner.selectedItem.toString(),
-                    branch = branchSpinner.selectedItem.toString(),
-                    section = sectionSpinner.selectedItem.toString()
-                )
-//                editProfileViewModel.updateUser(user)
-//                createUserProgressbar.visibility = View.GONE
+                // Nothing
             }
             else {
                 editProfileViewModel.imageDownloadUrl(imageUri)
                     .observe(viewLifecycleOwner) { imageUrl ->
-                        updatedUser = User(
-                            id = currentUserUid,
-                            name = nameEditText.text.toString(),
-                            lowercaseName = nameEditText.text.toString()
-                                .lowercase(Locale.ROOT),
-                            profileImageUrl = imageUrl,
-                            semester = semesterSpinner.selectedItem.toString(),
-                            branch = branchSpinner.selectedItem.toString(),
-                            section = sectionSpinner.selectedItem.toString()
-                        )
-//                        editProfileViewModel.updateUser(user)
-//                        createUserProgressbar.visibility = View.GONE
+                        updatedUser.profileImageUrl = imageUrl
                     }
             }
             editProfileViewModel.updateUser(updatedUser)
@@ -147,11 +133,7 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
                 val resultUri = result.uri
                 imageUri = resultUri
                 binding.profileImageView.setImageURI(resultUri)
-                editProfileViewModel.uploadImage(
-                    resultUri,
-                    editProfileViewModel.currentUser!!.uid,
-                    requireActivity()
-                )
+                editProfileViewModel.uploadImage(resultUri, editProfileViewModel.currentUser!!.uid, requireActivity())
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Toast.makeText(requireContext(), result.error.message, Toast.LENGTH_SHORT).show()
             }
@@ -171,7 +153,7 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
         )
         val semesterAdapter = EditProfileSpinnerAdapter(requireContext(), semesterList)
         binding.semesterSpinner.adapter = semesterAdapter
-        binding.semesterSpinner.setSelection(semesterList.indexOf(navArgs.user.semester))
+        binding.semesterSpinner.setSelection(semesterList.indexOf(oldUser.semester))
     }
 
     private fun setUpBranchSpinners() {
@@ -186,7 +168,7 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
         )
         val branchAdapter = EditProfileSpinnerAdapter(requireContext(), branchList)
         binding.branchSpinner.adapter = branchAdapter
-        binding.branchSpinner.setSelection(branchList.indexOf(navArgs.user.branch))
+        binding.branchSpinner.setSelection(branchList.indexOf(oldUser.branch))
     }
 
     private fun setUpSubSectionSpinners() {
@@ -202,7 +184,7 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
         )
         val subSectionAdapter = EditProfileSpinnerAdapter(requireContext(), subSectionList)
         binding.sectionSpinner.adapter = subSectionAdapter
-        binding.sectionSpinner.setSelection(subSectionList.indexOf(navArgs.user.section))
+        binding.sectionSpinner.setSelection(subSectionList.indexOf(oldUser.section))
     }
 
     override fun onDestroyView() {

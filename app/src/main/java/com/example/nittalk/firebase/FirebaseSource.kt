@@ -277,10 +277,11 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
         groupCollection.document(id).get().addOnSuccessListener { dataSnapshot ->
             if (dataSnapshot.exists()) {
                 val group = dataSnapshot.toObject(Group::class.java)!!
-                val members = group.members
-                members.add(user.id)
-                user.groups.add(id)
-                userCollection.document(user.id).set(user)
+                group.members.add(user.id)
+
+                val userGroups = user.groups
+                userGroups.add(id)
+                userCollection.document(user.id).update("groups", userGroups)
 
                 val serverSelected1 = GroupPreferences(id, id + "General")
 
@@ -288,7 +289,7 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
                     groupPreferencesDao.insertServer(serverSelected1)
                 }
 
-                groupCollection.document(id).update("members", members)
+                groupCollection.document(id).set(group)
                 progress.value = View.GONE
                 enable.value = true
             } else {
@@ -301,8 +302,9 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
                 )
 
                 group.members.add(user.id)
-                user.groups.add(id)
-                userCollection.document(user.id).set(user)
+                val userGroups = user.groups
+                userGroups.add(id)
+                userCollection.document(user.id).update("groups", userGroups)
 
                 createGeneralTextChannel(group = group, activity = activity)
                 createTextChannel(channelName = user.section, group = group, activity = activity)
@@ -326,26 +328,24 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
         }
     }
 
-    suspend fun changeUserGroup(user: User, updatedUser: User, activity: Activity) {
+    suspend fun changeUserGroup(oldUserBranch: String, oldUserSemester: String, updatedUser: User, activity: Activity) {
+
         val newGroupId = branchIdHashMap[updatedUser.branch] + semesterIdHashMap[updatedUser.semester]
-        val oldGroupId = branchIdHashMap[user.branch] + semesterIdHashMap[user.semester]
+        val oldGroupId = branchIdHashMap[oldUserBranch] + semesterIdHashMap[oldUserSemester]
         preferencesManager.updateGroupSelected(GROUP_SELECTED, newGroupId)
 
         val oldServer = GroupPreferences(oldGroupId, oldGroupId + "General")
-
         groupPreferencesDao.removeServer(oldServer)
-
-        addUserToGroup(updatedUser, activity)
 
         groupCollection.document(oldGroupId).get().addOnSuccessListener { dataSnapshot ->
             if (dataSnapshot.exists()) {
                 val group = dataSnapshot.toObject(Group::class.java)!!
-                val members = group.members
-                members.remove(user.id)
-                user.groups.remove(oldGroupId)
-                groupCollection.document(oldGroupId).update("members", members)
+                group.members.remove(updatedUser.id)
+                groupCollection.document(oldGroupId).set(group)
             }
-        }
+        }.await()
+
+        addUserToGroup(updatedUser, activity)
     }
 
     @ExperimentalCoroutinesApi
