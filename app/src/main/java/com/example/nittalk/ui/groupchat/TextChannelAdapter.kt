@@ -24,8 +24,20 @@ class TextChannelAdapter(private val listener: OnTextChannelSelected, private va
     }
 
     inner class TextChannelViewHolder(val binding: ItemChannelBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(textChannel: Channel) {
-            binding.channelTitleTextView.text = textChannel.channelName
+        fun bind(textChannel: Channel, selectedChannel: String) {
+            binding.apply {
+                channelTitleTextView.text = textChannel.channelName
+                if (selectedChannel == textChannel.channelId) {
+                    channelTitleTextView.setTextColor(Color.parseColor("#FFFFFF"))
+                    hashTextView.setTextColor(Color.parseColor("#FFFFFF"))
+                    channelLayout.setBackgroundResource(R.drawable.shape_channel_selected)
+                }
+                else {
+                    channelTitleTextView.setTextColor(Color.parseColor("#6a6c71"))
+                    hashTextView.setTextColor(Color.parseColor("#6a6c71"))
+                    channelLayout.setBackgroundColor(Color.parseColor("#303136"))
+                }
+            }
         }
     }
 
@@ -35,24 +47,13 @@ class TextChannelAdapter(private val listener: OnTextChannelSelected, private va
         viewHolder.binding.channelLayout.setOnClickListener {
             val position = viewHolder.absoluteAdapterPosition
             listener.showTextChannelMessages(getItem(position), getItem(position).channelId)
-            notifyDataSetChanged()
         }
         return viewHolder
     }
 
     override fun onBindViewHolder(holder: TextChannelViewHolder, position: Int) {
         val currentChannel = getItem(position)
-        if (selectedChannel == currentChannel.channelId) {
-            holder.binding.channelTitleTextView.setTextColor(Color.parseColor("#FFFFFF"))
-            holder.binding.hashTextView.setTextColor(Color.parseColor("#FFFFFF"))
-            holder.binding.channelLayout.setBackgroundResource(R.drawable.shape_channel_selected)
-        }
-        else {
-            holder.binding.channelTitleTextView.setTextColor(Color.parseColor("#6a6c71"))
-            holder.binding.hashTextView.setTextColor(Color.parseColor("#6a6c71"))
-            holder.binding.channelLayout.setBackgroundColor(Color.parseColor("#303136"))
-        }
-        holder.bind(currentChannel)
+        holder.bind(currentChannel, selectedChannel)
     }
 }
 

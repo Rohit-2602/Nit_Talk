@@ -159,14 +159,12 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
         binding.groupRecyclerview.apply {
             adapter = groupAdapter
             layoutManager = LinearLayoutManager(requireContext())
-            setHasFixedSize(true)
         }
     }
 
     override fun checkOutGroup(groupId: String) {
         groupChatViewModel.updateGroupSelected(groupId)
         groupChatViewModel.update(groupId)
-        messageAdapter.notifyDataSetChanged()
     }
 
     private fun setUpTextChannelRecyclerView() {
@@ -177,7 +175,6 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
         binding.textChannelsRecyclerview.apply {
             adapter = textChannelAdapter
             layoutManager = LinearLayoutManager(requireContext())
-            setHasFixedSize(true)
         }
     }
 
@@ -203,7 +200,6 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
         binding.messageRV.apply {
             adapter = messageAdapter
             layoutManager = mLayoutManager
-            setHasFixedSize(true)
         }
     }
 
@@ -216,7 +212,6 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
         binding.onlineRecyclerView.apply {
             adapter = onlineAdapter
             layoutManager = LinearLayoutManager(requireContext())
-            setHasFixedSize(true)
         }
     }
 
@@ -229,7 +224,6 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
         binding.offlineRecyclerView.apply {
             adapter = offlineAdapter
             layoutManager = LinearLayoutManager(requireContext())
-            setHasFixedSize(true)
         }
     }
 
@@ -254,16 +248,10 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
         ) {
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
                 super.onDrawerSlide(drawerView, slideOffset)
-                groupAdapter.notifyDataSetChanged()
+                // TODO : Need to change this notify
                 textChannelAdapter.notifyDataSetChanged()
-                onlineAdapter.notifyDataSetChanged()
-                offlineAdapter.notifyDataSetChanged()
             }
             override fun onDrawerOpened(drawerView: View) {
-//                groupAdapter.notifyDataSetChanged()
-//                textChannelAdapter.notifyDataSetChanged()
-//                onlineAdapter.notifyDataSetChanged()
-//                offlineAdapter.notifyDataSetChanged()
                 bottomNav.visibility = View.VISIBLE
             }
             override fun onDrawerClosed(drawerView: View) {

@@ -41,8 +41,6 @@ class SearchFragment : Fragment(R.layout.fragment_search), OnClickListener,
         setUpOnlineFriendRecyclerView()
         setUpOfflineRecyclerView()
         setUpOutGoingRequestRecyclerView()
-        setUpOnlineFriendRecyclerView()
-        setUpOfflineRecyclerView()
 
     }
 
