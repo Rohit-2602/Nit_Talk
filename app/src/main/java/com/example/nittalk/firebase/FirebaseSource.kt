@@ -307,7 +307,9 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
                 userCollection.document(user.id).update("groups", userGroups)
 
                 createGeneralTextChannel(group = group, activity = activity)
-                createTextChannel(channelName = user.section, group = group, activity = activity)
+                CoroutineScope(Dispatchers.IO).launch {
+                    createTextChannel(channelName = user.section, group = group, activity = activity)
+                }
 
                 val serverSelected1 = GroupPreferences(id, id + "General")
 
@@ -432,25 +434,20 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
         groupCollection.document(group.groupId).set(group)
     }
 
-    private fun createTextChannel(channelName: String, group: Group, activity: Activity) {
+    private suspend fun createTextChannel(channelName: String, group: Group, activity: Activity) {
         val textChannelCollection = groupCollection.document(group.groupId).collection("textChannels")
-        val id = textChannelCollection.document().id
-        val sectionTextChannel = Channel(
-            channelId = id,
-            channelName = channelName,
-            createdAt = System.currentTimeMillis(),
-            groupId = group.groupId
-        )
-        textChannelCollection.document(id).set(sectionTextChannel).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                showToast(activity, "Text Channel Created")
-            }
-            else {
-                showToast(activity, task.exception?.message)
-            }
+        for (i in 1..8) {
+            val id = textChannelCollection.document().id
+            val sectionTextChannel = Channel(
+                channelId = id,
+                channelName = "Section $i",
+                createdAt = System.currentTimeMillis(),
+                groupId = group.groupId
+            )
+            textChannelCollection.document(id).set(sectionTextChannel).await()
+            group.channelsId.add(id)
+            group.textChannels.add(id)
         }
-        group.channelsId.add(id)
-        group.textChannels.add(id)
         groupCollection.document(group.groupId).set(group)
     }
 

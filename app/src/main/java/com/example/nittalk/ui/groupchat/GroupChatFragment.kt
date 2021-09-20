@@ -169,8 +169,9 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
 
     private fun setUpTextChannelRecyclerView() {
         textChannelAdapter = TextChannelAdapter(this, groupChatViewModel.channelSelected, this)
-        groupChatViewModel.textChannels.asLiveData().observe(viewLifecycleOwner) {
-            textChannelAdapter.submitList(it)
+        groupChatViewModel.textChannels.asLiveData().observe(viewLifecycleOwner) { textChannels ->
+            val list = textChannels.filter { currentUser.section == it.channelName || it.channelName == "General" }
+            textChannelAdapter.submitList(list)
         }
         binding.textChannelsRecyclerview.apply {
             adapter = textChannelAdapter
