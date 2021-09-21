@@ -382,7 +382,7 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
                         cancel(cause = firebaseFirestoreException, message = "Error Getting Channel Name")
                         return@addSnapshotListener
                     }
-                    val map = documentSnapshot!!.toObject(Channel::class.java)!!.channelName
+                    val map = documentSnapshot!!.toObject(TextChannel::class.java)!!.channelName
                     offer(map)
                 }
             awaitClose {
@@ -415,7 +415,7 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
     private fun createGeneralTextChannel(group: Group, activity: Activity) {
         val textChannelCollection = groupCollection.document(group.groupId).collection("textChannels")
         val id = group.groupId + "General"
-        val sectionTextChannel = Channel(
+        val sectionTextChannel = TextChannel(
             channelId = id,
             channelName = "General",
             createdAt = System.currentTimeMillis(),
@@ -438,7 +438,7 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
         val textChannelCollection = groupCollection.document(group.groupId).collection("textChannels")
         for (i in 1..8) {
             val id = textChannelCollection.document().id
-            val sectionTextChannel = Channel(
+            val sectionTextChannel = TextChannel(
                 channelId = id,
                 channelName = "Section $i",
                 createdAt = System.currentTimeMillis(),
@@ -471,7 +471,7 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
     }
 
     @ExperimentalCoroutinesApi
-    fun getGroupTextChannels(groupId: String) : Flow<List<Channel>> {
+    fun getGroupTextChannels(groupId: String) : Flow<List<TextChannel>> {
         return callbackFlow {
             val channels = groupCollection.document(groupId).collection("textChannels").orderBy("createdAt")
                 .addSnapshotListener { querySnapShot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
@@ -479,7 +479,7 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
                         cancel(cause = firebaseFirestoreException, message = "Error Fetching Channels")
                         return@addSnapshotListener
                     }
-                    val mapChannels = querySnapShot!!.documents.mapNotNull { it.toObject(Channel::class.java) }
+                    val mapChannels = querySnapShot!!.documents.mapNotNull { it.toObject(TextChannel::class.java) }
                     offer(mapChannels)
                 }
             awaitClose {

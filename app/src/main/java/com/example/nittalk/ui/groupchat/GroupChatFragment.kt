@@ -15,8 +15,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.asLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.nittalk.R
-import com.example.nittalk.data.Channel
 import com.example.nittalk.data.Group
+import com.example.nittalk.data.TextChannel
 import com.example.nittalk.data.User
 import com.example.nittalk.databinding.FragmentGroupChatBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -104,7 +104,7 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
 
         setUpGroupRecyclerView()
         setUpTextChannelRecyclerView()
-        setUpChannelsRecyclerView()
+        setUpVoiceChannelsRecyclerView()
         setUpMessageRecyclerView()
         setUpOnlineUserRecyclerView()
         setUpOfflineUserRecyclerView()
@@ -179,14 +179,14 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
         }
     }
 
-    override fun showTextChannelMessages(channel: Channel, channelId: String) {
-        groupChatViewModel.updateChannelSelected(channel.groupId, channelId)
+    override fun showTextChannelMessages(textChannel: TextChannel, channelId: String) {
+        groupChatViewModel.updateChannelSelected(textChannel.groupId, channelId)
         binding.apply {
-            groupChatToolbar.title = channel.channelName
+            groupChatToolbar.title = textChannel.channelName
             drawerLayout.closeDrawer(GravityCompat.START)
             messageEditText.setText("")
         }
-        Toast.makeText(requireContext(), "Clicked On ${channel.channelName}", Toast.LENGTH_SHORT)
+        Toast.makeText(requireContext(), "Clicked On ${textChannel.channelName}", Toast.LENGTH_SHORT)
             .show()
     }
 
@@ -288,21 +288,14 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
         return super.onOptionsItemSelected(item)
     }
 
-    private fun setUpChannelsRecyclerView() {
+    private fun setUpVoiceChannelsRecyclerView() {
         val channels = listOf(
-            "# Channel 1",
-            "# Channel 1",
-            "# Channel 1",
-            "# Channel 1",
-            "# Channel 1",
-            "# Channel 1",
-            "# Channel 1",
             "# Channel 1"
         )
-        val channelAdapter = ChannelAdapter(channels)
+        val voiceChannelAdapter = VoiceChannelAdapter(requireContext(), channels)
 
         binding.voiceChannelsRecyclerview.apply {
-            adapter = channelAdapter
+            adapter = voiceChannelAdapter
             layoutManager = LinearLayoutManager(requireContext())
         }
     }

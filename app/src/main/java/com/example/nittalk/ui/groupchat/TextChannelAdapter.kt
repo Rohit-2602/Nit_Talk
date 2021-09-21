@@ -7,12 +7,12 @@ import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nittalk.R
-import com.example.nittalk.data.Channel
+import com.example.nittalk.data.TextChannel
 import com.example.nittalk.databinding.ItemChannelBinding
 import com.example.nittalk.util.Comparators.TEXT_CHANNEL_COMPARATOR
 
 class TextChannelAdapter(private val listener: OnTextChannelSelected, private var selectedChannelId: LiveData<String>, private val groupChatFragment: GroupChatFragment):
-    ListAdapter<Channel, TextChannelAdapter.TextChannelViewHolder>(TEXT_CHANNEL_COMPARATOR) {
+    ListAdapter<TextChannel, TextChannelAdapter.TextChannelViewHolder>(TEXT_CHANNEL_COMPARATOR) {
 
     private val selectedChannel: String
         get() = run {
@@ -24,10 +24,10 @@ class TextChannelAdapter(private val listener: OnTextChannelSelected, private va
     }
 
     inner class TextChannelViewHolder(val binding: ItemChannelBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(textChannel: Channel, selectedChannel: String) {
+        fun bind(textTextChannel: TextChannel, selectedChannel: String) {
             binding.apply {
-                channelTitleTextView.text = textChannel.channelName
-                if (selectedChannel == textChannel.channelId) {
+                channelTitleTextView.text = textTextChannel.channelName
+                if (selectedChannel == textTextChannel.channelId) {
                     channelTitleTextView.setTextColor(Color.parseColor("#FFFFFF"))
                     hashTextView.setTextColor(Color.parseColor("#FFFFFF"))
                     channelLayout.setBackgroundResource(R.drawable.shape_channel_selected)
@@ -58,5 +58,5 @@ class TextChannelAdapter(private val listener: OnTextChannelSelected, private va
 }
 
 interface OnTextChannelSelected {
-    fun showTextChannelMessages(channel: Channel, channelId: String)
+    fun showTextChannelMessages(textChannel: TextChannel, channelId: String)
 }

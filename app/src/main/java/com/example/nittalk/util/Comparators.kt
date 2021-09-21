@@ -43,11 +43,11 @@ object Comparators {
         }
     }
 
-    val TEXT_CHANNEL_COMPARATOR = object : DiffUtil.ItemCallback<Channel>() {
-        override fun areItemsTheSame(oldItem: Channel, newItem: Channel): Boolean {
+    val TEXT_CHANNEL_COMPARATOR = object : DiffUtil.ItemCallback<TextChannel>() {
+        override fun areItemsTheSame(oldItem: TextChannel, newItem: TextChannel): Boolean {
             return oldItem.channelId == newItem.channelId
         }
-        override fun areContentsTheSame(oldItem: Channel, newItem: Channel): Boolean {
+        override fun areContentsTheSame(oldItem: TextChannel, newItem: TextChannel): Boolean {
             return oldItem == newItem
         }
     }

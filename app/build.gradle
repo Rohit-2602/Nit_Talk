@@ -14,7 +14,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.whatsappclone"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -60,6 +60,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-inappmessaging-display'
+
+    //Jitsi
+    implementation ('org.jitsi.react:jitsi-meet-sdk:3.8.0') { transitive = true }
 
 //    implementation 'com.google.firebase:firebase-auth-ktx:21.0.1'
     implementation 'com.google.android.gms:play-services-auth:19.0.0'
