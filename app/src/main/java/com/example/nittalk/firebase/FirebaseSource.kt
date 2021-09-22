@@ -309,6 +309,7 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
                 createGeneralTextChannel(group = group, activity = activity)
                 CoroutineScope(Dispatchers.IO).launch {
                     createTextChannel(channelName = user.section, group = group, activity = activity)
+                    createVoiceChannel(group = group)
                 }
 
                 val serverSelected1 = GroupPreferences(id, id + "General")
@@ -451,6 +452,22 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
         groupCollection.document(group.groupId).set(group)
     }
 
+    private suspend fun createVoiceChannel(group: Group) {
+        val voiceChannelCollection = groupCollection.document(group.groupId).collection("voiceChannels")
+        val id = voiceChannelCollection.document().id
+        val voiceChannel = VoiceChannel(
+            channelId = id,
+            channelName = "General",
+            createdAt = System.currentTimeMillis(),
+            groupId = group.groupId
+        )
+        voiceChannelCollection.document(id).set(voiceChannel).await()
+        group.channelsId.add(id)
+        group.voiceChannels.add(id)
+
+        groupCollection.document(group.groupId).set(group)
+    }
+
     @ExperimentalCoroutinesApi
     suspend fun getUserGroup(userId: String) : Flow<List<Group>> {
         val currentUser = getUserById(userId)
@@ -480,6 +497,24 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
                         return@addSnapshotListener
                     }
                     val mapChannels = querySnapShot!!.documents.mapNotNull { it.toObject(TextChannel::class.java) }
+                    offer(mapChannels)
+                }
+            awaitClose {
+                channels.remove()
+            }
+        }
+    }
+
+    @ExperimentalCoroutinesApi
+    fun getGroupVoiceChannels(groupId: String) : Flow<List<VoiceChannel>> {
+        return callbackFlow {
+            val channels = groupCollection.document(groupId).collection("voiceChannels").orderBy("createdAt")
+                .addSnapshotListener { querySnapShot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
+                    if (firebaseFirestoreException != null) {
+                        cancel(cause = firebaseFirestoreException, message = "Error Fetching Channels")
+                        return@addSnapshotListener
+                    }
+                    val mapChannels = querySnapShot!!.documents.mapNotNull { it.toObject(VoiceChannel::class.java) }
                     offer(mapChannels)
                 }
             awaitClose {

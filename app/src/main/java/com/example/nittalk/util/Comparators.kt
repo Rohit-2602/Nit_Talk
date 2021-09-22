@@ -52,4 +52,13 @@ object Comparators {
         }
     }
 
+    val VOICE_CHANNEL_COMPARATOR = object : DiffUtil.ItemCallback<VoiceChannel>() {
+        override fun areItemsTheSame(oldItem: VoiceChannel, newItem: VoiceChannel): Boolean {
+            return oldItem.channelId == newItem.channelId
+        }
+        override fun areContentsTheSame(oldItem: VoiceChannel, newItem: VoiceChannel): Boolean {
+            return oldItem == newItem
+        }
+    }
+
 }

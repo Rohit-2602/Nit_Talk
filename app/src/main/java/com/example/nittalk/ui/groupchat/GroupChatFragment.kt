@@ -18,16 +18,16 @@ import com.example.nittalk.R
 import com.example.nittalk.data.Group
 import com.example.nittalk.data.TextChannel
 import com.example.nittalk.data.User
+import com.example.nittalk.data.VoiceChannel
 import com.example.nittalk.databinding.FragmentGroupChatBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import org.jitsi.meet.sdk.JitsiMeetActivity
+import org.jitsi.meet.sdk.JitsiMeetConferenceOptions
 
 @AndroidEntryPoint
 class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSelected,
-    OnTextChannelSelected {
+    OnTextChannelSelected, OnVoiceChannelClicked {
 
     private var _binding: FragmentGroupChatBinding? = null
     private val binding get() = _binding!!
@@ -179,6 +179,26 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
         }
     }
 
+    private fun setUpVoiceChannelsRecyclerView() {
+        val voiceChannelAdapter = VoiceChannelAdapter(this)
+        groupChatViewModel.voiceChannels.asLiveData().observe(viewLifecycleOwner) {
+            voiceChannelAdapter.submitList(it)
+        }
+        binding.voiceChannelsRecyclerview.apply {
+            adapter = voiceChannelAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+        }
+    }
+
+    override fun joinVoiceCall(voiceChannel: VoiceChannel) {
+        val option = JitsiMeetConferenceOptions.Builder()
+            .setRoom(voiceChannel.groupId + voiceChannel.channelName)
+            .setWelcomePageEnabled(false)
+            .build()
+        voiceChannel.members.add(currentUser)
+        JitsiMeetActivity.launch(context, option)
+    }
+
     override fun showTextChannelMessages(textChannel: TextChannel, channelId: String) {
         groupChatViewModel.updateChannelSelected(textChannel.groupId, channelId)
         binding.apply {
@@ -204,6 +224,7 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setUpOnlineUserRecyclerView() {
         onlineAdapter = OnlineStatusAdapter()
         groupChatViewModel.onlineGroupMembers.observe(viewLifecycleOwner) {
@@ -216,6 +237,7 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setUpOfflineUserRecyclerView() {
         offlineAdapter = OfflineStatusAdapter()
         groupChatViewModel.offlineGroupMembers.observe(viewLifecycleOwner) {
@@ -232,12 +254,12 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
         val mainActivity = activity as AppCompatActivity
         mainActivity.setSupportActionBar(binding.groupChatToolbar)
 
-        CoroutineScope(Dispatchers.Main).launch {
+//        CoroutineScope(Dispatchers.Main).launch {
             groupChatViewModel.channelName.observe(viewLifecycleOwner) { channelName ->
                 binding.groupChatToolbar.title = channelName
                 binding.onlineChannelTitle.text = channelName
             }
-        }
+//        }
 
         val bottomNav = requireActivity().findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
@@ -247,9 +269,11 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
             R.string.open,
             R.string.close
         ) {
+            @SuppressLint("NotifyDataSetChanged")
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
                 super.onDrawerSlide(drawerView, slideOffset)
-                // TODO : Need to change this notify
+                onlineAdapter.notifyDataSetChanged()
+                offlineAdapter.notifyDataSetChanged()
                 textChannelAdapter.notifyDataSetChanged()
             }
             override fun onDrawerOpened(drawerView: View) {
@@ -286,18 +310,6 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
             return true
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun setUpVoiceChannelsRecyclerView() {
-        val channels = listOf(
-            "# Channel 1"
-        )
-        val voiceChannelAdapter = VoiceChannelAdapter(requireContext(), channels)
-
-        binding.voiceChannelsRecyclerview.apply {
-            adapter = voiceChannelAdapter
-            layoutManager = LinearLayoutManager(requireContext())
-        }
     }
 
     override fun onDestroyView() {

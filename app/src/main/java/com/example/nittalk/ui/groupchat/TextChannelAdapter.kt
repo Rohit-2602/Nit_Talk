@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nittalk.R
 import com.example.nittalk.data.TextChannel
-import com.example.nittalk.databinding.ItemChannelBinding
+import com.example.nittalk.databinding.ItemTextChannelBinding
 import com.example.nittalk.util.Comparators.TEXT_CHANNEL_COMPARATOR
 
 class TextChannelAdapter(private val listener: OnTextChannelSelected, private var selectedChannelId: LiveData<String>, private val groupChatFragment: GroupChatFragment):
@@ -23,7 +23,7 @@ class TextChannelAdapter(private val listener: OnTextChannelSelected, private va
         id
     }
 
-    inner class TextChannelViewHolder(val binding: ItemChannelBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class TextChannelViewHolder(val binding: ItemTextChannelBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(textTextChannel: TextChannel, selectedChannel: String) {
             binding.apply {
                 channelTitleTextView.text = textTextChannel.channelName
@@ -42,7 +42,7 @@ class TextChannelAdapter(private val listener: OnTextChannelSelected, private va
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TextChannelViewHolder {
-        val binding = ItemChannelBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemTextChannelBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         val viewHolder = TextChannelViewHolder(binding)
         viewHolder.binding.channelLayout.setOnClickListener {
             val position = viewHolder.absoluteAdapterPosition

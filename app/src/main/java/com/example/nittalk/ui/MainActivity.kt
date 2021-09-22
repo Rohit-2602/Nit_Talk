@@ -11,6 +11,9 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.nittalk.R
 import com.example.nittalk.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
+import org.jitsi.meet.sdk.JitsiMeet
+import org.jitsi.meet.sdk.JitsiMeetConferenceOptions
+import java.net.URL
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -29,6 +32,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val serverUrl = URL("https://meet.jit.si")
+        val defaultOptions = JitsiMeetConferenceOptions.Builder()
+            .setServerURL(serverUrl)
+            .setWelcomePageEnabled(false)
+            .setAudioOnly(true)
+            .build()
+        JitsiMeet.setDefaultConferenceOptions(defaultOptions)
 
         appBarConfiguration = AppBarConfiguration(setOf(R.id.groupChatFragment, R.id.inboxFragment, R.id.searchFragment, R.id.profileFragment))
 

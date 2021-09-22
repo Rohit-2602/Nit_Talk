@@ -8,7 +8,6 @@ import com.example.nittalk.firebase.FirebaseUtil
 import com.example.nittalk.util.Constant.GROUP_SELECTED
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
@@ -23,7 +22,7 @@ class GroupChatViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-    val currentUserUid = groupChatRepository.currentUser!!.uid
+    private val currentUserUid = groupChatRepository.currentUser!!.uid
 
     val currentUserFromDB = groupChatRepository.getCurrentUserFromDB()
 
@@ -31,7 +30,6 @@ class GroupChatViewModel @Inject constructor(
 //    fun getUserById(userId: String) =
 //        groupChatRepository.getUserById(userId)
 
-    @ExperimentalCoroutinesApi
     val currentUserGroups get() = run {
         val groups = MutableLiveData<List<Group>>()
         viewModelScope.launch {
@@ -44,18 +42,14 @@ class GroupChatViewModel @Inject constructor(
 
     private val groupSelected = preferencesManager.groupSelected
 
-    @ExperimentalCoroutinesApi
     val currentGroup = groupSelected.flatMapLatest {
         groupChatRepository.getGroupById(it)
     }
 
-    @ExperimentalCoroutinesApi
     val onlineGroupMembers = groupChatRepository.getGroupOnlineMembers().asLiveData()
 
-    @ExperimentalCoroutinesApi
     val offlineGroupMembers = groupChatRepository.getGroupOfflineMembers().asLiveData()
 
-    @ExperimentalCoroutinesApi
     val groupName = groupSelected.flatMapLatest { groupSelected ->
         groupChatRepository.getGroupName(groupSelected)
     }.asLiveData()
@@ -74,7 +68,6 @@ class GroupChatViewModel @Inject constructor(
             preferencesManager.updateGroupSelected(GROUP_SELECTED, groupId)
         }
 
-    @ExperimentalCoroutinesApi
     val channelName = groupSelected.flatMapLatest { groupSelected ->
         val channelId =
             groupPref.first().find { it.groupSelectedId == groupSelected }?.channelSelectedId
@@ -82,7 +75,6 @@ class GroupChatViewModel @Inject constructor(
         groupChatRepository.getChannelName(groupSelected, channelId)
     }.asLiveData()
 
-    @ExperimentalCoroutinesApi
     val channelSelected = groupPref.flatMapLatest { serverSelectedList ->
         val channelSelectedFlow = MutableStateFlow(groupSelected.first() + "General")
         channelSelectedFlow.value =
@@ -100,7 +92,6 @@ class GroupChatViewModel @Inject constructor(
             groupChatRepository.updateChannelSelected(groupSelectedId, channelSelectedId)
         }
 
-    @ExperimentalCoroutinesApi
     val messages = groupPref.flatMapLatest { serverSelectedList ->
         val channelId =
             serverSelectedList.find { it.groupSelectedId == groupSelected.first() }?.channelSelectedId
@@ -108,12 +99,14 @@ class GroupChatViewModel @Inject constructor(
         groupChatRepository.getMessages(groupSelected.first(), channelId)
     }
 
-    @ExperimentalCoroutinesApi
     val textChannels = groupSelected.flatMapLatest {
         groupChatRepository.getGroupTextChannels(it)
     }
 
-    @ExperimentalCoroutinesApi
+    val voiceChannels = groupSelected.flatMapLatest {
+        groupChatRepository.getGroupVoiceChannels(it)
+    }
+
     fun sendMessage(messageText: String, imageUrl: String) =
         viewModelScope.launch {
             groupChatRepository.sendMessage(

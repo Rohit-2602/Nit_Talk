@@ -190,7 +190,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/text_channels_textView"
-                        tools:listitem="@layout/item_channel" />
+                        tools:listitem="@layout/item_text_channel" />
 
                     <TextView
                         android:id="@+id/voice_channels_textView"
@@ -213,7 +213,7 @@
                         android:nestedScrollingEnabled="false"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/voice_channels_textView"
-                        tools:listitem="@layout/item_channel" />
+                        tools:listitem="@layout/item_text_channel" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.core.widget.NestedScrollView>

@@ -1,49 +1,51 @@
 package com.example.nittalk.ui.groupchat
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.nittalk.databinding.ItemChannelBinding
-import org.jitsi.meet.sdk.JitsiMeet
-import org.jitsi.meet.sdk.JitsiMeetActivity
-import org.jitsi.meet.sdk.JitsiMeetConferenceOptions
-import java.net.URL
+import com.example.nittalk.data.VoiceChannel
+import com.example.nittalk.databinding.ItemVoiceChannelBinding
+import com.example.nittalk.util.Comparators.VOICE_CHANNEL_COMPARATOR
 
-class VoiceChannelAdapter(private val context: Context, private val channels: List<String>): RecyclerView.Adapter<VoiceChannelAdapter.ChannelViewHolder>() {
+class VoiceChannelAdapter(private val listener: OnVoiceChannelClicked):
+    ListAdapter<VoiceChannel, VoiceChannelAdapter.VoiceChannelViewHolder>(VOICE_CHANNEL_COMPARATOR) {
 
-    inner class ChannelViewHolder(private val binding: ItemChannelBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(channelTitle: String) {
-            binding.channelTitleTextView.text = channelTitle
+    private val recyclerViewPool = RecyclerView.RecycledViewPool()
+    private lateinit var voiceMemberAdapter: VoiceMemberAdapter
+
+    inner class VoiceChannelViewHolder(private val binding: ItemVoiceChannelBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(voiceChannel: VoiceChannel) {
+            binding.channelTitleTextView.text = voiceChannel.channelName
+
+            voiceMemberAdapter = VoiceMemberAdapter(voiceChannel.members)
+            binding.membersRecyclerView.apply {
+                adapter = voiceMemberAdapter
+                layoutManager = LinearLayoutManager(binding.root.context)
+                setRecycledViewPool(recyclerViewPool)
+            }
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChannelViewHolder {
-        val serverUrl = URL("https://meet.jit.si")
-        val defaultOptions = JitsiMeetConferenceOptions.Builder()
-            .setServerURL(serverUrl)
-            .setWelcomePageEnabled(false)
-            .setAudioOnly(true)
-            .build()
-        JitsiMeet.setDefaultConferenceOptions(defaultOptions)
-
-        val binding = ItemChannelBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VoiceChannelViewHolder {
+        val binding = ItemVoiceChannelBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val viewHolder = VoiceChannelViewHolder(binding)
         binding.channelLayout.setOnClickListener {
-            val option = JitsiMeetConferenceOptions.Builder()
-                .setRoom("General")
-                .setWelcomePageEnabled(false)
-                .build()
-            JitsiMeetActivity.launch(context, option)
+            val voiceChannel = getItem(viewHolder.absoluteAdapterPosition)
+            voiceMemberAdapter.notifyDataSetChanged()
+            listener.joinVoiceCall(voiceChannel)
         }
-        return ChannelViewHolder(binding)
+        return viewHolder
     }
 
-    override fun onBindViewHolder(holder: ChannelViewHolder, position: Int) {
-        val currentItem = channels[position]
+    override fun onBindViewHolder(holder: VoiceChannelViewHolder, position: Int) {
+        val currentItem = getItem(position)
         holder.bind(currentItem)
     }
 
-    override fun getItemCount(): Int {
-        return channels.size
-    }
+}
+
+interface OnVoiceChannelClicked {
+    fun joinVoiceCall(voiceChannel: VoiceChannel)
 }
