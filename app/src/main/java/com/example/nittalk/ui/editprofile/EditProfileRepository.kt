@@ -12,7 +12,7 @@ class EditProfileRepository @Inject constructor(private val firebaseSource: Fire
     val progress = firebaseSource.progress
     val enable = firebaseSource.enable
 
-    fun uploadImage(imageUri: Uri, userId: String, activity: Activity) =
+    suspend fun uploadImage(imageUri: Uri, userId: String, activity: Activity) =
         firebaseSource.uploadImage(imageUri, userId, activity)
 
     suspend fun saveUserToDB(user: User) =

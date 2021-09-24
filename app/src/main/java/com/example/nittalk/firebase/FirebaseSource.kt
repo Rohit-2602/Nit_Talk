@@ -20,10 +20,7 @@ import com.example.nittalk.util.Constant.LOGIN_STATE_KEY
 import com.example.nittalk.util.Constant.branchIdHashMap
 import com.example.nittalk.util.Constant.semesterIdHashMap
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
-import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
@@ -36,6 +33,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.tasks.await
 import java.util.*
 import javax.inject.Inject
+
 
 class FirebaseSource @Inject constructor(private val preferencesManager: PreferencesManager, private val userDao: UserDao, private val groupPreferencesDao: GroupPreferencesDao) {
 
@@ -244,7 +242,7 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
         enable.value = true
     }
 
-    fun uploadImage(imageUri: Uri, userId: String, activity: Activity) {
+    suspend fun uploadImage(imageUri: Uri, userId: String, activity: Activity) {
         progress.value = View.VISIBLE
         enable.value = false
         storageReference.reference.child("${userId}/uploads/DP").putFile(imageUri)
@@ -258,16 +256,19 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
                     enable.value = true
                     showToast(activity, task.exception?.message)
                 }
-            }
+            }.await()
     }
 
     suspend fun getImageDownloadUrl(imageUri: Uri?, userId: String): String {
-        return if (imageUri != null) {
-            storageReference.reference.child("${userId}/uploads/DP").downloadUrl.await()
-                .toString()
-        } else {
-            DEFAULT_USER_DP
-        }
+        progress.value = View.VISIBLE
+        enable.value = false
+        var url = DEFAULT_USER_DP
+        storageReference.reference.child("${userId}/uploads/DP").downloadUrl.addOnSuccessListener {
+            url = it.toString()
+            progress.value = View.GONE
+            enable.value = true
+        }.await()
+        return url
     }
 
     fun addUserToGroup(user: User, activity: Activity) {

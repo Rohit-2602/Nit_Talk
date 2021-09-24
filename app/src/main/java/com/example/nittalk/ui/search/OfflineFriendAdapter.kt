@@ -9,7 +9,7 @@ import com.example.nittalk.data.User
 import com.example.nittalk.databinding.ItemFriendStatusBinding
 import com.example.nittalk.util.Comparators.USER_COMPARATOR
 
-class OfflineFriendAdapter :
+class OfflineFriendAdapter(private val listener: ChatWithFriend) :
     ListAdapter<User, OfflineFriendAdapter.OfflineViewHolder>(USER_COMPARATOR) {
 
     inner class OfflineViewHolder(private val binding: ItemFriendStatusBinding) :
@@ -27,6 +27,9 @@ class OfflineFriendAdapter :
         val binding =
             ItemFriendStatusBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         val offlineViewHolder = OfflineViewHolder(binding)
+        binding.friendChatButton.setOnClickListener {
+            listener.navigateToFriendScreen(getItem(offlineViewHolder.absoluteAdapterPosition))
+        }
         return offlineViewHolder
     }
 

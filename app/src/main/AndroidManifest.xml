@@ -24,7 +24,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.example.nittalk.ui.MainActivity" />
+        <activity android:name="com.example.nittalk.ui.MainActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <service
             android:name=".firebase.FirebaseMessagingService"

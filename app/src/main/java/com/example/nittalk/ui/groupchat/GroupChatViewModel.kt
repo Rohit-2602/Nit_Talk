@@ -22,7 +22,7 @@ class GroupChatViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-    private val currentUserUid = groupChatRepository.currentUser!!.uid
+    val currentUserUid = groupChatRepository.currentUser!!.uid
 
     val currentUserFromDB = groupChatRepository.getCurrentUserFromDB()
 

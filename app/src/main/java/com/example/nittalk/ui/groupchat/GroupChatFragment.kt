@@ -1,6 +1,9 @@
 package com.example.nittalk.ui.groupchat
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -21,6 +24,8 @@ import com.example.nittalk.data.User
 import com.example.nittalk.data.VoiceChannel
 import com.example.nittalk.databinding.FragmentGroupChatBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.storage.FirebaseStorage
+import com.theartofdev.edmodo.cropper.CropImage
 import dagger.hilt.android.AndroidEntryPoint
 import org.jitsi.meet.sdk.JitsiMeetActivity
 import org.jitsi.meet.sdk.JitsiMeetConferenceOptions
@@ -41,6 +46,9 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
     private lateinit var currentGroup : Group
     private lateinit var currentUser: User
 
+    private var imageUri :Uri?= null
+    private var imageUrl :String?= null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentGroupChatBinding.bind(view)
@@ -59,6 +67,13 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
         }
 
         binding.apply {
+
+            removeImageBtn.setOnClickListener {
+                imageUri = null
+                imageUrl = null
+                imageContainer.visibility = View.GONE
+            }
+
             textChannelsTextView.setOnClickListener {
                 if (binding.textChannelsRecyclerview.isVisible) {
                     binding.textChannelsTextView.setCompoundDrawablesWithIntrinsicBounds(
@@ -78,9 +93,7 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
                     binding.textChannelsRecyclerview.visibility = View.VISIBLE
                 }
             }
-        }
 
-        binding.apply {
             voiceChannelsTextView.setOnClickListener {
                 if (voiceChannelsRecyclerview.isVisible) {
                     voiceChannelsTextView.setCompoundDrawablesWithIntrinsicBounds(
@@ -100,6 +113,11 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
                     voiceChannelsRecyclerview.visibility = View.VISIBLE
                 }
             }
+
+            messageImageBtn.setOnClickListener {
+                startCropActivity()
+            }
+
         }
 
         setUpGroupRecyclerView()
@@ -131,16 +149,22 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
                 val message = messageEditText.text.toString().trim()
                 if (message != "") {
                     messageEditText.setText("")
-                    groupChatViewModel.sendMessage(messageText = message, imageUrl = "")
+                    groupChatViewModel.sendMessage(messageText = message, imageUrl = imageUrl ?: "")
+
+                    imageUri = null
+                    imageUrl = null
+                    imageContainer.visibility = View.GONE
                     val membersUidList = currentGroup.members
 
                     for (member in membersUidList) {
-                        groupChatViewModel.sendNotification(
-                            context = requireContext(),
-                            title = currentGroup.groupName,
-                            message = currentUser.name + ": " + message,
-                            userId = member
-                        )
+                        if(member != groupChatViewModel.currentUserUid) {
+                            groupChatViewModel.sendNotification(
+                                context = requireContext(),
+                                title = currentGroup.groupName,
+                                message = currentUser.name + ": " + message,
+                                userId = member
+                            )
+                        }
                     }
                 }
                 else {
@@ -149,6 +173,42 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
             }
         }
 
+    }
+
+    private fun startCropActivity() {
+        CropImage.activity()
+            .setAspectRatio(16, 16)
+            .start(requireContext(), this)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            val result = CropImage.getActivityResult(data)
+            if (resultCode == Activity.RESULT_OK) {
+                imageUri = result.uri
+
+                binding.apply {
+                    msgImage.setImageURI(imageUri)
+                    imageContainer.visibility = View.VISIBLE
+                    messageSendBtn.isEnabled = false
+                }
+                FirebaseStorage.getInstance().reference.child("images/$imageUri").putFile(imageUri!!)
+                    .addOnProgressListener {
+                        val progress = 100.0 * it.bytesTransferred / it.totalByteCount
+                        val currentProgress = progress.toInt()
+                        binding.imageUploadProgressBar.progress = currentProgress
+                    }
+                    .addOnSuccessListener {
+                        FirebaseStorage.getInstance().reference.child("images/$imageUri").downloadUrl
+                            .addOnSuccessListener { uri ->
+                                imageUrl = uri.toString()
+                                binding.messageSendBtn.isEnabled = true
+                            }
+                    }
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Toast.makeText(requireContext(), result.error.message, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun setUpGroupRecyclerView() {
@@ -199,14 +259,19 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
         JitsiMeetActivity.launch(context, option)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun showTextChannelMessages(textChannel: TextChannel, channelId: String) {
         groupChatViewModel.updateChannelSelected(textChannel.groupId, channelId)
+        val channelName = textChannel.channelName
         binding.apply {
-            groupChatToolbar.title = textChannel.channelName
+            groupChatToolbar.title = channelName
+            onlineChannelTitle.text = channelName
+//            welcomeTextView.text = "Welcome to #$channelName!"
+//            channelStartTextView.text = "This is the start of the #$channelName channel."
             drawerLayout.closeDrawer(GravityCompat.START)
             messageEditText.setText("")
         }
-        Toast.makeText(requireContext(), "Clicked On ${textChannel.channelName}", Toast.LENGTH_SHORT)
+        Toast.makeText(requireContext(), "Clicked On $channelName", Toast.LENGTH_SHORT)
             .show()
     }
 
@@ -250,14 +315,19 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setUpNavDrawer() {
         val mainActivity = activity as AppCompatActivity
         mainActivity.setSupportActionBar(binding.groupChatToolbar)
 
 //        CoroutineScope(Dispatchers.Main).launch {
             groupChatViewModel.channelName.observe(viewLifecycleOwner) { channelName ->
-                binding.groupChatToolbar.title = channelName
-                binding.onlineChannelTitle.text = channelName
+                binding.apply {
+                    groupChatToolbar.title = channelName
+                    onlineChannelTitle.text = channelName
+//                    welcomeTextView.text = "Welcome to #$channelName!"
+//                    channelStartTextView.text = "This is the start of the #$channelName channel."
+                }
             }
 //        }
 

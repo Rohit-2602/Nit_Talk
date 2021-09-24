@@ -18,6 +18,7 @@ class MessageAdapter: ListAdapter<Message, MessageAdapter.MessageViewHolder>(MES
         fun bind(message: Message, headerVisibility: Int, headerText: String) {
             binding.apply {
                 Glide.with(root).load(message.senderDp).circleCrop().into(senderDpIV)
+                Glide.with(root).load(message.imageUrl).into(messageImage)
                 senderNameTV.text = message.senderName
                 messageTV.text = message.message
                 val sentTime = MessageTimeUtil.getTimeAgoGroupChat(message.sendAt)

@@ -12,6 +12,12 @@
         <entry key="..\:/AndroidProjects/Nit_Talk/app/src/main/res/layout/item_voice_channel.xml" value="0.25416666666666665" />
         <entry key="..\:/AndroidProjects/Nit_Talk/app/src/main/res/layout/item_voice_members.xml" value="0.25416666666666665" />
         <entry key="..\:/AndroidProjects/Nit_Talk/app/src/main/res/layout/toolbar_profile.xml" value="0.19583333333333333" />
+        <entry key="..\:/Android_Studio_Project/Nit_Talk/app/src/main/res/layout/activity_jitsi_main.xml" value="0.23854166666666668" />
+        <entry key="..\:/Android_Studio_Project/Nit_Talk/app/src/main/res/layout/fragment_group_chat.xml" value="0.2" />
+        <entry key="..\:/Android_Studio_Project/Nit_Talk/app/src/main/res/layout/fragment_inbox.xml" value="0.25416666666666665" />
+        <entry key="..\:/Android_Studio_Project/Nit_Talk/app/src/main/res/layout/fragment_search.xml" value="0.25416666666666665" />
+        <entry key="..\:/Android_Studio_Project/Nit_Talk/app/src/main/res/layout/item_friend_status.xml" value="0.25416666666666665" />
+        <entry key="..\:/Android_Studio_Project/Nit_Talk/app/src/main/res/layout/item_message.xml" value="0.1890625" />
       </map>
     </option>
   </component>

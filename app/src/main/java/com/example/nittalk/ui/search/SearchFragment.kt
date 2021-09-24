@@ -9,14 +9,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.nittalk.R
+import com.example.nittalk.data.User
 import com.example.nittalk.databinding.FragmentSearchBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SearchFragment : Fragment(R.layout.fragment_search), OnClickListener,
-    IncomingRequestClickListener, OutGoingRequestClickListener {
+    IncomingRequestClickListener, OutGoingRequestClickListener, ChatWithFriend {
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
@@ -108,7 +110,7 @@ class SearchFragment : Fragment(R.layout.fragment_search), OnClickListener,
 
     @SuppressLint("SetTextI18n")
     private fun setUpOnlineFriendRecyclerView() {
-        onlineFriendAdapter = OnlineFriendAdapter()
+        onlineFriendAdapter = OnlineFriendAdapter(this)
         searchViewModel.userOnlineFriends.observe(viewLifecycleOwner) {
             if (it.isEmpty()) {
                 binding.apply {
@@ -133,7 +135,7 @@ class SearchFragment : Fragment(R.layout.fragment_search), OnClickListener,
 
     @SuppressLint("SetTextI18n")
     private fun setUpOfflineRecyclerView() {
-        offlineFriendAdapter = OfflineFriendAdapter()
+        offlineFriendAdapter = OfflineFriendAdapter(this)
         searchViewModel.userOfflineFriends.observe(viewLifecycleOwner) {
             if (it.isEmpty()) {
                 binding.apply {
@@ -154,6 +156,11 @@ class SearchFragment : Fragment(R.layout.fragment_search), OnClickListener,
             adapter = offlineFriendAdapter
             layoutManager = LinearLayoutManager(requireContext())
         }
+    }
+
+    override fun navigateToFriendScreen(friend: User) {
+        val action = SearchFragmentDirections.actionSearchFragmentToFriendChatFragment(friend.id, friend.name)
+        findNavController().navigate(action)
     }
 
     private fun setUpSearchRecyclerView() {

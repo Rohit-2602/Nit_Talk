@@ -25,7 +25,7 @@ class AuthRepository @Inject constructor(private val firebaseSource: FirebaseSou
     suspend fun createUser(user: User, infoFragment: InfoFragment) =
         firebaseSource.createUser(user, infoFragment)
 
-    fun uploadImage(imageUri: Uri, userId: String, activity: Activity) =
+    suspend fun uploadImage(imageUri: Uri, userId: String, activity: Activity) =
         firebaseSource.uploadImage(imageUri, userId, activity)
 
     suspend fun imageDownloadUrl(imageUri: Uri?, userId: String) : String =

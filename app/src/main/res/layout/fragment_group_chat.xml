@@ -23,6 +23,57 @@
             app:layout_constraintTop_toTopOf="parent"
             app:popupTheme="@style/Theme.AppCompat.Light" />
 
+<!--        <androidx.core.widget.NestedScrollView-->
+<!--            android:id="@+id/nestedScrollView2"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:overScrollMode="never"-->
+<!--            app:layout_constraintBottom_toTopOf="@id/constraintLayout"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/group_chat_toolbar">-->
+
+<!--            <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:focusableInTouchMode="true"-->
+<!--                android:layout_height="0dp">-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/welcome_textView"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_margin="10dp"-->
+<!--                    android:textColor="@color/white"-->
+<!--                    android:textSize="25sp"-->
+<!--                    android:textStyle="bold"-->
+<!--                    app:layout_constraintBottom_toTopOf="@id/channel_start_textView"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    tools:text="Welcome To #General" />-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/channel_start_textView"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_margin="10dp"-->
+<!--                    android:textColor="@color/white"-->
+<!--                    app:layout_constraintBottom_toTopOf="@id/message_RV"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    tools:text="This is the start of the #General Channel" />-->
+
+<!--                <androidx.recyclerview.widget.RecyclerView-->
+<!--                    android:id="@+id/message_RV"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginBottom="10dp"-->
+<!--                    android:nestedScrollingEnabled="false"-->
+<!--                    android:overScrollMode="never"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                    tools:listitem="@layout/item_message" />-->
+
+<!--            </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+<!--        </androidx.core.widget.NestedScrollView>-->
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/message_RV"
             android:layout_width="match_parent"
@@ -32,6 +83,46 @@
             app:layout_constraintBottom_toTopOf="@id/constraintLayout"
             app:layout_constraintTop_toBottomOf="@id/group_chat_toolbar"
             tools:listitem="@layout/item_message" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/image_container"
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:background="@color/black_gray"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+            tools:visibility="visible">
+
+            <ImageView
+                android:id="@+id/msg_image"
+                android:layout_width="100dp"
+                android:layout_height="0dp"
+                android:src="@drawable/bulbasaur"
+                app:layout_constraintBottom_toTopOf="@id/image_upload_progressBar"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/remove_image_btn"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:background="@drawable/shape_circle"
+                android:src="@drawable/ic_baseline_close_24"
+                app:layout_constraintBottom_toTopOf="@id/image_upload_progressBar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ProgressBar
+                android:id="@+id/image_upload_progressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:progress="45" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
