@@ -23,7 +23,7 @@
         tools:text="Rohit Sharma"
         android:layout_marginStart="10dp"
         android:textSize="18sp"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@id/user_status_Dp"
         app:layout_constraintStart_toEndOf="@id/user_status_Dp"
         app:layout_constraintTop_toTopOf="@id/user_status_Dp" />

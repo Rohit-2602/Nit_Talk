@@ -5,23 +5,18 @@
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
+
     <color name="black">#FF000000</color>
+    <color name="light_black">#191A1C</color>
     <color name="white">#FFFFFF</color>
+    <color name="gray">#A0A0A0</color>
+    <color name="dark_gray">#303136</color>
+    <color name="button_color">#4F535C</color>
 
     <color name="hintColor">#524758</color>
     <color name="backgroundColor">#41304a</color>
     <color name="blueColor">#14e3ef</color>
     <color name="darkBlue">#002b27</color>
     <color name="lightBlue">#056e83</color>
-
-    <color name="gray">#4f535c</color>
-    <color name="darker_gray">#aaa</color>
-
-    <color name="selectedChannelColor">#6a6c71</color>
-
-    <color name="black_gray">#424549</color>
-    <color name="light_gray">#36393e</color>
-    <color name="light_black">#282b30</color>
-    <color name="black_light">#1e2124</color>
 
 </resources>

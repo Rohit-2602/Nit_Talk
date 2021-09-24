@@ -33,8 +33,8 @@ class TextChannelAdapter(private val listener: OnTextChannelSelected, private va
                     channelLayout.setBackgroundResource(R.drawable.shape_channel_selected)
                 }
                 else {
-                    channelTitleTextView.setTextColor(Color.parseColor("#6a6c71"))
-                    hashTextView.setTextColor(Color.parseColor("#6a6c71"))
+                    channelTitleTextView.setTextColor(Color.parseColor("#A0A0A0"))
+                    hashTextView.setTextColor(Color.parseColor("#A0A0A0"))
                     channelLayout.setBackgroundColor(Color.parseColor("#303136"))
                 }
             }

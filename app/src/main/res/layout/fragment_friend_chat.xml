@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black_gray"
+    android:background="@color/dark_gray"
     tools:context=".ui.inbox.FriendChatFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="@color/light_black">
+        android:background="@color/black">
 
         <ImageView
             android:id="@+id/back_button"
@@ -21,6 +21,7 @@
             android:layout_height="25dp"
             android:layout_marginStart="5dp"
             android:src="@drawable/ic_back"
+            android:background="@color/black"
             app:layout_constraintBottom_toBottomOf="@+id/friend_chat_toolbar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/friend_chat_toolbar"
@@ -30,7 +31,7 @@
             android:id="@+id/friend_chat_toolbar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/light_black"
+            android:background="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/back_button"
             app:layout_constraintTop_toTopOf="parent"
@@ -69,8 +70,8 @@
         android:background="@drawable/shape_message_background"
         android:hint="@string/message"
         android:padding="10dp"
-        android:textColor="@color/selectedChannelColor"
-        android:textColorHint="@color/selectedChannelColor"
+        android:textColor="@color/white"
+        android:textColorHint="@color/gray"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/message_send_Btn"
         app:layout_constraintStart_toEndOf="@id/message_image_Btn"

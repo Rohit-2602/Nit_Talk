@@ -10,8 +10,8 @@
 
     <ImageView
         android:id="@+id/user_dp"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:scaleType="centerCrop"
         android:src="@drawable/bulbasaur"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,7 +23,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="20sp"
         app:layout_constraintEnd_toStartOf="@id/cancel_friend_request_btn"
         app:layout_constraintStart_toEndOf="@id/user_dp"

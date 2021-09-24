@@ -4,15 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black_gray"
-    android:rotation="0"
+    android:background="@color/dark_gray"
     tools:context=".ui.inbox.InboxFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/friend_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/light_black"
+        android:background="@color/black"
         app:layout_constraintTop_toTopOf="parent"
         app:title="Direct Messages"
         app:titleTextColor="@color/white" />
@@ -23,6 +22,7 @@
         android:layout_height="0dp"
         android:overScrollMode="never"
         android:visibility="gone"
+        android:background="@color/dark_gray"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/friend_toolbar"
         tools:listitem="@layout/item_friend_chat"

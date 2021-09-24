@@ -12,12 +12,33 @@
         <entry key="..\:/AndroidProjects/Nit_Talk/app/src/main/res/layout/item_voice_channel.xml" value="0.25416666666666665" />
         <entry key="..\:/AndroidProjects/Nit_Talk/app/src/main/res/layout/item_voice_members.xml" value="0.25416666666666665" />
         <entry key="..\:/AndroidProjects/Nit_Talk/app/src/main/res/layout/toolbar_profile.xml" value="0.19583333333333333" />
+        <entry key="..\:/Android_Studio_Project/Nit_Talk/app/src/main/res/drawable/bottom_nav_item_selector.xml" value="0.2546875" />
+        <entry key="..\:/Android_Studio_Project/Nit_Talk/app/src/main/res/drawable/ic_arrow_down.xml" value="0.2703125" />
+        <entry key="..\:/Android_Studio_Project/Nit_Talk/app/src/main/res/drawable/ic_arrow_up.xml" value="0.2546875" />
+        <entry key="..\:/Android_Studio_Project/Nit_Talk/app/src/main/res/drawable/ic_back.xml" value="0.2703125" />
+        <entry key="..\:/Android_Studio_Project/Nit_Talk/app/src/main/res/drawable/ic_baseline_send_request.xml" value="0.2703125" />
+        <entry key="..\:/Android_Studio_Project/Nit_Talk/app/src/main/res/drawable/ic_image.xml" value="0.2703125" />
+        <entry key="..\:/Android_Studio_Project/Nit_Talk/app/src/main/res/drawable/ic_send_24.xml" value="0.2703125" />
+        <entry key="..\:/Android_Studio_Project/Nit_Talk/app/src/main/res/drawable/shape_channel_selected.xml" value="0.2546875" />
+        <entry key="..\:/Android_Studio_Project/Nit_Talk/app/src/main/res/drawable/shape_circle.xml" value="0.2703125" />
+        <entry key="..\:/Android_Studio_Project/Nit_Talk/app/src/main/res/drawable/shape_message_background.xml" value="0.2703125" />
         <entry key="..\:/Android_Studio_Project/Nit_Talk/app/src/main/res/layout/activity_jitsi_main.xml" value="0.23854166666666668" />
-        <entry key="..\:/Android_Studio_Project/Nit_Talk/app/src/main/res/layout/fragment_group_chat.xml" value="0.2" />
+        <entry key="..\:/Android_Studio_Project/Nit_Talk/app/src/main/res/layout/activity_main.xml" value="0.23854166666666668" />
+        <entry key="..\:/Android_Studio_Project/Nit_Talk/app/src/main/res/layout/fragment_edit_profile.xml" value="0.23854166666666668" />
+        <entry key="..\:/Android_Studio_Project/Nit_Talk/app/src/main/res/layout/fragment_friend_chat.xml" value="0.25416666666666665" />
+        <entry key="..\:/Android_Studio_Project/Nit_Talk/app/src/main/res/layout/fragment_group_chat.xml" value="0.264" />
         <entry key="..\:/Android_Studio_Project/Nit_Talk/app/src/main/res/layout/fragment_inbox.xml" value="0.25416666666666665" />
         <entry key="..\:/Android_Studio_Project/Nit_Talk/app/src/main/res/layout/fragment_search.xml" value="0.25416666666666665" />
+        <entry key="..\:/Android_Studio_Project/Nit_Talk/app/src/main/res/layout/item_friend_chat.xml" value="0.25416666666666665" />
         <entry key="..\:/Android_Studio_Project/Nit_Talk/app/src/main/res/layout/item_friend_status.xml" value="0.25416666666666665" />
+        <entry key="..\:/Android_Studio_Project/Nit_Talk/app/src/main/res/layout/item_group.xml" value="0.1" />
+        <entry key="..\:/Android_Studio_Project/Nit_Talk/app/src/main/res/layout/item_incoming_request.xml" value="0.25416666666666665" />
         <entry key="..\:/Android_Studio_Project/Nit_Talk/app/src/main/res/layout/item_message.xml" value="0.1890625" />
+        <entry key="..\:/Android_Studio_Project/Nit_Talk/app/src/main/res/layout/item_outgoing_request.xml" value="0.25416666666666665" />
+        <entry key="..\:/Android_Studio_Project/Nit_Talk/app/src/main/res/layout/item_search_user.xml" value="0.25416666666666665" />
+        <entry key="..\:/Android_Studio_Project/Nit_Talk/app/src/main/res/layout/item_text_channel.xml" value="0.264" />
+        <entry key="..\:/Android_Studio_Project/Nit_Talk/app/src/main/res/layout/item_user_status.xml" value="0.25416666666666665" />
+        <entry key="..\:/Android_Studio_Project/Nit_Talk/app/src/main/res/layout/item_voice_channel.xml" value="0.25416666666666665" />
       </map>
     </option>
   </component>

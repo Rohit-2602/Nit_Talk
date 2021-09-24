@@ -265,7 +265,7 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
         val channelName = textChannel.channelName
         binding.apply {
             groupChatToolbar.title = channelName
-            onlineChannelTitle.text = channelName
+            onlineChannelTitle.text = "# ${channelName.lowercase()}"
 //            welcomeTextView.text = "Welcome to #$channelName!"
 //            channelStartTextView.text = "This is the start of the #$channelName channel."
             drawerLayout.closeDrawer(GravityCompat.START)
@@ -324,7 +324,7 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
             groupChatViewModel.channelName.observe(viewLifecycleOwner) { channelName ->
                 binding.apply {
                     groupChatToolbar.title = channelName
-                    onlineChannelTitle.text = channelName
+                    onlineChannelTitle.text = "# ${channelName.lowercase()}"
 //                    welcomeTextView.text = "Welcome to #$channelName!"
 //                    channelStartTextView.text = "This is the start of the #$channelName channel."
                 }

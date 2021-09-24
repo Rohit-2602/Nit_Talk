@@ -16,6 +16,7 @@
         android:layout_marginStart="5dp"
         android:text="#"
         android:textSize="20sp"
+        android:textColor="@color/gray"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -27,6 +28,7 @@
         android:layout_margin="5dp"
         android:text="code-of-conduct"
         android:textSize="16sp"
+        android:textColor="@color/gray"
         app:layout_constraintStart_toEndOf="@id/hash_textView"
         app:layout_constraintTop_toTopOf="parent" />
 

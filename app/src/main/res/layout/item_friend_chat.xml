@@ -5,7 +5,7 @@
     android:id="@+id/friend_cardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:backgroundTint="@color/black_gray"
+    android:backgroundTint="@color/dark_gray"
     android:clickable="true"
     app:cardElevation="0dp"
     android:focusable="true"
@@ -17,7 +17,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/black_gray">
+        android:background="@color/dark_gray">
 
         <ImageView
             android:id="@+id/friend_dp"
@@ -66,7 +66,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="Yesterday"
-            android:textColor="@color/white"
+            android:textColor="@color/gray"
             android:textSize="15sp"
             app:layout_constraintBottom_toTopOf="@+id/friend_last_message"
             app:layout_constraintEnd_toEndOf="parent"
