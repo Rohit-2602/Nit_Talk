@@ -4,31 +4,57 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#271a2f"
+    android:background="@color/light_black"
     tools:context=".ui.editprofile.EditProfileFragment">
 
-    <ImageView
-        android:id="@+id/back_Btn"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_margin="30dp"
-        android:src="@drawable/ic_back"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="ContentDescription" />
-
-    <TextView
-        android:id="@+id/loginText"
-        android:layout_width="wrap_content"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/edit_profile_toolbar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Edit Profile"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="30dp"
-        android:textColor="@color/white"
-        android:textSize="35sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/back_Btn"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:background="@color/black"
+        app:layout_constraintTop_toTopOf="parent" >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/back_Btn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_back"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginStart="10dp"
+                android:text="@string/edit_profile"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/back_Btn"
+                app:layout_constraintTop_toTopOf="parent" />
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="0dp"-->
+<!--                android:text="@string/save"-->
+<!--                android:textSize="20sp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:textColor="@color/white"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent" />-->
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.appcompat.widget.Toolbar>
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/profile_imageView"
@@ -41,10 +67,22 @@
         android:src="@drawable/ic_user"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/loginText"
+        app:layout_constraintTop_toBottomOf="@+id/edit_profile_toolbar"
         app:shapeAppearanceOverlay="@style/CircularImageView"
         app:strokeColor="@color/white"
         app:strokeWidth="1dp" />
+
+    <TextView
+        android:id="@+id/choose_profile_picture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/choose_profile_picture"
+        android:textColor="@color/gray"
+        android:textSize="18sp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_imageView" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/name_input_editText"
@@ -55,7 +93,8 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="30dp"
         android:hint="@string/name"
-        app:boxBackgroundColor="#41304a"
+        app:hintTextColor="@color/gray"
+        app:boxBackgroundColor="@color/dark_gray"
         app:boxBackgroundMode="filled"
         app:boxCornerRadiusBottomEnd="10dp"
         app:boxCornerRadiusBottomStart="10dp"
@@ -63,7 +102,7 @@
         app:boxCornerRadiusTopStart="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/profile_imageView">
+        app:layout_constraintTop_toBottomOf="@id/choose_profile_picture">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/name_editText"
@@ -121,9 +160,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="30dp"
-        android:backgroundTint="@color/blueColor"
-        android:text="Save"
-        android:textColor="@color/darkBlue"
+        android:backgroundTint="@color/dark_gray"
+        android:text="@string/save"
+        android:textColor="@color/gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/section_spinner" />

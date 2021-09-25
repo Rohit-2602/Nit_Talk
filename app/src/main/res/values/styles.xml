@@ -4,8 +4,7 @@
     <style name="TextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="hintTextAppearance">@style/TextAppearance.Shrine.TextInputLayout.HintText</item>
         <item name="android:paddingTop">8dp</item>
-        <item name="boxStrokeColor">@null</item>
-        <item name="background">@color/backgroundColor</item>
+        <item name="boxStrokeColor">@color/gray</item>
         <item name="hintTextColor">@color/white</item>
         <item name="android:textColorHint">@color/white</item>
     </style>

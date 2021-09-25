@@ -14,6 +14,7 @@ data class User(
     var name: String = "",
     var lowercaseName: String = "",
     var profileImageUrl: String = "",
+    var backgroundImageUrl: String = "",
     var semester: String = "",
     var branch: String = "",
     var section: String = "",

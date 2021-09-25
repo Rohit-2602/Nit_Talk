@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#271a2f"
+    android:background="@color/light_black"
     tools:context=".ui.auth.LoginFragment">
 
     <ImageView
@@ -66,12 +66,13 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="30dp"
         android:hint="@string/name"
-        app:boxBackgroundColor="#41304a"
+        app:boxBackgroundColor="@color/dark_gray"
         app:boxBackgroundMode="filled"
         app:boxCornerRadiusBottomEnd="10dp"
         app:boxCornerRadiusBottomStart="10dp"
         app:boxCornerRadiusTopEnd="10dp"
         app:boxCornerRadiusTopStart="10dp"
+        app:hintTextColor="@color/gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/profile_imageView">
@@ -81,6 +82,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@null"
+            android:textColorHint="@color/gray"
             android:inputType="textPersonName"
             android:lines="1"
             android:textColor="@color/white"
@@ -132,9 +134,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="30dp"
-        android:backgroundTint="@color/blueColor"
+        android:backgroundTint="@color/dark_gray"
         android:text="@string/create"
-        android:textColor="@color/darkBlue"
+        android:textColor="@color/gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/subsection_spinner" />

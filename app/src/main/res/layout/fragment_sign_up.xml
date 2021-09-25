@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#271a2f"
+    android:background="@color/light_black"
     tools:context=".ui.auth.LoginFragment">
 
     <ImageView
@@ -50,12 +50,13 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="30dp"
         android:hint="@string/email"
-        app:boxBackgroundColor="#41304a"
+        app:boxBackgroundColor="@color/dark_gray"
         app:boxBackgroundMode="filled"
         app:boxCornerRadiusBottomEnd="10dp"
         app:boxCornerRadiusBottomStart="10dp"
         app:boxCornerRadiusTopEnd="10dp"
         app:boxCornerRadiusTopStart="10dp"
+        app:hintTextColor="@color/gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textView">
@@ -81,18 +82,18 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="30dp"
         android:hint="@string/password"
-        app:boxBackgroundColor="#41304a"
+        app:boxBackgroundColor="@color/dark_gray"
         app:boxBackgroundMode="filled"
         app:boxCornerRadiusBottomEnd="10dp"
         app:boxCornerRadiusBottomStart="10dp"
         app:boxCornerRadiusTopEnd="10dp"
         app:boxCornerRadiusTopStart="10dp"
-        app:hintTextColor="@color/white"
+        app:hintTextColor="@color/gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/email_inputLayout"
         app:passwordToggleEnabled="true"
-        app:passwordToggleTint="@color/white">
+        app:passwordToggleTint="@color/gray">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/password_editText"
@@ -115,18 +116,18 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="30dp"
         android:hint="@string/re_enter_password"
-        app:boxBackgroundColor="#41304a"
+        app:boxBackgroundColor="@color/dark_gray"
         app:boxBackgroundMode="filled"
         app:boxCornerRadiusBottomEnd="10dp"
         app:boxCornerRadiusBottomStart="10dp"
         app:boxCornerRadiusTopEnd="10dp"
         app:boxCornerRadiusTopStart="10dp"
-        app:hintTextColor="@color/white"
+        app:hintTextColor="@color/gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/password_inputLayout"
         app:passwordToggleEnabled="true"
-        app:passwordToggleTint="@color/white">
+        app:passwordToggleTint="@color/gray">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/re_password_editText"
@@ -147,8 +148,8 @@
         android:layout_margin="30dp"
         android:backgroundTint="@null"
         android:text="@string/sign_up"
-        android:textColor="@color/darkBlue"
-        app:backgroundTint="@color/blueColor"
+        android:textColor="@color/gray"
+        app:backgroundTint="@color/dark_gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/re_password_inputLayout" />
@@ -157,15 +158,15 @@
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
         android:text="@string/already_have_a_account"
         android:textColor="@color/white"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/signin_button"
         app:layout_constraintEnd_toStartOf="@id/signin_button"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/signin_button" />
 
     <TextView
         android:id="@+id/signin_button"
@@ -174,8 +175,8 @@
         android:layout_marginStart="5dp"
         android:layout_marginBottom="20dp"
         android:text="@string/sign_in"
-        android:textColor="@color/blueColor"
-        android:textSize="16sp"
+        android:textColor="@color/gray"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

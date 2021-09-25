@@ -4,85 +4,140 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black">
+    tools:context=".ui.profile.ProfileFragment"
+    android:background="@color/dark_gray">
 
-    <ImageView
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/profile_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:paddingEnd="5dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="Your Profile"
+        app:titleTextColor="@color/white" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/background_constraint"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@color/gray"
+        app:layout_constraintTop_toBottomOf="@+id/profile_toolbar">
+
+        <ImageView
+            android:id="@+id/background_image"
+            android:layout_width="match_parent"
+            android:src="@color/gray"
+            android:scaleType="centerCrop"
+            android:layout_height="match_parent"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:id="@+id/background_image_button"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/shape_circle"
+            android:padding="5dp"
+            android:src="@drawable/ic_camera"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/profileIV"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:layout_marginStart="20dp"
+        android:scaleType="centerCrop"
         android:src="@drawable/bulbasaur"
-        android:layout_margin="30dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="50dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="ContentDescription" />
+        app:layout_constraintTop_toTopOf="@+id/background_constraint"
+        app:shapeAppearanceOverlay="@style/CircularImageView"
+        app:strokeColor="@color/white"
+        app:strokeWidth="1dp" />
 
     <TextView
         android:id="@+id/user_name_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="20dp"
         android:textColor="@color/white"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profileIV"
         tools:text="Rohit Sharma" />
 
-    <Button
+    <TextView
+        android:id="@+id/user_branch_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/user_name_textView"
+        tools:text="Electrical" />
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="2dp"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        android:layout_marginStart="5dp"
+        app:layout_constraintBottom_toBottomOf="@id/user_branch_textView"
+        app:layout_constraintStart_toEndOf="@id/user_branch_textView"
+        app:layout_constraintTop_toTopOf="@+id/user_branch_textView" />
+
+    <TextView
+        android:id="@+id/user_semester_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        app:layout_constraintStart_toEndOf="@id/view1"
+        app:layout_constraintTop_toBottomOf="@+id/user_name_textView"
+        tools:text="Semester 5" />
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="2dp"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        android:layout_marginStart="5dp"
+        app:layout_constraintBottom_toBottomOf="@id/user_semester_textView"
+        app:layout_constraintStart_toEndOf="@id/user_semester_textView"
+        app:layout_constraintTop_toTopOf="@+id/user_semester_textView" />
+
+    <TextView
+        android:id="@+id/user_section_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        app:layout_constraintStart_toEndOf="@id/view2"
+        app:layout_constraintTop_toBottomOf="@+id/user_name_textView"
+        tools:text="Section 8" />
+
+    <ImageView
         android:id="@+id/edit_profile_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:drawableLeft="@drawable/ic_edit"
-        android:text="Edit Profile"
-        android:textAllCaps="false"
-        android:layout_marginTop="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/user_name_textView" />
-
-    <Button
-        android:id="@+id/sign_out_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:drawableLeft="@drawable/ic_sign_out"
-        android:text="Sign Out"
-        android:layout_marginTop="20dp"
-        android:textAllCaps="false"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_profile_btn" />
-
-<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--        android:id="@+id/edit_profile_btn"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="40dp"-->
-<!--        android:background="@color/white"-->
-<!--        android:layout_marginTop="20dp"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/user_name_textView" >-->
-
-<!--        <ImageView-->
-<!--            android:id="@+id/edit_image"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:src="@drawable/ic_edit"-->
-<!--            android:layout_marginStart="20dp"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--        <TextView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:textSize="20sp"-->
-<!--            android:textColor="@color/black"-->
-<!--            android:layout_marginStart="10dp"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintStart_toEndOf="@id/edit_image"-->
-<!--            app:layout_constraintTop_toTopOf="parent"-->
-<!--            tools:text="Edit Profile" />-->
-
-<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
+        android:layout_margin="10dp"
+        android:src="@drawable/ic_edit"
+        android:padding="5dp"
+        android:background="@drawable/shape_circle"
+        app:layout_constraintTop_toBottomOf="@+id/background_constraint" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

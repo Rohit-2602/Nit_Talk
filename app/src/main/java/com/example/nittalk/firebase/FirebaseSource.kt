@@ -34,7 +34,6 @@ import kotlinx.coroutines.tasks.await
 import java.util.*
 import javax.inject.Inject
 
-
 class FirebaseSource @Inject constructor(private val preferencesManager: PreferencesManager, private val userDao: UserDao, private val groupPreferencesDao: GroupPreferencesDao) {
 
     private val firebaseAuth: FirebaseAuth by lazy {
@@ -235,12 +234,16 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
             "profileImageUrl" to user.profileImageUrl,
             "branch" to user.branch,
             "section" to user.section,
-            "semester" to user.semester
+            "semester" to user.semester,
+            "backgroundImageUrl" to user.backgroundImageUrl
         )
         userCollection.document(user.id).update(map).await()
         progress.value = View.GONE
         enable.value = true
     }
+
+    suspend fun updateUserBackgroundImage(userId: String, backgroundImage: String) =
+        userDao.updateUserBackgroundImage(userId, backgroundImage)
 
     suspend fun uploadImage(imageUri: Uri, userId: String, activity: Activity) {
         progress.value = View.VISIBLE
@@ -257,6 +260,21 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
                     showToast(activity, task.exception?.message)
                 }
             }.await()
+    }
+
+    fun uploadImageAndGetDownloadUrl(imageUri: Uri, userId: String) {
+        val path = imageUri.toString()
+        storageReference.reference.child("${userId}/images/${path}").putFile(imageUri)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    storageReference.reference.child("${userId}/images/${path}").downloadUrl.addOnCompleteListener {
+                        if(task.isSuccessful) {
+                            val downloadUrl = it.result.toString()
+                            userCollection.document(userId).update("backgroundImageUrl", downloadUrl)
+                        }
+                    }
+                }
+            }
     }
 
     suspend fun getImageDownloadUrl(imageUri: Uri?, userId: String): String {

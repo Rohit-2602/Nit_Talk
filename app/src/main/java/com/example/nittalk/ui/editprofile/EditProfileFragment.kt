@@ -46,7 +46,7 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
                 .into(profileImageView)
             nameEditText.setText(oldUser.name)
 
-            profileImageView.setOnClickListener {
+            chooseProfilePicture.setOnClickListener {
                 startCropActivity()
             }
         }
@@ -84,6 +84,9 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
                         updateUser()
                     }
                 }
+            }
+            backBtn.setOnClickListener {
+                findNavController().navigateUp()
             }
         }
 
@@ -152,8 +155,10 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
             "Semester 8"
         )
         val semesterAdapter = EditProfileSpinnerAdapter(requireContext(), semesterList)
-        binding.semesterSpinner.adapter = semesterAdapter
-        binding.semesterSpinner.setSelection(semesterList.indexOf(oldUser.semester))
+        binding.apply {
+            semesterSpinner.adapter = semesterAdapter
+            semesterSpinner.setSelection(semesterList.indexOf(oldUser.semester))
+        }
     }
 
     private fun setUpBranchSpinners() {
@@ -167,8 +172,10 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
             "Production"
         )
         val branchAdapter = EditProfileSpinnerAdapter(requireContext(), branchList)
-        binding.branchSpinner.adapter = branchAdapter
-        binding.branchSpinner.setSelection(branchList.indexOf(oldUser.branch))
+        binding.branchSpinner.apply {
+            adapter = branchAdapter
+            setSelection(branchList.indexOf(oldUser.branch))
+        }
     }
 
     private fun setUpSubSectionSpinners() {
@@ -183,8 +190,10 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
             "Section 8"
         )
         val subSectionAdapter = EditProfileSpinnerAdapter(requireContext(), subSectionList)
-        binding.sectionSpinner.adapter = subSectionAdapter
-        binding.sectionSpinner.setSelection(subSectionList.indexOf(oldUser.section))
+        binding.sectionSpinner.apply {
+            adapter = subSectionAdapter
+            setSelection(subSectionList.indexOf(oldUser.section))
+        }
     }
 
     override fun onDestroyView() {

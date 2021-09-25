@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:text="@string/search_your_friends_to_chat_with"
         android:textColor="@color/white"
-        android:textSize="24sp"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

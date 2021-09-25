@@ -32,4 +32,7 @@
     <string name="please_sign_in_to_continue">Please Sign In To Continue</string>
     <string name="forgot_password">Forgot Password</string>
     <string name="don_t_have_an_account">Don\'t have an account ?</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="choose_profile_picture">Choose Profile Picture</string>
+    <string name="save">Save</string>
 </resources>

@@ -16,4 +16,7 @@ interface UserDao {
     @Query("SELECT * FROM user_table WHERE id LIKE '%' || :userId || '%'")
     fun getCurrentUser(userId: String): Flow<User>
 
+    @Query("UPDATE user_table SET backgroundImageUrl =:backgroundImage WHERE id = :userId")
+    fun updateUserBackgroundImage(userId: String, backgroundImage: String)
+
 }
