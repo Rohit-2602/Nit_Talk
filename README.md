@@ -26,7 +26,7 @@ NitTalk is a fully functional Group Chat Messaging App with multiple features bu
 
 | Message Screen | Message Notification | User Status | Friend Screen(Dummy Data) |
 | -------------- | -------------------- | ----------- | ------------- |
-| <img src="https://user-images.githubusercontent.com/65807152/134796162-ee29c21f-739f-4847-97c7-e655fa41728c.jpg" width=250> | <img src="https://user-images.githubusercontent.com/65807152/125169992-5cb5e500-e1ca-11eb-836b-ac2d82a4c23d.jpg" width=250> | <img src="https://user-images.githubusercontent.com/65807152/134796181-885b9b93-f911-49a3-be9e-45fb5e1f2c4f.jpg" width=250> | <img src="https://user-images.githubusercontent.com/65807152/134796193-06f31923-ac0c-4309-8fd0-f3dade517c51.jpg" width=250> |
+| <img src="https://user-images.githubusercontent.com/65807152/134796162-ee29c21f-739f-4847-97c7-e655fa41728c.jpg" width=250> | <img src="https://user-images.githubusercontent.com/65807152/134804236-50445701-1823-4d41-9e49-b2c46a7da031.jpg" width=250> | <img src="https://user-images.githubusercontent.com/65807152/134796181-885b9b93-f911-49a3-be9e-45fb5e1f2c4f.jpg" width=250> | <img src="https://user-images.githubusercontent.com/65807152/134796193-06f31923-ac0c-4309-8fd0-f3dade517c51.jpg" width=250> |
 
 | Search User | Friend Chat | Friend Message | Profile |
 | ----------- | ----------- | -------------- | ------- |
