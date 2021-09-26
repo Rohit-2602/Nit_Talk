@@ -115,7 +115,10 @@ class GroupChatViewModel @Inject constructor(
             )
         }
 
-    fun sendNotification(context: Context, title: String, message: String, userId: String) =
-        firebaseUtil.sendNotification(context, title, message, userId)
+    val currentUserToken =
+        firebaseUtil.getCurrentUserToken(currentUserUid)
+
+    fun sendNotification(context: Context, title: String, message: String, userId: String,currentUserToken: String) =
+        firebaseUtil.sendNotification(context, title, message, userId, currentUserToken)
 
 }

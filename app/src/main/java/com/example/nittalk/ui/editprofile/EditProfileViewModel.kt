@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.net.Uri
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.nittalk.data.User
@@ -21,33 +20,21 @@ class EditProfileViewModel @Inject constructor(private val repository: EditProfi
     val progress = repository.progress
     val enable = repository.enable
 
-    private fun saveUserToDB(user: User) =
-        viewModelScope.launch {
-            repository.saveUserToDB(user)
-        }
+    suspend fun saveUserToDB(user: User) = repository.saveUserToDB(user)
 
     fun uploadImage(imageUri: Uri, userId: String, activity: Activity) =
         viewModelScope.launch {
             repository.uploadImage(imageUri, userId, activity)
         }
 
-    fun imageDownloadUrl(imageUri: Uri?): MutableLiveData<String> {
-        val imageUrl = MutableLiveData<String>()
-        viewModelScope.launch {
-            val url = repository.imageDownloadUrl(imageUri, currentUser!!.uid)
-            imageUrl.postValue(url)
+    suspend fun imageDownloadUrl(): String {
+        return repository.imageDownloadUrl(currentUser!!.uid)
+    }
+
+    fun updateFirebaseUser(user: User) =
+        CoroutineScope(Dispatchers.IO).launch {
+            repository.updateFirebaseUser(user)
         }
-        return imageUrl
-    }
-
-    private fun updateFirebaseUser(user: User) = CoroutineScope(Dispatchers.Main).launch {
-        repository.updateFirebaseUser(user)
-    }
-
-    fun updateUser(user: User) {
-        saveUserToDB(user)
-        updateFirebaseUser(user)
-    }
 
     fun showAlertDialog(oldUserBranch: String, oldUserSemester: String, activity: Activity, context: Context, updateUser: () -> User) {
         val alertDialog = AlertDialog.Builder(context)

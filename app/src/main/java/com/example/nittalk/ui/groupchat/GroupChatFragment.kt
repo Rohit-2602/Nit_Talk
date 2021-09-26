@@ -54,6 +54,8 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
         _binding = FragmentGroupChatBinding.bind(view)
         setUpNavDrawer()
 
+        val currentUserToken = groupChatViewModel.currentUserToken
+
         groupChatViewModel.currentGroup.asLiveData().observe(viewLifecycleOwner) {
             currentGroup = it
         }
@@ -162,7 +164,8 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
                                 context = requireContext(),
                                 title = currentGroup.groupName,
                                 message = currentUser.name + ": " + message,
-                                userId = member
+                                userId = member,
+                                currentUserToken = currentUserToken
                             )
                         }
                     }

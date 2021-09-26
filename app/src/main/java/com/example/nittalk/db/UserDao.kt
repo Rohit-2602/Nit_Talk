@@ -19,4 +19,7 @@ interface UserDao {
     @Query("UPDATE user_table SET backgroundImageUrl =:backgroundImage WHERE id = :userId")
     fun updateUserBackgroundImage(userId: String, backgroundImage: String)
 
+    @Query("UPDATE user_table SET profileImageUrl =:profileImage WHERE id = :userId")
+    fun updateUserProfileImage(userId: String, profileImage: String)
+
 }

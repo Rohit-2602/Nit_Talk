@@ -28,8 +28,8 @@ class AuthRepository @Inject constructor(private val firebaseSource: FirebaseSou
     suspend fun uploadImage(imageUri: Uri, userId: String, activity: Activity) =
         firebaseSource.uploadImage(imageUri, userId, activity)
 
-    suspend fun imageDownloadUrl(imageUri: Uri?, userId: String) : String =
-        firebaseSource.getImageDownloadUrl(imageUri, userId)
+    suspend fun imageDownloadUrl(userId: String) : String =
+        firebaseSource.getProfileImageDownloadUrl(userId)
 
     fun addUserToGroup(user: User, activity: Activity) =
         firebaseSource.addUserToGroup(user, activity)

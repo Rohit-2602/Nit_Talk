@@ -52,8 +52,8 @@
 
     <ImageView
         android:id="@+id/request_cancel_button"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:background="@drawable/shape_circle"
         android:padding="5dp"
         android:src="@drawable/ic_cancel_request"

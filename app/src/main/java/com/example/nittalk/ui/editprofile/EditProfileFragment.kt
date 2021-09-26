@@ -16,6 +16,9 @@ import com.example.nittalk.data.User
 import com.example.nittalk.databinding.FragmentEditProfileBinding
 import com.theartofdev.edmodo.cropper.CropImage
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
@@ -102,18 +105,17 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
             updatedUser.branch = branchSpinner.selectedItem.toString()
             updatedUser.section = sectionSpinner.selectedItem.toString()
 
-            if (imageUri == null) {
-                // Nothing
+            CoroutineScope(Dispatchers.IO).launch {
+                val url = editProfileViewModel.imageDownloadUrl()
+                updatedUser.profileImageUrl = url
+                editProfileViewModel.saveUserToDB(updatedUser)
+            }.invokeOnCompletion {
+                editProfileViewModel.updateFirebaseUser(updatedUser)
+                CoroutineScope(Dispatchers.Main).launch {
+                    createUserProgressbar.visibility = View.GONE
+                    navigateToProfileFragment()
+                }
             }
-            else {
-                editProfileViewModel.imageDownloadUrl(imageUri)
-                    .observe(viewLifecycleOwner) { imageUrl ->
-                        updatedUser.profileImageUrl = imageUrl
-                    }
-            }
-            editProfileViewModel.updateUser(updatedUser)
-            createUserProgressbar.visibility = View.GONE
-            navigateToProfileFragment()
         }
         return updatedUser
     }

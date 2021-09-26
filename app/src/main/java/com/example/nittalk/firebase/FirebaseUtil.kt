@@ -1,7 +1,6 @@
 package com.example.nittalk.firebase
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
@@ -34,25 +33,36 @@ class FirebaseUtil {
         if (currentUser != null) {
             tokenCollection.document(currentUser.uid).set(map).addOnCompleteListener {
                 if (it.isSuccessful) {
-                    Log.i("Token", "Save Token $token")
+//                    Toast.makeText(context, "Token Updated", Toast.LENGTH_SHORT).show()
                 } else {
-                    Log.i("Token", "Failed To Save Token")
+//                    Toast.makeText(context, it.exception!!.message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
-
     }
 
-    fun sendNotification(context: Context, title: String, message: String, userId: String) {
+    fun getCurrentUserToken(currentUserId: String): String {
+        var token = ""
+        tokenCollection.document(currentUserId).get().addOnCompleteListener {
+            token = it.result.getString("token")!!.toString()
+        }
+        return token
+    }
+
+    fun sendNotification(context: Context, title: String, message: String, userId: String, currentUserToken: String) {
         val userTokenRef = tokenCollection.document(userId)
 
         userTokenRef
             .addSnapshotListener { documentSnapshot: DocumentSnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
                 if (firebaseFirestoreException != null) {
-                    Log.i("Error Getting UserToken", firebaseFirestoreException.message.toString())
+                    Toast.makeText(context, firebaseFirestoreException.message, Toast.LENGTH_SHORT).show()
                     return@addSnapshotListener
                 }
                 val deviceToken = documentSnapshot!!.getString("token")
+
+                if (deviceToken == currentUserToken) {
+                    return@addSnapshotListener
+                }
 
                 val notification = JSONObject()
                 val notificationData = JSONObject()
@@ -68,11 +78,9 @@ class FirebaseUtil {
 
                 val request = object : JsonObjectRequest(fcmApiUrl, notification,
                     {
-                        Log.i("Rohit JSON", it.toString())
                         Toast.makeText(context, "Notification Sent", Toast.LENGTH_SHORT).show()
                     },
                     {
-                        Log.i("Rohit JSON", it.message.toString())
                         Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show()
                     }) {
                     override fun getHeaders(): MutableMap<String, String> {

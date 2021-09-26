@@ -226,8 +226,10 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
     }
 
     suspend fun updateFirebaseUser(user: User) {
-        progress.value = View.VISIBLE
-        enable.value = false
+        CoroutineScope(Dispatchers.Main).launch {
+            progress.value = View.VISIBLE
+            enable.value = false
+        }
         val map : Map<String, String> = hashMapOf(
             "name" to user.name,
             "lowercaseName" to user.name.lowercase(),
@@ -238,8 +240,10 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
             "backgroundImageUrl" to user.backgroundImageUrl
         )
         userCollection.document(user.id).update(map).await()
-        progress.value = View.GONE
-        enable.value = true
+        CoroutineScope(Dispatchers.Main).launch {
+            progress.value = View.GONE
+            enable.value = true
+        }
     }
 
     suspend fun updateUserBackgroundImage(userId: String, backgroundImage: String) =
@@ -277,14 +281,10 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
             }
     }
 
-    suspend fun getImageDownloadUrl(imageUri: Uri?, userId: String): String {
-        progress.value = View.VISIBLE
-        enable.value = false
+    suspend fun getProfileImageDownloadUrl(userId: String): String {
         var url = DEFAULT_USER_DP
-        storageReference.reference.child("${userId}/uploads/DP").downloadUrl.addOnSuccessListener {
-            url = it.toString()
-            progress.value = View.GONE
-            enable.value = true
+        storageReference.reference.child("${userId}/uploads/DP").downloadUrl.addOnCompleteListener {
+            url = it.result.toString()
         }.await()
         return url
     }

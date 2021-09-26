@@ -63,10 +63,7 @@ class InfoFragment : Fragment(R.layout.fragment_info) {
                 }
                 else {
                     createUserProgressbar.visibility = View.VISIBLE
-                    authViewModel.imageDownloadUrl(
-                        imageUri,
-                        currentUserUid
-                    ).observe(viewLifecycleOwner) { imageUrl ->
+                    authViewModel.imageDownloadUrl(currentUserUid).observe(viewLifecycleOwner) { imageUrl ->
                         val user = User(
                             id = currentUserUid,
                             name = nameEditText.text.toString(),

@@ -52,10 +52,10 @@
 
     <ImageView
         android:id="@+id/friend_chat_button"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:background="@drawable/shape_circle"
-        android:padding="5dp"
+        android:padding="8dp"
         android:src="@drawable/ic_friend_chat"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
