@@ -16,6 +16,14 @@ NitTalk is a fully functional Group Chat Messaging App with multiple features bu
 - [Jitsi Meet SDK](https://jitsi.github.io/handbook/docs/dev-guide/dev-guide-android-sdk) - It is an Android library which embodies the whole Jitsi Meet experience and makes it reusable by third-party apps.
 - [Glide](https://github.com/bumptech/glide) - An image loading and caching library for Android focused on smooth scrolling
 
+## Application Install
+You can Install and test the app from below 👇
+
+[![Nit Talk](https://img.shields.io/badge/Nit_Talk-APK-silver.svg?style=for-the-badge&logo=android)](https://github.com/Rohit-2602/Nit_Talk/releases)
+
+## Project SetUp
+Clone the repository on your machine. Open the project on your IDE, connect it to firebase, add **google-services.json** file and you are good to go 😃.
+
 ## Firebase FlowChart 👀
  [**Firebase Flow Chart**](https://whimsical.com/nit-talk-firebase-flowchart-AqJqtDqdypWyPiYBVTG5cS)
 
