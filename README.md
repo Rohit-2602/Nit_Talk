@@ -26,6 +26,11 @@ Clone the repository on your machine. Open the project on your IDE, connect it t
 
 ## Firebase FlowChart 👀
  [**Firebase Flow Chart**](https://whimsical.com/nit-talk-firebase-flowchart-AqJqtDqdypWyPiYBVTG5cS)
+ 
+## Video
+This is a small/basic introduction video about NitTalk
+
+[](https://user-images.githubusercontent.com/65807152/134813658-30d9e4ec-0075-402b-b11c-d5d3f392e7b3.mp4)
 
 ## Screenshots 📷
 | Login | SignUp | Info | HomeScreen |
