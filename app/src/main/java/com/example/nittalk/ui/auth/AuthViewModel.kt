@@ -52,13 +52,13 @@ class AuthViewModel @Inject constructor(
             authRepository.uploadImage(imageUri, userId, activity)
         }
 
-    fun imageDownloadUrl(userId: String): MutableLiveData<String> {
-        val imageUrl = MutableLiveData<String>()
+    fun imageDownloadUrl(imageUrl: String?, userId: String): MutableLiveData<String> {
+        val imageDownloadUrl = MutableLiveData<String>()
         viewModelScope.launch {
-            val url = authRepository.imageDownloadUrl(userId)
-            imageUrl.postValue(url)
+            val url = authRepository.imageDownloadUrl(imageUrl, userId)
+            imageDownloadUrl.postValue(url)
         }
-        return imageUrl
+        return imageDownloadUrl
     }
 
     fun updateDeviceToken(token: String) =

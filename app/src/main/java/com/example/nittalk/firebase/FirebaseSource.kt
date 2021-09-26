@@ -281,11 +281,22 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
             }
     }
 
-    suspend fun getProfileImageDownloadUrl(userId: String): String {
+    suspend fun getProfileImageDownloadUrl(imageUrl: String?, userId: String): String {
         var url = DEFAULT_USER_DP
-        storageReference.reference.child("${userId}/uploads/DP").downloadUrl.addOnCompleteListener {
-            url = it.result.toString()
-        }.await()
+        if (imageUrl == null) {
+            return url
+        }
+        else {
+            storageReference.reference.child("${userId}/uploads/DP")
+                .downloadUrl.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        url = task.result.toString()
+                    }
+                    else {
+                        return@addOnCompleteListener
+                    }
+                }.await()
+        }
         return url
     }
 
@@ -313,7 +324,7 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
                 enable.value = true
             } else {
                 val link =
-                    "https://firebasestorage.googleapis.com/v0/b/whatsapp-clone-bcfa9.appspot.com/o/spiderman.jpg?alt=media&token=22bbb815-26b7-4da1-87c7-29961f510d90"
+                    "https://firebasestorage.googleapis.com/v0/b/whatsapp-clone-bcfa9.appspot.com/o/spiderman.jpg?alt=media&token=6d712d7c-7f28-45e9-a5ce-df21314a9bd3"
                 val group = Group(
                     groupId = id,
                     groupName = "${user.branch} ${user.semester}",
