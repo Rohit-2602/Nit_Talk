@@ -281,14 +281,11 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
             }
     }
 
-    suspend fun getProfileImageDownloadUrl(imageUrl: String?, userId: String): String {
+    suspend fun getProfileImageDownloadUrl(userId: String): String {
         var url = DEFAULT_USER_DP
-        if (imageUrl == null) {
-            return url
-        }
-        else {
-            storageReference.reference.child("${userId}/uploads/DP")
-                .downloadUrl.addOnCompleteListener { task ->
+        try {
+            storageReference.reference.child("$userId/uploads/DP").downloadUrl
+                .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         url = task.result.toString()
                     }
@@ -296,6 +293,9 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
                         return@addOnCompleteListener
                     }
                 }.await()
+        }
+        catch (e: Exception) {
+            url = DEFAULT_USER_DP
         }
         return url
     }

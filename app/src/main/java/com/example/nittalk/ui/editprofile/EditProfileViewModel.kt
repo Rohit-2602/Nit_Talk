@@ -27,8 +27,8 @@ class EditProfileViewModel @Inject constructor(private val repository: EditProfi
             repository.uploadImage(imageUri, userId, activity)
         }
 
-    suspend fun imageDownloadUrl(imageUrl: String?): String {
-        return repository.imageDownloadUrl(imageUrl, currentUser!!.uid)
+    suspend fun imageDownloadUrl(): String {
+        return repository.imageDownloadUrl(currentUser!!.uid)
     }
 
     fun updateFirebaseUser(user: User) =

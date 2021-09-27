@@ -106,7 +106,7 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
             updatedUser.section = sectionSpinner.selectedItem.toString()
 
             CoroutineScope(Dispatchers.IO).launch {
-                val url = editProfileViewModel.imageDownloadUrl(oldUser.profileImageUrl)
+                val url = editProfileViewModel.imageDownloadUrl()
                 updatedUser.profileImageUrl = url
                 editProfileViewModel.saveUserToDB(updatedUser)
             }.invokeOnCompletion {
