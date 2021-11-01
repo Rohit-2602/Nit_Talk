@@ -7,6 +7,7 @@
     android:layout_marginTop="10dp"
     android:layout_marginStart="10dp"
     android:layout_marginEnd="10dp"
+    tools:background="@color/dark_gray"
     android:id="@+id/message_constraint">
 
     <LinearLayout
@@ -88,14 +89,24 @@
         android:id="@+id/message_TV"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
         android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
         android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@+id/message_edited_TV"
         app:layout_constraintStart_toEndOf="@id/sender_Dp_IV"
         app:layout_constraintTop_toBottomOf="@id/sender_name_TV"
         tools:text="Hello There This is My First Message" />
+
+    <TextView
+        android:id="@+id/message_edited_TV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/gray"
+        android:layout_marginEnd="10dp"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sender_name_TV"
+        tools:text="(edited)" />
 
     <ImageView
         android:id="@+id/message_image"

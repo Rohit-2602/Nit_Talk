@@ -12,7 +12,8 @@ import com.example.nittalk.util.Comparators.MESSAGE_COMPARATOR
 import com.example.nittalk.util.MessageTimeUtil
 import java.text.DateFormat
 
-class MessageAdapter: ListAdapter<Message, MessageAdapter.MessageViewHolder>(MESSAGE_COMPARATOR) {
+class MessageAdapter(private val listener: OnMessageLongPress):
+    ListAdapter<Message, MessageAdapter.MessageViewHolder>(MESSAGE_COMPARATOR) {
 
     inner class MessageViewHolder(private val binding: ItemMessageBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(message: Message, headerVisibility: Int, headerText: String) {
@@ -20,6 +21,12 @@ class MessageAdapter: ListAdapter<Message, MessageAdapter.MessageViewHolder>(MES
                 Glide.with(root).load(message.senderDp).circleCrop().into(senderDpIV)
                 Glide.with(root).load(message.imageUrl).into(messageImage)
                 senderNameTV.text = message.senderName
+                if (message.edited) {
+                    messageEditedTV.visibility = View.VISIBLE
+                }
+                else {
+                    messageEditedTV.visibility = View.GONE
+                }
                 messageTV.text = message.message
                 val sentTime = MessageTimeUtil.getTimeAgoGroupChat(message.sendAt)
                 messageSentTime.text = sentTime
@@ -34,8 +41,9 @@ class MessageAdapter: ListAdapter<Message, MessageAdapter.MessageViewHolder>(MES
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageAdapter.MessageViewHolder {
         val binding = ItemMessageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         val viewHolder = MessageViewHolder(binding)
-        binding.messageConstraint.setOnClickListener {
-
+        binding.messageConstraint.setOnLongClickListener {
+            listener.showMessageOptions(getItem(viewHolder.absoluteAdapterPosition))
+            return@setOnLongClickListener true
         }
         return viewHolder
     }
@@ -60,4 +68,8 @@ class MessageAdapter: ListAdapter<Message, MessageAdapter.MessageViewHolder>(MES
         }
         holder.bind(currentMessage, headerVisibility, headerText)
     }
+}
+
+interface OnMessageLongPress {
+    fun showMessageOptions(message: Message)
 }

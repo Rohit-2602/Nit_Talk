@@ -3,6 +3,7 @@ package com.example.nittalk.ui.groupchat
 import android.content.Context
 import androidx.lifecycle.*
 import com.example.nittalk.data.Group
+import com.example.nittalk.data.Message
 import com.example.nittalk.data.PreferencesManager
 import com.example.nittalk.firebase.FirebaseUtil
 import com.example.nittalk.util.Constant.GROUP_SELECTED
@@ -112,6 +113,22 @@ class GroupChatViewModel @Inject constructor(
             groupChatRepository.sendMessage(
                 groupPref.first().find { it.channelSelectedId == channelSelected.asFlow().first() }!!,
                 messageText, imageUrl, currentUserFromDB.first()
+            )
+        }
+
+    fun editMessage(messageText: String, message: Message) =
+        viewModelScope.launch {
+            groupChatRepository.editMessage(
+                groupPref.first().find { it.channelSelectedId == channelSelected.asFlow().first() }!!,
+                messageText, message
+            )
+        }
+
+    fun deleteMessage(message: Message) =
+        viewModelScope.launch {
+            groupChatRepository.deleteMessage(
+                groupPref.first().find { it.channelSelectedId == channelSelected.asFlow().first() }!!,
+                message
             )
         }
 

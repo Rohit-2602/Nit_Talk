@@ -568,6 +568,26 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
         messageCollection.document(id).set(message)
     }
 
+    fun editMessage(groupSelectedId: String, channelSelectedId: String, messageText: String, message: Message) {
+        val messageCollection = groupCollection.document(groupSelectedId).collection("textChannels").document(channelSelectedId).collection("messages")
+        val editedMessage = Message(
+            senderId = firebaseAuth.currentUser!!.uid,
+            message = messageText,
+            messageId = message.messageId,
+            imageUrl = message.imageUrl,
+            senderDp = message.senderDp,
+            senderName = message.senderName,
+            sendAt = message.sendAt,
+            edited = true
+        )
+        messageCollection.document(message.messageId).set(editedMessage)
+    }
+
+    fun deleteMessage(groupSelectedId: String, channelSelectedId: String, message: Message) {
+        val messageCollection = groupCollection.document(groupSelectedId).collection("textChannels").document(channelSelectedId).collection("messages")
+        messageCollection.document(message.messageId).delete()
+    }
+
     @ExperimentalCoroutinesApi
     fun getChannelMessages(groupId: String, channelId: String) : Flow<List<Message>> {
         return callbackFlow {

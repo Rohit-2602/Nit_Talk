@@ -11,12 +11,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.nittalk.R
+import com.example.nittalk.data.Message
 import com.example.nittalk.databinding.FragmentFriendChatBinding
 import com.example.nittalk.ui.groupchat.MessageAdapter
+import com.example.nittalk.ui.groupchat.OnMessageLongPress
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class FriendChatFragment: Fragment(R.layout.fragment_friend_chat) {
+class FriendChatFragment: Fragment(R.layout.fragment_friend_chat), OnMessageLongPress {
 
     private var _binding: FragmentFriendChatBinding?= null
     private val binding get() = _binding!!
@@ -73,7 +75,7 @@ class FriendChatFragment: Fragment(R.layout.fragment_friend_chat) {
     }
 
     private fun setUpFriendChatRecyclerView() {
-        messageAdapter = MessageAdapter()
+        messageAdapter = MessageAdapter(this)
         val mLayoutManager = LinearLayoutManager(requireContext())
         binding.friendChatRecyclerView.apply {
             adapter = messageAdapter
@@ -84,6 +86,10 @@ class FriendChatFragment: Fragment(R.layout.fragment_friend_chat) {
             messageAdapter.submitList(it)
             mLayoutManager.smoothScrollToPosition(binding.friendChatRecyclerView, null, it.size)
         }
+    }
+
+    override fun showMessageOptions(message: Message) {
+
     }
 
     override fun onDestroyView() {

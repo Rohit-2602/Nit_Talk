@@ -1,6 +1,7 @@
 package com.example.nittalk.ui.groupchat
 
 import com.example.nittalk.data.GroupPreferences
+import com.example.nittalk.data.Message
 import com.example.nittalk.data.User
 import com.example.nittalk.firebase.FirebaseSource
 import javax.inject.Inject
@@ -44,6 +45,12 @@ class GroupChatRepository @Inject constructor(private val firebaseSource: Fireba
 
     fun sendMessage(groupPreferences: GroupPreferences, messageText: String, imageUrl: String, currentUser: User) =
         firebaseSource.sendMessage(groupPreferences.groupSelectedId, groupPreferences.channelSelectedId, messageText, imageUrl, currentUser)
+
+    fun editMessage(groupPreferences: GroupPreferences, messageText: String, message: Message) =
+        firebaseSource.editMessage(groupPreferences.groupSelectedId, groupPreferences.channelSelectedId, messageText, message)
+
+    fun deleteMessage(groupPreferences: GroupPreferences, message: Message) =
+        firebaseSource.deleteMessage(groupPreferences.groupSelectedId, groupPreferences.channelSelectedId, message)
 
     fun getMessages(groupId: String, channelId: String) =
         firebaseSource.getChannelMessages(groupId, channelId)

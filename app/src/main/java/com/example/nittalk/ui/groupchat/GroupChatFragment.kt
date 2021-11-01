@@ -13,17 +13,16 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.asLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.nittalk.R
-import com.example.nittalk.data.Group
-import com.example.nittalk.data.TextChannel
-import com.example.nittalk.data.User
-import com.example.nittalk.data.VoiceChannel
+import com.example.nittalk.data.*
 import com.example.nittalk.databinding.FragmentGroupChatBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.storage.FirebaseStorage
 import com.theartofdev.edmodo.cropper.CropImage
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,7 +30,7 @@ import org.jitsi.meet.sdk.JitsiMeetActivity
 import org.jitsi.meet.sdk.JitsiMeetConferenceOptions
 
 @AndroidEntryPoint
-class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSelected,
+class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSelected, OnMessageLongPress,
     OnTextChannelSelected, OnVoiceChannelClicked {
 
     private var _binding: FragmentGroupChatBinding? = null
@@ -46,6 +45,8 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
     private lateinit var currentGroup : Group
     private lateinit var currentUser: User
 
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<NestedScrollView>
+
     private var imageUri :Uri?= null
     private var imageUrl :String?= null
 
@@ -53,6 +54,8 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentGroupChatBinding.bind(view)
         setUpNavDrawer()
+
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.messageBottomSheet)
 
         val currentUserToken = groupChatViewModel.currentUserToken
 
@@ -74,6 +77,10 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
                 imageUri = null
                 imageUrl = null
                 imageContainer.visibility = View.GONE
+            }
+
+            blankView.setOnClickListener {
+                hideMessageOptions()
             }
 
             textChannelsTextView.setOnClickListener {
@@ -279,7 +286,7 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
     }
 
     private fun setUpMessageRecyclerView() {
-        messageAdapter = MessageAdapter()
+        messageAdapter = MessageAdapter(this)
         val mLayoutManager = LinearLayoutManager(requireContext())
         groupChatViewModel.messages.asLiveData().observe(viewLifecycleOwner) {
             messageAdapter.submitList(it)
@@ -289,6 +296,65 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
         binding.messageRV.apply {
             adapter = messageAdapter
             layoutManager = mLayoutManager
+        }
+    }
+
+    override fun showMessageOptions(message: Message) {
+        showMessageOptions()
+        binding.apply {
+            editButton.setOnClickListener {
+                binding.apply {
+                    editMessageContainer.visibility = View.VISIBLE
+                    messageEditBtn.visibility = View.VISIBLE
+                    messageSendBtn.visibility = View.GONE
+                    messageImageBtn.visibility = View.GONE
+                    messageEditText.setText(message.message)
+                    cancelEditingMessage.setOnClickListener {
+                        messageEditText.setText("")
+                        editMessageContainer.visibility = View.GONE
+                        messageImageBtn.visibility = View.VISIBLE
+                        messageEditBtn.visibility = View.GONE
+                        messageSendBtn.visibility = View.GONE
+                    }
+                    messageEditBtn.setOnClickListener {
+                        if (messageEditText.text.trim().isEmpty()) {
+                            Toast.makeText(requireContext(), "Message Can't be Empty", Toast.LENGTH_SHORT).show()
+                        }
+                        else {
+                            groupChatViewModel.editMessage(messageText = messageEditText.text.trim().toString(), message = message)
+                            messageEditText.setText("")
+                            Toast.makeText(requireContext(), "Message Edited", Toast.LENGTH_SHORT).show()
+                            editMessageContainer.visibility = View.GONE
+                            messageImageBtn.visibility = View.VISIBLE
+                            messageEditBtn.visibility = View.GONE
+                        }
+                    }
+                }
+                hideMessageOptions()
+            }
+
+            replyButton.setOnClickListener {
+                Toast.makeText(requireContext(), "Reply", Toast.LENGTH_SHORT).show()
+            }
+
+            deleteButton.setOnClickListener {
+                groupChatViewModel.deleteMessage(message)
+                hideMessageOptions()
+            }
+        }
+    }
+
+    private fun showMessageOptions() {
+        binding.apply {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            blankView.visibility = View.VISIBLE
+        }
+    }
+
+    private fun hideMessageOptions() {
+        binding.apply {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            blankView.visibility = View.GONE
         }
     }
 
