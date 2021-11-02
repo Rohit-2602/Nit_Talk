@@ -108,11 +108,11 @@ class GroupChatViewModel @Inject constructor(
         groupChatRepository.getGroupVoiceChannels(it)
     }
 
-    fun sendMessage(messageText: String, imageUrl: String) =
+    fun sendMessage(messageText: String, imageUrl: String, repliedTo: Message?) =
         viewModelScope.launch {
             groupChatRepository.sendMessage(
                 groupPref.first().find { it.channelSelectedId == channelSelected.asFlow().first() }!!,
-                messageText, imageUrl, currentUserFromDB.first()
+                messageText, imageUrl, repliedTo, currentUserFromDB.first()
             )
         }
 

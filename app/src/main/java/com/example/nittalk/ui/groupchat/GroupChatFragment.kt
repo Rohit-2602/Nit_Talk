@@ -49,6 +49,7 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
 
     private var imageUri :Uri?= null
     private var imageUrl :String?= null
+    private var repliedMessage: Message? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -157,8 +158,9 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
             messageSendBtn.setOnClickListener {
                 val message = messageEditText.text.toString().trim()
                 if (message != "") {
+                    hideEditMessage()
                     messageEditText.setText("")
-                    groupChatViewModel.sendMessage(messageText = message, imageUrl = imageUrl ?: "")
+                    groupChatViewModel.sendMessage(messageText = message, imageUrl = imageUrl ?: "", repliedTo = repliedMessage)
 
                     imageUri = null
                     imageUrl = null
@@ -334,13 +336,33 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
             }
 
             replyButton.setOnClickListener {
-                Toast.makeText(requireContext(), "Reply", Toast.LENGTH_SHORT).show()
+                repliedMessage = message
+                hideMessageOptions()
+                showEditMessage(message)
+            }
+
+            cancelReplyingMessage.setOnClickListener {
+                hideEditMessage()
+                repliedMessage = null
             }
 
             deleteButton.setOnClickListener {
                 groupChatViewModel.deleteMessage(message)
                 hideMessageOptions()
             }
+        }
+    }
+
+    private fun showEditMessage(message: Message) {
+        binding.apply {
+            replyingToText.text = message.senderName
+            repliedMessageContainer.visibility = View.VISIBLE
+        }
+    }
+
+    private fun hideEditMessage() {
+        binding.apply {
+            repliedMessageContainer.visibility = View.GONE
         }
     }
 

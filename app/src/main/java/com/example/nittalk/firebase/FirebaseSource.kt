@@ -553,7 +553,7 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
         }
     }
 
-    fun sendMessage(groupSelectedId: String, channelSelectedId: String, messageText: String, imageUrl: String, currentUser: User) {
+    fun sendMessage(groupSelectedId: String, channelSelectedId: String, messageText: String, imageUrl: String, repliedTo: Message?, currentUser: User) {
         val messageCollection = groupCollection.document(groupSelectedId).collection("textChannels").document(channelSelectedId).collection("messages")
         val id = messageCollection.document().id
         val message = Message(
@@ -563,7 +563,8 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
             imageUrl = imageUrl,
             senderDp = currentUser.profileImageUrl,
             senderName = currentUser.name,
-            sendAt = System.currentTimeMillis()
+            sendAt = System.currentTimeMillis(),
+            repliedTo = repliedTo
         )
         messageCollection.document(id).set(message)
     }

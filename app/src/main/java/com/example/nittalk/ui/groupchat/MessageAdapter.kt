@@ -34,6 +34,13 @@ class MessageAdapter(private val listener: OnMessageLongPress):
                 messageDateHeader.visibility = headerVisibility
                 messageDateHeaderText.text = headerText
 
+                if (message.repliedTo != null) {
+                    repliedMessageLayout.visibility = View.VISIBLE
+                    repliedMessageSenderName.text = message.repliedTo?.senderName
+                    repliedMessageText.text = message.repliedTo?.message
+                    Glide.with(root).load(message.repliedTo?.senderDp).circleCrop().into(repliedMessageSenderDp)
+                }
+
             }
         }
     }
