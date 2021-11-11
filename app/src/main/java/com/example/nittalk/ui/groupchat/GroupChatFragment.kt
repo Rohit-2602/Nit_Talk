@@ -301,8 +301,8 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
         }
     }
 
-    override fun showMessageOptions(message: Message) {
-        showMessageOptions()
+    override fun showMessageOptions(message: Message, lastMessage: Message, nextLastMessage: Message?) {
+        showOptions(message)
         binding.apply {
             editButton.setOnClickListener {
                 binding.apply {
@@ -366,8 +366,16 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
         }
     }
 
-    private fun showMessageOptions() {
+    private fun showOptions(message: Message) {
         binding.apply {
+            if(groupChatViewModel.currentUserUid != message.senderId) {
+                editButton.visibility = View.GONE
+                deleteButton.visibility = View.GONE
+            }
+            else {
+                editButton.visibility = View.VISIBLE
+                deleteButton.visibility = View.VISIBLE
+            }
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
             blankView.visibility = View.VISIBLE
         }

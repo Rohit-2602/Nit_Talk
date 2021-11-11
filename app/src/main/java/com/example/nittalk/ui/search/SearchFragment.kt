@@ -159,7 +159,7 @@ class SearchFragment : Fragment(R.layout.fragment_search), OnClickListener,
     }
 
     override fun navigateToFriendScreen(friend: User) {
-        val action = SearchFragmentDirections.actionSearchFragmentToFriendChatFragment(friend.id, friend.name)
+        val action = SearchFragmentDirections.actionSearchFragmentToFriendChatFragment(friend.id, friend.name, null)
         findNavController().navigate(action)
     }
 

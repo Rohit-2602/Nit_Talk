@@ -569,7 +569,7 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
         messageCollection.document(id).set(message)
     }
 
-    fun editMessage(groupSelectedId: String, channelSelectedId: String, messageText: String, message: Message) {
+    fun editChannelMessage(groupSelectedId: String, channelSelectedId: String, messageText: String, message: Message) {
         val messageCollection = groupCollection.document(groupSelectedId).collection("textChannels").document(channelSelectedId).collection("messages")
         val editedMessage = Message(
             senderId = firebaseAuth.currentUser!!.uid,
@@ -584,7 +584,7 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
         messageCollection.document(message.messageId).set(editedMessage)
     }
 
-    fun deleteMessage(groupSelectedId: String, channelSelectedId: String, message: Message) {
+    fun deleteChannelMessage(groupSelectedId: String, channelSelectedId: String, message: Message) {
         val messageCollection = groupCollection.document(groupSelectedId).collection("textChannels").document(channelSelectedId).collection("messages")
         messageCollection.document(message.messageId).delete()
     }
@@ -800,7 +800,7 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
         }
     }
 
-    fun sendPersonalMessage(currentUser: User, friendId: String, imageUrl: String, messageText: String) {
+    fun sendPersonalMessage(currentUser: User, friendId: String, imageUrl: String, messageText: String, repliedTo: Message?) {
         val combinedId = if (currentUser.id > friendId) currentUser.id + friendId
                          else friendId + currentUser.id
 
@@ -813,7 +813,8 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
             imageUrl = imageUrl,
             senderDp = currentUser.profileImageUrl,
             senderName = currentUser.name,
-            sendAt = sendTime
+            sendAt = sendTime,
+            repliedTo = repliedTo
         )
 
         messageCollection.document(combinedId).collection("messages").document(id).set(message)
@@ -822,6 +823,40 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
         inboxCollection.document(currentUser.id).collection("userInbox").document(friendId).update("lastMessageTime", sendTime)
         inboxCollection.document(friendId).collection("userInbox").document(currentUser.id).update("lastMessageTime", sendTime)
 
+    }
+
+    fun deletePersonalMessage(currentUserId: String, friendId: String, message: Message, lastMessage: Message, nextLastMessage: Message?) {
+        val combinedId = if (currentUserId > friendId) currentUserId + friendId
+        else friendId + currentUserId
+
+        val messageId = message.messageId
+
+        if(message != lastMessage) {
+            messageCollection.document(combinedId).collection("messages").document(messageId).delete()
+        }
+        else {
+            messageCollection.document(combinedId).collection("messages").document(messageId).delete()
+            inboxCollection.document(currentUserId).collection("userInbox").document(friendId).update("lastMessage", nextLastMessage?.message)
+            inboxCollection.document(friendId).collection("userInbox").document(currentUserId).update("lastMessage", nextLastMessage?.message)
+            inboxCollection.document(currentUserId).collection("userInbox").document(friendId).update("lastMessageTime", nextLastMessage?.sendAt)
+            inboxCollection.document(friendId).collection("userInbox").document(currentUserId).update("lastMessageTime", nextLastMessage?.sendAt)
+        }
+    }
+
+    fun editPersonalMessage(currentUserId: String, friendId: String, message: Message, newMessage: String, lastMessage: Message) {
+        val combinedId = if (currentUserId > friendId) currentUserId + friendId
+        else friendId + currentUserId
+
+        val messageId = message.messageId
+
+        if (message != lastMessage) {
+            messageCollection.document(combinedId).collection("messages").document(messageId).update("message", newMessage)
+        }
+        else {
+            messageCollection.document(combinedId).collection("messages").document(messageId).update("message", newMessage)
+            inboxCollection.document(currentUserId).collection("userInbox").document(friendId).update("lastMessage", newMessage)
+            inboxCollection.document(friendId).collection("userInbox").document(currentUserId).update("lastMessage", newMessage)
+        }
     }
 
     @ExperimentalCoroutinesApi

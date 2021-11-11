@@ -53,8 +53,8 @@ class InboxFragment: Fragment(R.layout.fragment_inbox), OnFriendItemClickListene
         }
     }
 
-    override fun onFriendItemClick(friendId: String, friendName: String) {
-        val action = InboxFragmentDirections.actionInboxFragmentToFriendChatFragment(friendId, friendName)
+    override fun onFriendItemClick(friendId: String, friendName: String, lastMessage: String?) {
+        val action = InboxFragmentDirections.actionInboxFragmentToFriendChatFragment(friendId, friendName, lastMessage)
         findNavController().navigate(action)
     }
 

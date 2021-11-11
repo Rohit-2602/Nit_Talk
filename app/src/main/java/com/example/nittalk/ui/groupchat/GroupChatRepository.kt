@@ -47,10 +47,10 @@ class GroupChatRepository @Inject constructor(private val firebaseSource: Fireba
         firebaseSource.sendMessage(groupPreferences.groupSelectedId, groupPreferences.channelSelectedId, messageText, imageUrl, repliedTo, currentUser)
 
     fun editMessage(groupPreferences: GroupPreferences, messageText: String, message: Message) =
-        firebaseSource.editMessage(groupPreferences.groupSelectedId, groupPreferences.channelSelectedId, messageText, message)
+        firebaseSource.editChannelMessage(groupPreferences.groupSelectedId, groupPreferences.channelSelectedId, messageText, message)
 
     fun deleteMessage(groupPreferences: GroupPreferences, message: Message) =
-        firebaseSource.deleteMessage(groupPreferences.groupSelectedId, groupPreferences.channelSelectedId, message)
+        firebaseSource.deleteChannelMessage(groupPreferences.groupSelectedId, groupPreferences.channelSelectedId, message)
 
     fun getMessages(groupId: String, channelId: String) =
         firebaseSource.getChannelMessages(groupId, channelId)

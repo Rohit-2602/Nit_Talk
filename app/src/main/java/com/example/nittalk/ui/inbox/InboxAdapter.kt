@@ -2,6 +2,7 @@ package com.example.nittalk.ui.inbox
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -31,14 +32,21 @@ class InboxAdapter(
                         Glide.with(binding.root).load(user.profileImageUrl).circleCrop()
                             .into(friendDp)
                         friendName.text = user.name
-                        if (inbox.lastMessage == "") {
+                        if (inbox.lastMessage == null) {
                             friendLastMessage.text = "Start Chat With ${user.name}"
                         }
                         else {
                             friendLastMessage.text = inbox.lastMessage
                         }
-                        val sentTime = MessageTimeUtil.getTimeAgoFriendChat(inbox.lastMessageTime)
-                        friendLastMessageTime.text = sentTime
+
+                        if (inbox.lastMessageTime == null) {
+                            friendLastMessageTime.visibility = View.GONE
+                        }
+                        else {
+                            val sentTime = MessageTimeUtil.getTimeAgoFriendChat(inbox.lastMessageTime!!)
+                            friendLastMessageTime.text = sentTime
+                        }
+
                     }
                 }
             }
@@ -51,7 +59,7 @@ class InboxAdapter(
         val friendChatViewHolder = InboxViewHolder(binding)
         binding.friendCardView.setOnClickListener {
             val current = getItem(friendChatViewHolder.absoluteAdapterPosition)
-            onFriendItemClickListener.onFriendItemClick(current.friendId, current.friendName)
+            onFriendItemClickListener.onFriendItemClick(current.friendId, current.friendName, current.lastMessage)
         }
         return friendChatViewHolder
     }
@@ -63,5 +71,5 @@ class InboxAdapter(
 }
 
 interface OnFriendItemClickListener {
-    fun onFriendItemClick(friendId: String, friendName: String)
+    fun onFriendItemClick(friendId: String, friendName: String, lastMessage: String?)
 }

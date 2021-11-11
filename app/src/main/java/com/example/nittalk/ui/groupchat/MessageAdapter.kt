@@ -49,7 +49,12 @@ class MessageAdapter(private val listener: OnMessageLongPress):
         val binding = ItemMessageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         val viewHolder = MessageViewHolder(binding)
         binding.messageConstraint.setOnLongClickListener {
-            listener.showMessageOptions(getItem(viewHolder.absoluteAdapterPosition))
+            if(itemCount >= 2) {
+                listener.showMessageOptions(getItem(viewHolder.absoluteAdapterPosition), currentList[itemCount-1], currentList[itemCount-2])
+            }
+            else {
+                listener.showMessageOptions(getItem(viewHolder.absoluteAdapterPosition), currentList[itemCount-1], null)
+            }
             return@setOnLongClickListener true
         }
         return viewHolder
@@ -78,5 +83,5 @@ class MessageAdapter(private val listener: OnMessageLongPress):
 }
 
 interface OnMessageLongPress {
-    fun showMessageOptions(message: Message)
+    fun showMessageOptions(message: Message, lastMessage: Message, nextLastMessage: Message?)
 }
