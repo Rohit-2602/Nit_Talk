@@ -14,6 +14,7 @@ import com.example.nittalk.ui.auth.AuthActivity
 import com.example.nittalk.ui.auth.InfoFragment
 import com.example.nittalk.ui.auth.LoginFragment
 import com.example.nittalk.ui.auth.LoginFragmentDirections
+import com.example.nittalk.util.Constant
 import com.example.nittalk.util.Constant.DEFAULT_USER_DP
 import com.example.nittalk.util.Constant.GROUP_SELECTED
 import com.example.nittalk.util.Constant.LOGIN_STATE_KEY
@@ -323,8 +324,7 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
                 progress.value = View.GONE
                 enable.value = true
             } else {
-                val link =
-                    "https://firebasestorage.googleapis.com/v0/b/whatsapp-clone-bcfa9.appspot.com/o/spiderman.jpg?alt=media&token=6d712d7c-7f28-45e9-a5ce-df21314a9bd3"
+                val link = Constant.DEFAULT_GROUP_DP
                 val group = Group(
                     groupId = id,
                     groupName = "${user.branch} ${user.semester}",
@@ -342,10 +342,10 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
                     createVoiceChannel(group = group)
                 }
 
-                val serverSelected1 = GroupPreferences(id, id + "General")
+                val serverSelected = GroupPreferences(id, id + "General")
 
                 CoroutineScope(Dispatchers.IO).launch {
-                    groupPreferencesDao.insertServer(serverSelected1)
+                    groupPreferencesDao.insertServer(serverSelected)
                 }
 
                 groupCollection.document(id).set(group).addOnCompleteListener { task ->
@@ -379,6 +379,37 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
         }.await()
 
         addUserToGroup(updatedUser, activity)
+    }
+
+    suspend fun createNewServer(userId: String, groupName: String, groupImageUrl: String?, activity: Activity) {
+        val groupId = groupCollection.document().id
+        var groupDp = Constant.DEFAULT_GROUP_DP
+        if (groupImageUrl != null) {
+            groupDp = groupImageUrl
+        }
+        val group = Group(
+            groupId = groupId,
+            groupName = groupName,
+            groupDp = groupDp,
+        )
+        group.members.add(userId)
+
+        createGeneralTextChannel(group, activity)
+        createVoiceChannel(group)
+
+        val user = userCollection.document(userId).get().await().toObject(User::class.java)!!
+
+        val userGroups = user.groups
+        userGroups.add(groupId)
+        userCollection.document(user.id).update("groups", userGroups)
+
+        val serverSelected = GroupPreferences(groupId, groupId + "General")
+
+        CoroutineScope(Dispatchers.IO).launch {
+            groupPreferencesDao.insertServer(serverSelected)
+            preferencesManager.updateGroupSelected(GROUP_SELECTED, groupId)
+        }
+//        groupCollection.document(groupName).set(group)
     }
 
     @ExperimentalCoroutinesApi

@@ -9,6 +9,7 @@ object Constant {
     const val GROUP_SELECTED = "group_selected"
     const val FIREBASE_SERVER_KEY = BuildConfig.FIREBASE_SERVER_KEY
     const val SENDER_ID = BuildConfig.FIREBASE_SENDER_ID
+    const val DEFAULT_GROUP_DP = "https://firebasestorage.googleapis.com/v0/b/whatsapp-clone-bcfa9.appspot.com/o/spiderman.jpg?alt=media&token=6d712d7c-7f28-45e9-a5ce-df21314a9bd3"
     const val DEFAULT_USER_DP = "https://firebasestorage.googleapis.com/v0/b/whatsapp-clone-bcfa9.appspot.com/o/abstract-user-flat-4.png?alt=media&token=0b642336-9ab7-462f-9538-963de5e616a6"
 
     val branchIdHashMap : HashMap<String, String> = hashMapOf(

@@ -17,6 +17,7 @@ import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.asLiveData
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.nittalk.R
 import com.example.nittalk.data.*
@@ -78,6 +79,16 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
                 imageUri = null
                 imageUrl = null
                 imageContainer.visibility = View.GONE
+            }
+
+            friendChatBtn.setOnClickListener {
+                val action = GroupChatFragmentDirections.actionGroupChatFragmentToFriendChatFragment()
+                findNavController().navigate(action)
+            }
+
+            createServerBtn.setOnClickListener {
+                val action = GroupChatFragmentDirections.actionGroupChatFragmentToCreateServerFragment(currentUser.id)
+                findNavController().navigate(action)
             }
 
             blankView.setOnClickListener {

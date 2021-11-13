@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_groupChatFragment_to_friendChatFragment"
             app:destination="@id/inboxFragment" />
+        <action
+            android:id="@+id/action_groupChatFragment_to_createServerFragment"
+            app:destination="@id/createServerFragment" />
     </fragment>
     <fragment
         android:id="@+id/inboxFragment"
@@ -77,5 +80,17 @@
         <argument
             android:name="user"
             app:argType="com.example.nittalk.data.User" />
+    </fragment>
+    <fragment
+        android:id="@+id/createServerFragment"
+        android:name="com.example.nittalk.ui.server.CreateServerFragment"
+        android:label="fragment_create_server"
+        tools:layout="@layout/fragment_create_server" >
+        <argument
+            android:name="userId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_createServerFragment_to_groupChatFragment"
+            app:destination="@id/groupChatFragment" />
     </fragment>
 </navigation>

@@ -35,4 +35,8 @@
     <string name="edit_profile">Edit Profile</string>
     <string name="choose_profile_picture">Choose Profile Picture</string>
     <string name="save">Save</string>
+    <string name="create_server_text">Your Server is Where you and your friends hang out. \n Make yours and start talking.</string>
+    <string name="create_your_server">Create Your Server</string>
+    <string name="server_name">Server Name</string>
+    <string name="create_server">Create Server</string>
 </resources>
