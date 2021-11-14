@@ -21,6 +21,14 @@ class MessageAdapter(private val listener: OnMessageLongPress):
                 Glide.with(root).load(message.senderDp).circleCrop().into(senderDpIV)
                 Glide.with(root).load(message.imageUrl).into(messageImage)
                 senderNameTV.text = message.senderName
+                if (message.joinGroup == null) {
+                    joinServerConstraint.visibility = View.GONE
+                }
+                else {
+                    joinServerConstraint.visibility = View.VISIBLE
+                    Glide.with(binding.root).load(message.joinGroup!!.groupDp).circleCrop().into(serverDp)
+                    serverNameTextview.text = message.joinGroup!!.groupName
+                }
                 if (message.edited) {
                     messageEditedTV.visibility = View.VISIBLE
                 }
@@ -57,6 +65,9 @@ class MessageAdapter(private val listener: OnMessageLongPress):
             }
             return@setOnLongClickListener true
         }
+        binding.joinServerButton.setOnClickListener {
+            listener.joinServer(getItem(viewHolder.absoluteAdapterPosition).joinGroup!!.groupId)
+        }
         return viewHolder
     }
 
@@ -84,4 +95,5 @@ class MessageAdapter(private val listener: OnMessageLongPress):
 
 interface OnMessageLongPress {
     fun showMessageOptions(message: Message, lastMessage: Message, nextLastMessage: Message?)
+    fun joinServer(groupId: String)
 }

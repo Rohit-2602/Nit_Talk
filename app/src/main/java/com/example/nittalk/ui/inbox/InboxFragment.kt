@@ -11,9 +11,9 @@ import com.example.nittalk.databinding.FragmentInboxBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class InboxFragment: Fragment(R.layout.fragment_inbox), OnFriendItemClickListener {
+class InboxFragment : Fragment(R.layout.fragment_inbox), OnFriendItemClickListener {
 
-    private var _binding : FragmentInboxBinding?= null
+    private var _binding: FragmentInboxBinding? = null
     private val binding get() = _binding!!
     private val friendChatViewModel by viewModels<FriendChatViewModel>()
     private lateinit var inboxAdapter: InboxAdapter
@@ -30,8 +30,7 @@ class InboxFragment: Fragment(R.layout.fragment_inbox), OnFriendItemClickListene
                     initialText.visibility = View.VISIBLE
                     inboxRecyclerview.visibility = View.GONE
                 }
-            }
-            else {
+            } else {
                 binding.apply {
                     initialText.visibility = View.GONE
                     inboxRecyclerview.visibility = View.VISIBLE
@@ -42,10 +41,10 @@ class InboxFragment: Fragment(R.layout.fragment_inbox), OnFriendItemClickListene
     }
 
     private fun setUpFriendChatRecyclerView() {
-        inboxAdapter = InboxAdapter(friendChatViewModel, this)
+        inboxAdapter = InboxAdapter(this)
         friendChatViewModel.userInbox.observe(viewLifecycleOwner) {
             inboxAdapter.submitList(it)
-            inboxAdapter.notifyDataSetChanged()
+//            inboxAdapter.notifyDataSetChanged()
         }
         binding.inboxRecyclerview.apply {
             adapter = inboxAdapter
@@ -54,7 +53,11 @@ class InboxFragment: Fragment(R.layout.fragment_inbox), OnFriendItemClickListene
     }
 
     override fun onFriendItemClick(friendId: String, friendName: String, lastMessage: String?) {
-        val action = InboxFragmentDirections.actionInboxFragmentToFriendChatFragment(friendId, friendName, lastMessage)
+        val action = InboxFragmentDirections.actionInboxFragmentToFriendChatFragment(
+            friendId,
+            friendName,
+            lastMessage
+        )
         findNavController().navigate(action)
     }
 

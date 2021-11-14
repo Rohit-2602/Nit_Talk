@@ -50,6 +50,9 @@ class MainActivity : AppCompatActivity() {
             when(destination.id) {
                 R.id.groupChatFragment -> hideBottomNav()
                 R.id.friendChatFragment -> hideBottomNav()
+                R.id.inviteMemberFragment -> hideBottomNav()
+                R.id.createServerFragment -> hideBottomNav()
+                R.id.editProfileFragment -> hideBottomNav()
                 else -> showBottomNav()
             }
         }

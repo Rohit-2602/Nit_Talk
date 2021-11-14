@@ -31,12 +31,15 @@ class FriendChatFragment: Fragment(R.layout.fragment_friend_chat), OnMessageLong
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<NestedScrollView>
     private var repliedMessage: Message? = null
     private lateinit var currentUserName :String
+    private lateinit var currentUserId: String
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentFriendChatBinding.bind(view)
 
         bottomSheetBehavior = BottomSheetBehavior.from(binding.messageBottomSheet)
+
+        currentUserId = friendChatViewModel.currentUserId
 
         binding.apply {
             friendChatToolbar.title = navArgs.friendName
@@ -81,7 +84,8 @@ class FriendChatFragment: Fragment(R.layout.fragment_friend_chat), OnMessageLong
                         friendId = navArgs.friendId,
                         messageText = message,
                         imageUrl = "",
-                        repliedTo = repliedMessage
+                        repliedTo = repliedMessage,
+                        joinGroup = null
                     )
                     friendChatViewModel.sendNotification(context = requireContext(), title = currentUserName, message = message, userId = navArgs.friendId)
                 } else {
@@ -106,6 +110,13 @@ class FriendChatFragment: Fragment(R.layout.fragment_friend_chat), OnMessageLong
             messageAdapter.submitList(it)
             mLayoutManager.smoothScrollToPosition(binding.friendChatRecyclerView, null, it.size)
         }
+    }
+
+    override fun joinServer(groupId: String) {
+        friendChatViewModel.joinServer(groupId = groupId, userId = currentUserId, activity = requireActivity())
+            .invokeOnCompletion {
+                Toast.makeText(requireContext(), "Server Joined!!", Toast.LENGTH_SHORT).show()
+            }
     }
 
     override fun showMessageOptions(message: Message, lastMessage: Message, nextLastMessage: Message?) {

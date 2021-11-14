@@ -52,6 +52,9 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
             chooseProfilePicture.setOnClickListener {
                 startCropActivity()
             }
+            profileImageView.setOnClickListener {
+                startCropActivity()
+            }
         }
 
         editProfileViewModel.progress.observe(viewLifecycleOwner) {

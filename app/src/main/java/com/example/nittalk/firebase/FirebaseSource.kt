@@ -241,6 +241,10 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
             "backgroundImageUrl" to user.backgroundImageUrl
         )
         userCollection.document(user.id).update(map).await()
+        // When user update profile it is not reflecting in group members
+        // Bcoz group takes user info from status collection
+        statusCollection.document("online").collection("onlineMembers")
+            .document(user.id).update(map).await()
         CoroutineScope(Dispatchers.Main).launch {
             progress.value = View.GONE
             enable.value = true
@@ -410,6 +414,34 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
             preferencesManager.updateGroupSelected(GROUP_SELECTED, groupId)
         }
 //        groupCollection.document(groupName).set(group)
+    }
+
+    suspend fun joinServer(groupId: String, userId: String, activity: Activity) {
+
+        val group = groupCollection.document(groupId).get().await().toObject(Group::class.java)!!
+
+        val groupMembers = group.members
+
+        if (groupMembers.contains(userId)) {
+            Toast.makeText(activity.applicationContext, "You already Joined This Server", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        groupMembers.add(userId)
+        groupCollection.document(groupId).update("members", group.members)
+
+        val user = userCollection.document(userId).get().await().toObject(User::class.java)!!
+
+        val userGroups = user.groups
+        userGroups.add(groupId)
+        userCollection.document(user.id).update("groups", userGroups)
+
+        val serverSelected = GroupPreferences(groupId, groupId + "General")
+
+        CoroutineScope(Dispatchers.IO).launch {
+            groupPreferencesDao.insertServer(serverSelected)
+            preferencesManager.updateGroupSelected(GROUP_SELECTED, groupId)
+        }
     }
 
     @ExperimentalCoroutinesApi
@@ -698,8 +730,8 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
         userCollection.document(currentUserId).set(currentUser)
         userCollection.document(friendId).set(friend)
 
-        val userInbox = Inbox(friendId = friendId, lastMessage = "", friendName = friend.name, lastMessageTime = System.currentTimeMillis())
-        val friendInbox = Inbox(friendId = currentUserId, lastMessage = "", friendName = currentUser.name, lastMessageTime = System.currentTimeMillis())
+        val userInbox = Inbox(friendId = friendId, lastMessage = "", friendName = friend.name, friendLowerCaseName = friend.lowercaseName, friendDp = friend.profileImageUrl,lastMessageTime = System.currentTimeMillis())
+        val friendInbox = Inbox(friendId = currentUserId, lastMessage = "", friendName = currentUser.name, friendLowerCaseName = currentUser.lowercaseName, friendDp = currentUser.profileImageUrl,lastMessageTime = System.currentTimeMillis())
         inboxCollection.document(currentUserId).collection("userInbox").document(friendId).set(userInbox)
         inboxCollection.document(friendId).collection("userInbox").document(currentUserId).set(friendInbox)
 
@@ -761,7 +793,7 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
             val outgoingRequest = userCollection.whereIn("id", userOutgoingRequest)
                 .addSnapshotListener { querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
                     if (firebaseFirestoreException != null) {
-                        cancel(cause = firebaseFirestoreException, message = "Error Getting Incoming Requests")
+                        cancel(cause = firebaseFirestoreException, message = "Error Getting Outgoing Requests")
                         return@addSnapshotListener
                     }
                     val outgoingMap = querySnapshot!!.documents.mapNotNull { it.toObject(User::class.java) }
@@ -781,7 +813,7 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
                 .collection("onlineMembers").whereIn("id", userFriends)
                 .addSnapshotListener { querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
                     if (firebaseFirestoreException != null) {
-                        cancel(cause = firebaseFirestoreException, message = "Error Getting Incoming Requests")
+                        cancel(cause = firebaseFirestoreException, message = "Error Getting Online Friends")
                         return@addSnapshotListener
                     }
                     val onlineFriendsMap = querySnapshot!!.documents.mapNotNull { it.toObject(User::class.java) }
@@ -801,7 +833,7 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
                 .collection("offlineMembers").whereIn("id", userFriends)
                 .addSnapshotListener { querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
                     if (firebaseFirestoreException != null) {
-                        cancel(cause = firebaseFirestoreException, message = "Error Getting Incoming Requests")
+                        cancel(cause = firebaseFirestoreException, message = "Error Getting Offline Friends")
                         return@addSnapshotListener
                     }
                     val offlineFriendsMap = querySnapshot!!.documents.mapNotNull { it.toObject(User::class.java) }
@@ -831,7 +863,7 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
         }
     }
 
-    fun sendPersonalMessage(currentUser: User, friendId: String, imageUrl: String, messageText: String, repliedTo: Message?) {
+    fun sendPersonalMessage(currentUser: User, friendId: String, imageUrl: String, messageText: String, repliedTo: Message?, joinGroup: Group?) {
         val combinedId = if (currentUser.id > friendId) currentUser.id + friendId
                          else friendId + currentUser.id
 
@@ -845,7 +877,8 @@ class FirebaseSource @Inject constructor(private val preferencesManager: Prefere
             senderDp = currentUser.profileImageUrl,
             senderName = currentUser.name,
             sendAt = sendTime,
-            repliedTo = repliedTo
+            repliedTo = repliedTo,
+            joinGroup = joinGroup
         )
 
         messageCollection.document(combinedId).collection("messages").document(id).set(message)

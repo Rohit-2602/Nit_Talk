@@ -1,9 +1,11 @@
 package com.example.nittalk.ui.inbox
 
+import android.app.Activity
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.nittalk.data.Group
 import com.example.nittalk.data.Message
 import com.example.nittalk.firebase.FirebaseUtil
 import com.google.firebase.auth.ktx.auth
@@ -30,7 +32,7 @@ class FriendChatViewModel @Inject constructor(private val friendChatRepository: 
     fun getFriendMessages(friendId: String) =
         friendChatRepository.getFriendMessages(currentUserId, friendId).asLiveData()
 
-    fun sendPersonalMessage(friendId: String, imageUrl: String, messageText: String, repliedTo: Message?) =
+    fun sendPersonalMessage(friendId: String, imageUrl: String, messageText: String, repliedTo: Message?, joinGroup: Group?) =
         viewModelScope.launch {
             val currentUser = currentUser.first()
             friendChatRepository.sendPersonalMessage(
@@ -38,7 +40,8 @@ class FriendChatViewModel @Inject constructor(private val friendChatRepository: 
                 friendUserId = friendId,
                 messageText = messageText,
                 imageUrl = imageUrl,
-                repliedTo = repliedTo
+                repliedTo = repliedTo,
+                joinGroup = joinGroup
             )
         }
 
@@ -61,5 +64,10 @@ class FriendChatViewModel @Inject constructor(private val friendChatRepository: 
 
     fun sendNotification(context: Context, title: String, message: String, userId: String) =
         firebaseUtil.sendNotification(context, title, message, userId, currentUserToken)
+
+    fun joinServer(groupId: String, userId: String, activity: Activity) =
+        viewModelScope.launch {
+            friendChatRepository.joinServer(groupId, userId, activity)
+        }
 
 }

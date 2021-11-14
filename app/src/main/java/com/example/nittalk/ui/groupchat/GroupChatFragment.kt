@@ -95,6 +95,16 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
                 hideMessageOptions()
             }
 
+            inviteMembersBtn.setOnClickListener {
+                val action = GroupChatFragmentDirections.actionGroupChatFragmentToInviteMemberFragment(currentUser = currentUser, group = currentGroup)
+                findNavController().navigate(action)
+            }
+
+            onlineInviteMembersBtn.setOnClickListener {
+                val action = GroupChatFragmentDirections.actionGroupChatFragmentToInviteMemberFragment(currentUser = currentUser, group = currentGroup)
+                findNavController().navigate(action)
+            }
+
             textChannelsTextView.setOnClickListener {
                 if (binding.textChannelsRecyclerview.isVisible) {
                     binding.textChannelsTextView.setCompoundDrawablesWithIntrinsicBounds(
@@ -310,6 +320,10 @@ class GroupChatFragment : Fragment(R.layout.fragment_group_chat), OnGroupItemSel
             adapter = messageAdapter
             layoutManager = mLayoutManager
         }
+    }
+
+    override fun joinServer(groupId: String) {
+        // only use in FriendChatFragment
     }
 
     override fun showMessageOptions(message: Message, lastMessage: Message, nextLastMessage: Message?) {

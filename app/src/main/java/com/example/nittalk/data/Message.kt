@@ -9,5 +9,7 @@ data class Message(
     val senderName: String = "",
     val sendAt: Long = 0L,
     var edited: Boolean = false,
-    var repliedTo: Message? = null
+    var repliedTo: Message? = null,
+    // Todo need to change
+    var joinGroup: Group ?=null
 )

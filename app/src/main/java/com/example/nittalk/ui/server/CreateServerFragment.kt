@@ -47,9 +47,7 @@ class CreateServerFragment : Fragment(R.layout.fragment_create_server) {
                         .invokeOnCompletion {
                             enableViews()
                             serverDpProgressbar.visibility = View.GONE
-                            val action =
-                                CreateServerFragmentDirections.actionCreateServerFragmentToGroupChatFragment()
-                            findNavController().navigate(action)
+                            findNavController().navigateUp()
                         }
                 } else {
                     Snackbar.make(view, "Server Name Can't be Empty", Snackbar.LENGTH_SHORT).show()

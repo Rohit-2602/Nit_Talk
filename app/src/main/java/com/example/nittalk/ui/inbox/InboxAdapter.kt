@@ -11,13 +11,8 @@ import com.example.nittalk.data.Inbox
 import com.example.nittalk.databinding.ItemFriendChatBinding
 import com.example.nittalk.util.Comparators.INBOX_COMPARATOR
 import com.example.nittalk.util.MessageTimeUtil
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class InboxAdapter(
-    private val friendChatViewModel: FriendChatViewModel,
     private val onFriendItemClickListener: OnFriendItemClickListener
 ) : ListAdapter<Inbox, InboxAdapter.InboxViewHolder>(INBOX_COMPARATOR) {
 
@@ -25,30 +20,23 @@ class InboxAdapter(
         RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n")
         fun bind(inbox: Inbox) {
-            CoroutineScope(Dispatchers.IO).launch {
-                val user = friendChatViewModel.getUserById(inbox.friendId)
-                withContext(Dispatchers.Main) {
-                    binding.apply {
-                        Glide.with(binding.root).load(user.profileImageUrl).circleCrop()
-                            .into(friendDp)
-                        friendName.text = user.name
-                        if (inbox.lastMessage == null) {
-                            friendLastMessage.text = "Start Chat With ${user.name}"
-                        }
-                        else {
-                            friendLastMessage.text = inbox.lastMessage
-                        }
-
-                        if (inbox.lastMessageTime == null) {
-                            friendLastMessageTime.visibility = View.GONE
-                        }
-                        else {
-                            val sentTime = MessageTimeUtil.getTimeAgoFriendChat(inbox.lastMessageTime!!)
-                            friendLastMessageTime.text = sentTime
-                        }
-
-                    }
+            binding.apply {
+                Glide.with(binding.root).load(inbox.friendDp).circleCrop()
+                    .into(friendDp)
+                friendName.text = inbox.friendName
+                if (inbox.lastMessage == "") {
+                    friendLastMessage.text = "Start Chat With ${inbox.friendName}"
+                } else {
+                    friendLastMessage.text = inbox.lastMessage
                 }
+
+                if (inbox.lastMessageTime == null) {
+                    friendLastMessageTime.visibility = View.GONE
+                } else {
+                    val sentTime = MessageTimeUtil.getTimeAgoFriendChat(inbox.lastMessageTime!!)
+                    friendLastMessageTime.text = sentTime
+                }
+
             }
         }
     }
@@ -59,7 +47,11 @@ class InboxAdapter(
         val friendChatViewHolder = InboxViewHolder(binding)
         binding.friendCardView.setOnClickListener {
             val current = getItem(friendChatViewHolder.absoluteAdapterPosition)
-            onFriendItemClickListener.onFriendItemClick(current.friendId, current.friendName, current.lastMessage)
+            onFriendItemClickListener.onFriendItemClick(
+                current.friendId,
+                current.friendName,
+                current.lastMessage
+            )
         }
         return friendChatViewHolder
     }
