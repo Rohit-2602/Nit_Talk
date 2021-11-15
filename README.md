@@ -10,7 +10,7 @@ Nit Talk is a Group Chat Messaging (Discord Clone) App based on Modern Android A
 <img src="https://user-images.githubusercontent.com/65807152/141776675-3c5df267-7b63-4576-a82f-2823e56ca0b7.jpg">
 </p>
 
-<img src="https://user-images.githubusercontent.com/65807152/141795825-201ad0a1-6376-4515-b4d0-61291ec2c1b6.gif" align="right" width="28%"/>
+<img src="https://user-images.githubusercontent.com/65807152/141795825-201ad0a1-6376-4515-b4d0-61291ec2c1b6.gif" align="right" width="32%"/>
 
 ## Techs Used 💻
 - [Kotlin](https://kotlinlang.org/) - First class and official programming language for Android development.
