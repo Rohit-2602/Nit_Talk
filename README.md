@@ -35,4 +35,4 @@ Support it by joining [stargazers](https://github.com/Rohit-2602/Nit_Talk/starga
 And [follow](https://github.com/Rohit-2602) me for my next creations! 🤩
 
 ## Project SetUp
-Clone the repository on your machine. Open the project on your IDE, connect it to firebase, add **google-services.json** file and you are good to go 😃.
+Fork and Clone the repository on your machine. Open the project on your IDE, connect it to firebase, add **google-services.json** file and you are good to go 😃.
