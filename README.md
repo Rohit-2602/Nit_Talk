@@ -1,5 +1,14 @@
-## NitTalk -
-NitTalk is a fully functional Group Chat Messaging App with multiple features built with Kotlin.
+<h1 align="center">Nit Talk</h1>
+  
+<p align="center">  
+Nit Talk is a Group Chat Messaging (Discord Clone) App based on Modern Android Application tech-stacks and MVVM architecture.
+<br>
+</p>
+<br>
+
+<p align="center">
+<img src="https://user-images.githubusercontent.com/65807152/141776675-3c5df267-7b63-4576-a82f-2823e56ca0b7.jpg">
+</p>
 
 ## Techs Used 💻
 - [Kotlin](https://kotlinlang.org/) - First class and official programming language for Android development.
@@ -17,41 +26,13 @@ NitTalk is a fully functional Group Chat Messaging App with multiple features bu
 - [Glide](https://github.com/bumptech/glide) - An image loading and caching library for Android focused on smooth scrolling
 
 ## Application Install
-You can Install and test the app from below 👇
+You can Install and test the app from below 👇 and App Preview [here](https://github.com/Rohit-2602/Nit_Talk/blob/master/screenshots.md)
 
 [![Nit Talk](https://img.shields.io/badge/Nit_Talk-APK-silver.svg?style=for-the-badge&logo=android)](https://github.com/Rohit-2602/Nit_Talk/releases)
 
+## Find this repository useful? ❤️
+Support it by joining [stargazers](https://github.com/Rohit-2602/Nit_Talk/stargazers) for this repository. ⭐
+And [follow](https://github.com/Rohit-2602) me for my next creations! 🤩
+
 ## Project SetUp
 Clone the repository on your machine. Open the project on your IDE, connect it to firebase, add **google-services.json** file and you are good to go 😃.
-
-## Firebase FlowChart 👀
- [**Firebase Flow Chart**](https://whimsical.com/nit-talk-firebase-flowchart-AqJqtDqdypWyPiYBVTG5cS)
- 
-## Video
-This is a small/basic introduction video about NitTalk
-
-[](https://user-images.githubusercontent.com/65807152/134813658-30d9e4ec-0075-402b-b11c-d5d3f392e7b3.mp4)
-
-## Screenshots 📷
-| Login | SignUp | Info | HomeScreen |
-| ----- | ------ | ---- | ---------- |
-| <img src="https://user-images.githubusercontent.com/65807152/134795936-bc73de63-6e28-484a-842c-241c5f3cbd90.jpg" width=250> | <img src="https://user-images.githubusercontent.com/65807152/134796093-5c75938e-87d8-485e-ae06-72636d45a786.jpg" width=250> | <img src="https://user-images.githubusercontent.com/65807152/134796125-b9f73c54-02e7-49d1-8c46-18d5d32786ff.jpg" width=250> | <img src="https://user-images.githubusercontent.com/65807152/134796140-be176ba0-1940-4ec4-ab1f-ad96ec8e9055.jpg" width=250> |
-
-| Message Screen | Message Notification | User Status | Friend Screen(Dummy Data) |
-| -------------- | -------------------- | ----------- | ------------- |
-| <img src="https://user-images.githubusercontent.com/65807152/134796162-ee29c21f-739f-4847-97c7-e655fa41728c.jpg" width=250> | <img src="https://user-images.githubusercontent.com/65807152/134804236-50445701-1823-4d41-9e49-b2c46a7da031.jpg" width=250> | <img src="https://user-images.githubusercontent.com/65807152/134796181-885b9b93-f911-49a3-be9e-45fb5e1f2c4f.jpg" width=250> | <img src="https://user-images.githubusercontent.com/65807152/134796193-06f31923-ac0c-4309-8fd0-f3dade517c51.jpg" width=250> |
-
-| Search User | Friend Chat | Friend Message | Profile |
-| ----------- | ----------- | -------------- | ------- |
-| <img src="https://user-images.githubusercontent.com/65807152/134796301-bc081259-16d3-49e3-813b-fdecbc0dc564.jpg" width=250> | <img src="https://user-images.githubusercontent.com/65807152/134796318-01691a13-698e-4af8-842b-66a3f4b5eb5b.jpg" width=250> | <img src="https://user-images.githubusercontent.com/65807152/134796333-16097913-c528-4b06-bd79-ba0c909f7227.jpg" width=250> | <img src="https://user-images.githubusercontent.com/65807152/134796360-60c12baf-f31d-4ff8-b6dd-d2948f786426.jpg" width=250> |
-
-| Update Profile |
-| -------------- |
-| <img src="https://user-images.githubusercontent.com/65807152/134796389-720f453e-5d25-44b5-9571-5de078f3a46f.jpg" width=250> |
-
-
-
-
-
-
-
