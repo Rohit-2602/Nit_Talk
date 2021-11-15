@@ -135,6 +135,45 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/image_container"
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:background="@color/dark_gray"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/constraintLayout">
+
+            <ImageView
+                android:id="@+id/msg_image"
+                android:layout_width="100dp"
+                android:layout_height="0dp"
+                android:src="@drawable/bulbasaur"
+                app:layout_constraintBottom_toTopOf="@id/image_upload_progressBar"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/remove_image_btn"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:background="@drawable/shape_circle"
+                android:src="@drawable/ic_baseline_close_24"
+                app:layout_constraintBottom_toTopOf="@id/image_upload_progressBar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ProgressBar
+                android:id="@+id/image_upload_progressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:progress="45" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"

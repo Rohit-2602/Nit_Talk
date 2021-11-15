@@ -1,5 +1,8 @@
 package com.example.nittalk.ui.inbox
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -18,6 +21,8 @@ import com.example.nittalk.databinding.FragmentFriendChatBinding
 import com.example.nittalk.ui.groupchat.MessageAdapter
 import com.example.nittalk.ui.groupchat.OnMessageLongPress
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.firebase.storage.FirebaseStorage
+import com.theartofdev.edmodo.cropper.CropImage
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -32,6 +37,9 @@ class FriendChatFragment: Fragment(R.layout.fragment_friend_chat), OnMessageLong
     private var repliedMessage: Message? = null
     private lateinit var currentUserName :String
     private lateinit var currentUserId: String
+
+    private var imageUri : Uri?= null
+    private var imageUrl :String?= null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -75,6 +83,16 @@ class FriendChatFragment: Fragment(R.layout.fragment_friend_chat), OnMessageLong
                 }
             })
 
+            messageImageBtn.setOnClickListener {
+                startCropActivity()
+            }
+
+            removeImageBtn.setOnClickListener {
+                imageUri = null
+                imageUrl = null
+                imageContainer.visibility = View.GONE
+            }
+
             messageSendBtn.setOnClickListener {
                 val message = messageEditText.text.toString().trim()
                 if (message != "") {
@@ -83,10 +101,13 @@ class FriendChatFragment: Fragment(R.layout.fragment_friend_chat), OnMessageLong
                     friendChatViewModel.sendPersonalMessage(
                         friendId = navArgs.friendId,
                         messageText = message,
-                        imageUrl = "",
+                        imageUrl = imageUrl ?: "",
                         repliedTo = repliedMessage,
                         joinGroup = null
                     )
+                    imageUri = null
+                    imageUrl = null
+                    imageContainer.visibility = View.GONE
                     friendChatViewModel.sendNotification(context = requireContext(), title = currentUserName, message = message, userId = navArgs.friendId)
                 } else {
                     Toast.makeText(requireContext(), "Write Something", Toast.LENGTH_SHORT).show()
@@ -96,6 +117,42 @@ class FriendChatFragment: Fragment(R.layout.fragment_friend_chat), OnMessageLong
 
         setUpFriendChatRecyclerView()
 
+    }
+
+    private fun startCropActivity() {
+        CropImage.activity()
+            .setAspectRatio(16, 16)
+            .start(requireContext(), this)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            val result = CropImage.getActivityResult(data)
+            if (resultCode == Activity.RESULT_OK) {
+                imageUri = result.uri
+
+                binding.apply {
+                    msgImage.setImageURI(imageUri)
+                    imageContainer.visibility = View.VISIBLE
+                    messageSendBtn.isEnabled = false
+                }
+                FirebaseStorage.getInstance().reference.child("images/$imageUri").putFile(imageUri!!)
+                    .addOnProgressListener {
+                        val progress = 100.0 * it.bytesTransferred / it.totalByteCount
+                        val currentProgress = progress.toInt()
+                        binding.imageUploadProgressBar.progress = currentProgress
+                    }
+                    .addOnSuccessListener {
+                        FirebaseStorage.getInstance().reference.child("images/$imageUri").downloadUrl
+                            .addOnSuccessListener { uri ->
+                                imageUrl = uri.toString()
+                                binding.messageSendBtn.isEnabled = true
+                            }
+                    }
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Toast.makeText(requireContext(), result.error.message, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun setUpFriendChatRecyclerView() {

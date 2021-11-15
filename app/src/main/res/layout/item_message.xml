@@ -8,7 +8,7 @@
     android:layout_marginStart="10dp"
     android:layout_marginTop="10dp"
     android:layout_marginEnd="10dp"
-    tools:background="@color/dark_gray">
+    tools:background="@color/black">
 
     <LinearLayout
         android:id="@+id/message_date_header"
@@ -88,7 +88,6 @@
             android:layout_marginEnd="10dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="Rohit Sharma Rohit Sharma Rohit Sharma Rohit Sharma Rohit Sharma"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -158,6 +157,7 @@
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
+        android:visibility="visible"
         app:layout_constraintStart_toStartOf="@+id/message_TV"
         app:layout_constraintTop_toBottomOf="@+id/message_TV"
         tools:src="@drawable/bulbasaur" />
@@ -167,6 +167,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:background="@color/dark_gray"
         android:visibility="gone"
         android:layout_marginEnd="10dp"
@@ -179,6 +181,7 @@
             android:layout_width="40dp"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_height="40dp"
+            android:layout_marginStart="10dp"
             android:src="@drawable/bulbasaur"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
